@@ -145,6 +145,22 @@ reference values — Medi-Cal Cases 1,910,584; Persons 3,153,672; Citizen 2,267,
 368,320; Undocumented 498,283; Other 19,753; Under 1 = 35,222; 1-2 = 72,285; 3-5 = 120,036.
 These are pinned as fixtures in the test suite.
 
+**Dropdown depth (observed 2026-07-05):** the Report Month dropdown currently offers **80 months,
+August 2019 through May 2026** — far deeper than feared when the "months age out on an unknown
+schedule" risk was written down. The aging-out risk is therefore low on a months timescale, but
+backfill still runs **oldest-first** within scope as cheap insurance. Scope stays ≥ 2026-01 per
+this plan's Goal; pre-2026 months exist upstream if the project ever wants them.
+
+**Capture validity (found during the 2026-05 partial):** clicking an already-selected sub-area
+mark **toggles it off** — the VizQL delta carries only the `"<name>|Unchecked"` checkbox token and
+no figures. Three of the first 32 committed area files (CD 23, SSD 25, SSD 34) were such
+toggle-only captures. The scraper now gates every capture on `captureHasData` (a non-trivial
+`real` value pool present, threshold 10 — a normal area re-render ships ~190 real values, the
+sparse "Unknown" area ~26, a toggle ~0), leaves invalid clicks unseen so a later pass re-selects
+and recaptures them, and treats only valid-on-disk files as already captured. `extractRawCapture`
+also now keeps **every** `dataSegments` occurrence in a multi-delta response (`deepFindAll`)
+instead of the first, so no served figures are dropped.
+
 **Watch item (from Out of scope):** no native DPSS disenrollment dashboard has appeared; the
 At-A-Glance embed remains the only source. No change to the ADR is warranted at this time.
 
