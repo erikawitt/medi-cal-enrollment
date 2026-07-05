@@ -52,6 +52,8 @@ export function geoIdToFileStem(geoId: string): string {
 export interface GeoTypeManifest {
   geoType: string;
   areaCount: number;
+  /** Size of the sub-area domain the embed advertised (target for completeness). */
+  domainCount?: number;
   /** Capture order — significant because per-area frames are session-cumulative deltas. */
   areas: { geoId: string; file: string; order: number }[];
 }

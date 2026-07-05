@@ -66,57 +66,99 @@ async function main() {
     : [...GEO_TYPES];
 
   log(`existing report months on disk: ${existingReportMonths().join(", ") || "(none)"}`);
-  const embed = await launchEmbed({ headless: !args.headed });
-  let exitCode = 0;
-  try {
-    const monthLabels = await listReportMonths(embed);
-    const labelByKey = new Map<string, string>();
-    for (const label of monthLabels) {
-      const key = monthLabelToKey(label);
-      if (key) labelByKey.set(key, label);
+
+  // Enumerate published months once, with a short-lived session.
+  const labelByKey = new Map<string, string>();
+  {
+    const embed = await launchEmbed({ headless: !args.headed });
+    try {
+      for (const label of await listReportMonths(embed)) {
+        const key = monthLabelToKey(label);
+        if (key) labelByKey.set(key, label);
+      }
+    } finally {
+      await embed.close();
     }
-    let keys = [...labelByKey.keys()].filter((k) => k >= args.minMonth).sort().reverse();
-    if (args.months) keys = keys.filter((k) => args.months!.includes(k));
-    log(`report months to capture (>= ${args.minMonth}): ${keys.join(", ") || "(none)"}`);
+  }
+  let keys = [...labelByKey.keys()].filter((k) => k >= args.minMonth).sort().reverse();
+  if (args.months) keys = keys.filter((k) => args.months!.includes(k));
+  log(`report months to capture (>= ${args.minMonth}): ${keys.join(", ") || "(none)"}`);
 
-    for (const monthKey of keys) {
-      const label = labelByKey.get(monthKey)!;
-      log(`=== report month ${monthKey} (${label}) ===`);
-      await selectReportMonth(embed, label);
-
-      for (const geo of geoTypes) {
-        // Idempotency: skip a fully-captured (month, geo_type).
-        const baseRespPeek = await selectGeoType(embed, geo.label);
-        const domain = parseSubAreaDomain(baseRespPeek.join("\n"), geo.pattern);
-        if (geoTypeComplete(monthKey, geo.geoType, domain.length)) {
-          log(`${monthKey}/${geo.geoType}: already complete (${domain.length} areas), skipping`);
-          continue;
+  let exitCode = 0;
+  for (const monthKey of keys) {
+    const label = labelByKey.get(monthKey)!;
+    for (const geo of geoTypes) {
+      // Fresh embed session per (month, geo_type): the embed accumulates state
+      // (tooltips, scroll, session staleness) that makes long sessions flaky.
+      // One bounded retry with another fresh session on failure.
+      let ok = false;
+      for (let attempt = 1; attempt <= 2 && !ok; attempt++) {
+        try {
+          ok = await captureMonthGeoType(monthKey, label, geo, args);
+        } catch (err) {
+          log(`${monthKey}/${geo.geoType}: attempt ${attempt} failed: ${(err as Error).message}`);
         }
-        writeBase(monthKey, geo.geoType, extractRawCapture(baseRespPeek));
-        const expected = args.maxAreas ? Math.min(args.maxAreas, domain.length) : domain.length;
-        const priorAreas = readManifest(monthKey)?.geoTypes.find((g) => g.geoType === geo.geoType)?.areas ?? [];
-        const areas: GeoTypeManifest["areas"] = [...priorAreas];
-        let order = areas.length;
-        for await (const cap of captureAllAreas(embed, geo.pattern, expected, (id) =>
-          areaAlreadyCaptured(monthKey, geo.geoType, id),
-        )) {
-          const file = writeArea(monthKey, geo.geoType, cap.geoId, extractRawCapture(cap.responses));
-          areas.push({ geoId: cap.geoId, file, order: order++ });
-          if (order % 25 === 0) log(`${monthKey}/${geo.geoType}: captured ${order}/${expected}`);
-          if (args.maxAreas && areas.length >= args.maxAreas) break;
-        }
-        upsertManifest(monthKey, { geoType: geo.geoType, areaCount: areas.length, areas });
-        log(`${monthKey}/${geo.geoType}: wrote ${areas.length} area captures`);
+      }
+      if (!ok) {
+        log(`${monthKey}/${geo.geoType}: INCOMPLETE after retries`);
+        exitCode = 1;
       }
     }
-    log("done");
-  } catch (err) {
-    exitCode = 1;
-    console.error("[scrape] fatal:", err);
+  }
+  log("done");
+  process.exit(exitCode);
+}
+
+/** Capture one (report month, geo type) in a fresh embed session. Returns true when complete. */
+async function captureMonthGeoType(
+  monthKey: string,
+  monthLabel: string,
+  geo: (typeof GEO_TYPES)[number],
+  args: Args,
+): Promise<boolean> {
+  // Idempotency pre-check from the manifest (avoids a session when done).
+  const prior = readManifest(monthKey)?.geoTypes.find((g) => g.geoType === geo.geoType);
+  if (prior?.domainCount && prior.areaCount >= prior.domainCount) {
+    log(`${monthKey}/${geo.geoType}: already complete (${prior.areaCount} areas), skipping`);
+    return true;
+  }
+
+  const embed = await launchEmbed({ headless: !args.headed });
+  try {
+    await selectReportMonth(embed, monthLabel);
+    const baseResp = await selectGeoType(embed, geo.label);
+    const domain = parseSubAreaDomain(baseResp.join("\n"), geo.pattern);
+    if (domain.length === 0) throw new Error("empty sub-area domain");
+
+    if (geoTypeComplete(monthKey, geo.geoType, domain.length)) {
+      log(`${monthKey}/${geo.geoType}: already complete (${domain.length} areas), skipping`);
+      return true;
+    }
+    writeBase(monthKey, geo.geoType, extractRawCapture(baseResp));
+
+    const expected = args.maxAreas ? Math.min(args.maxAreas, domain.length) : domain.length;
+    const priorAreas = prior?.areas ?? [];
+    const areas: GeoTypeManifest["areas"] = [...priorAreas];
+    let order = areas.length;
+    for await (const cap of captureAllAreas(embed, geo.pattern, expected, (id) =>
+      areaAlreadyCaptured(monthKey, geo.geoType, id),
+    )) {
+      const file = writeArea(monthKey, geo.geoType, cap.geoId, extractRawCapture(cap.responses));
+      areas.push({ geoId: cap.geoId, file, order: order++ });
+      if (order % 25 === 0) log(`${monthKey}/${geo.geoType}: captured ${order}/${expected}`);
+      if (args.maxAreas && areas.length >= args.maxAreas) break;
+    }
+    upsertManifest(monthKey, {
+      geoType: geo.geoType,
+      areaCount: areas.length,
+      domainCount: domain.length,
+      areas,
+    });
+    log(`${monthKey}/${geo.geoType}: wrote ${areas.length}/${domain.length} area captures`);
+    return areas.length >= expected;
   } finally {
     await embed.close();
   }
-  process.exit(exitCode);
 }
 
 await main();

@@ -184,36 +184,55 @@ export async function listReportMonths(embed: Embed): Promise<string[]> {
   return months;
 }
 
-/** Select a Report Month by its dropdown label (e.g. "March 2026"). */
-export async function selectReportMonth(embed: Embed, monthLabel: string): Promise<void> {
-  const { frame, page } = embed;
-  const combo = await frame.evaluate(() => {
-    const el = document.querySelector(".tabComboBoxNameContainer") as HTMLElement | null;
-    if (!el) return null;
-    const r = el.getBoundingClientRect();
-    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-  });
-  if (!combo) throw new Error("Report Month combobox not found");
-  const comboPt = await framePoint(embed, combo.x, combo.y);
-  await page.mouse.click(comboPt.x, comboPt.y);
-  await sleep(1000);
+/** Move the pointer to a neutral spot and dismiss any open menu/tooltip. */
+async function clearOverlays(embed: Embed): Promise<void> {
+  await embed.page.keyboard.press("Escape");
+  await embed.page.mouse.move(5, 5);
+  await sleep(500);
+}
 
-  const item = await frame.evaluate((label) => {
-    const el = [...document.querySelectorAll(".tabMenuItemName")].find(
-      (e) => (e as HTMLElement).innerText?.trim() === label,
-    ) as HTMLElement | undefined;
-    if (!el) return null;
-    const r = el.getBoundingClientRect();
-    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-  }, monthLabel);
-  if (!item) {
-    await page.keyboard.press("Escape");
-    throw new Error(`Report Month not offered: ${monthLabel}`);
+/**
+ * Select a Report Month by its dropdown label (e.g. "March 2026").
+ * Bounded retries: embed tooltips/menus occasionally swallow a click.
+ */
+export async function selectReportMonth(embed: Embed, monthLabel: string, attempts = 3): Promise<void> {
+  const { frame, page } = embed;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    await clearOverlays(embed);
+    const combo = await frame.evaluate(() => {
+      const el = document.querySelector(".tabComboBoxNameContainer") as HTMLElement | null;
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    });
+    if (!combo) throw new Error("Report Month combobox not found");
+    const comboPt = await framePoint(embed, combo.x, combo.y);
+    await page.mouse.click(comboPt.x, comboPt.y);
+    await sleep(1000 + attempt * 500);
+
+    const item = await frame.evaluate((label) => {
+      const el = [...document.querySelectorAll(".tabMenuItemName")].find(
+        (e) => (e as HTMLElement).innerText?.trim() === label,
+      ) as HTMLElement | undefined;
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    }, monthLabel);
+    if (item) {
+      const itemPt = await framePoint(embed, item.x, item.y);
+      await page.mouse.click(itemPt.x, itemPt.y);
+      // Month changes re-render every zone; give the embed time to settle.
+      await sleep(POLITE_DELAY_MS + 3000);
+      embed.drainResponses();
+      return;
+    }
+    await embed.page
+      .screenshot({ path: `/tmp/dpss-month-fail-${attempt}.png` })
+      .catch(() => {});
+    await clearOverlays(embed);
+    await sleep(attempt * 1000); // backoff before retrying
   }
-  const itemPt = await framePoint(embed, item.x, item.y);
-  await page.mouse.click(itemPt.x, itemPt.y);
-  await sleep(POLITE_DELAY_MS);
-  embed.drainResponses();
+  throw new Error(`Report Month not offered: ${monthLabel}`);
 }
 
 /**
@@ -223,6 +242,7 @@ export async function selectReportMonth(embed: Embed, monthLabel: string): Promi
 export async function selectGeoType(embed: Embed, label: string): Promise<string[]> {
   const idx = ADMIN_AREA_ITEMS.indexOf(label);
   if (idx < 0) throw new Error(`unknown Administrative Area label: ${label}`);
+  await clearOverlays(embed);
   const rect = await zoneRect(embed.frame, "Administrative Area");
   // The title occupies the first painted row; the 10 items fill the remainder.
   const titleH = rect.h / (ADMIN_AREA_ITEMS.length + 1);

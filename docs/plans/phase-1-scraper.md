@@ -4,22 +4,22 @@ overview: Build a Playwright scraper that extracts Medi-Cal/CalFresh enrollment 
 todos:
   - id: setup
     content: "Scaffold src/data-pipeline/ workspace package (Bun + TypeScript + Playwright)"
-    status: pending
+    status: completed
   - id: spike
     content: "Spike: resolve decision gates A-D against one month x one SPA"
-    status: pending
+    status: completed
   - id: record-gates
     content: Record decision-gate answers in this file's Decision log
-    status: pending
+    status: completed
   - id: generalize
     content: Generalize scraper across geo types and report months, idempotent per (month, geo_type)
-    status: pending
+    status: completed
   - id: backfill
     content: Backfill all currently-published report months from January 2026 onward
-    status: pending
+    status: in_progress
   - id: manifest
     content: Write capture manifest per month recording extraction method and timestamps
-    status: pending
+    status: completed
 ---
 
 # Phase 1: DPSS Tableau scraper
