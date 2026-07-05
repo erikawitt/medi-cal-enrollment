@@ -62,9 +62,30 @@ export interface Embed {
   close(): Promise<void>;
 }
 
-/** Launch a headless browser and load the embed until it is interactive. */
+/**
+ * One browser process shared across embed sessions. Under Bun, a second
+ * `chromium.launch()` in the same process hangs indefinitely (the first
+ * launch/close pair works, any relaunch stalls), so sessions must isolate via
+ * fresh browser *contexts* — which still give a clean cookie jar and thus a
+ * fresh one-shot Tableau JWT per APEX page load — over fresh processes.
+ */
+let sharedBrowser: Browser | null = null;
+
+async function getSharedBrowser(headless: boolean): Promise<Browser> {
+  if (sharedBrowser?.isConnected()) return sharedBrowser;
+  sharedBrowser = await chromium.launch({ headless });
+  return sharedBrowser;
+}
+
+/** Shut down the shared browser process (call once, at CLI exit). */
+export async function closeSharedBrowser(): Promise<void> {
+  await sharedBrowser?.close().catch(() => {});
+  sharedBrowser = null;
+}
+
+/** Start a fresh embed session (new context) and load the embed until interactive. */
 export async function launchEmbed(opts: { headless?: boolean } = {}): Promise<Embed> {
-  const browser = await chromium.launch({ headless: opts.headless ?? true });
+  const browser = await getSharedBrowser(opts.headless ?? true);
   const context = await browser.newContext({
     userAgent: USER_AGENT,
     viewport: { width: 1400, height: 1200 },
@@ -123,7 +144,7 @@ export async function launchEmbed(opts: { headless?: boolean } = {}): Promise<Em
       return out;
     },
     async close() {
-      await browser.close();
+      await context.close();
     },
   };
 }

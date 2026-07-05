@@ -17,6 +17,7 @@
  */
 import {
   launchEmbed,
+  closeSharedBrowser,
   listReportMonths,
   selectReportMonth,
   selectGeoType,
@@ -108,6 +109,7 @@ async function main() {
     }
   }
   log("done");
+  await closeSharedBrowser();
   process.exit(exitCode);
 }
 
