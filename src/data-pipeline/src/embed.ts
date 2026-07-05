@@ -25,17 +25,20 @@ export const POLITE_DELAY_MS = 1000;
  * first). `label` is the "Administrative Area" list item; `pattern` matches the
  * type's sub-area values (each level names its areas with a clean convention,
  * e.g. "SPA 3", "CD 23", "90001"), which lets us isolate this type's sub-area
- * domain from the other cross-type tokens in the same response.
+ * domain from the other cross-type tokens in the same response. `titlePrefix` +
+ * `idPrefix` map the dashboard's re-rendered view title (e.g. "Congressional
+ * District 23") to the sub-area value ("CD 23") — see `areaFromResponse`.
  */
 export const GEO_TYPES = [
-  { geoType: "spa", label: "Service Planning Area", pattern: /^(SPA \d+|Unknown)$/ },
-  { geoType: "congressional_district", label: "Congressional District", pattern: /^(CD \d+|Unknown)$/ },
-  { geoType: "senate_district", label: "State Senate District", pattern: /^(SSD \d+|Unknown)$/ },
-  { geoType: "assembly_district", label: "State Assembly District", pattern: /^(SAD \d+|Unknown)$/ },
-  { geoType: "zip", label: "Zip Code", pattern: /^(\d{5}|Unknown)$/ },
+  { geoType: "spa", label: "Service Planning Area", pattern: /^(SPA \d+|Unknown)$/, titlePrefix: "Service Planning Area", idPrefix: "SPA " },
+  { geoType: "congressional_district", label: "Congressional District", pattern: /^(CD \d+|Unknown)$/, titlePrefix: "Congressional District", idPrefix: "CD " },
+  { geoType: "senate_district", label: "State Senate District", pattern: /^(SSD \d+|Unknown)$/, titlePrefix: "State Senate District", idPrefix: "SSD " },
+  { geoType: "assembly_district", label: "State Assembly District", pattern: /^(SAD \d+|Unknown)$/, titlePrefix: "State Assembly District", idPrefix: "SAD " },
+  { geoType: "zip", label: "Zip Code", pattern: /^(\d{5}|Unknown)$/, titlePrefix: "Zip Code", idPrefix: "" },
 ] as const;
 
 export type GeoType = (typeof GEO_TYPES)[number]["geoType"];
+export type GeoTypeSpec = (typeof GEO_TYPES)[number];
 
 /** Full "Administrative Area" list order (used to compute click positions). */
 const ADMIN_AREA_ITEMS = [
@@ -258,11 +261,21 @@ export async function selectReportMonth(embed: Embed, monthLabel: string, attemp
 
 /**
  * Select a geography level in the Administrative Area list.
- * Returns the VizQL response bodies, which enumerate the geo type's sub-area domain.
+ *
+ * Returns the VizQL response bodies, polled until they carry the geo type's
+ * sub-area domain (the `"<name>|Checked"` token pool) — large types (zip: ~300
+ * areas, multi-MB responses) stream in well after the click, so a fixed wait
+ * misses them. The returned bodies also carry the type's DEFAULT area render:
+ * the dashboard focuses the first list member (title + figures), which the
+ * caller should capture directly — its row never needs clicking.
  */
-export async function selectGeoType(embed: Embed, label: string): Promise<string[]> {
-  const idx = ADMIN_AREA_ITEMS.indexOf(label);
-  if (idx < 0) throw new Error(`unknown Administrative Area label: ${label}`);
+export async function selectGeoType(
+  embed: Embed,
+  geo: Pick<GeoTypeSpec, "label" | "pattern">,
+  timeoutMs = 25_000,
+): Promise<string[]> {
+  const idx = ADMIN_AREA_ITEMS.indexOf(geo.label);
+  if (idx < 0) throw new Error(`unknown Administrative Area label: ${geo.label}`);
   await clearOverlays(embed);
   const rect = await zoneRect(embed.frame, "Administrative Area");
   // The title occupies the first painted row; the 10 items fill the remainder.
@@ -271,11 +284,21 @@ export async function selectGeoType(embed: Embed, label: string): Promise<string
   const pt = await framePoint(embed, rect.x + 20, y);
   embed.drainResponses();
   await embed.page.mouse.click(pt.x, pt.y);
-  // The geo-type selection triggers two responses: the Administrative Area
-  // filter update, then (a beat later) the Sub Administrative Area list render
-  // that carries this type's sub-area domain. Wait for both to settle.
-  await sleep(4500);
-  return embed.drainResponses();
+  await sleep(POLITE_DELAY_MS);
+
+  let collected: string[] = [];
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    collected = collected.concat(embed.drainResponses());
+    if (parseSubAreaDomain(collected.join("\n"), geo.pattern).length > 0) {
+      // Domain seen; let trailing frames (rest of the streamed render) settle.
+      await sleep(1500);
+      collected = collected.concat(embed.drainResponses());
+      break;
+    }
+    await sleep(500);
+  }
+  return collected;
 }
 
 /**
@@ -300,23 +323,28 @@ export async function subAreaZone(embed: Embed) {
 }
 
 /**
- * Which sub-area a select response reports as newly focused.
+ * Which sub-area a response's re-rendered dashboard actually shows.
  *
- * The sub-area list loads with every member Checked (the unfiltered default).
- * Clicking a mark UNchecks it, and that focuses the view on that area — the
- * re-render carries the area's figures and its view title (e.g. "Service
- * Planning Area 3"), verified against committed captures. So the newly-focused
- * area is named by the response's single pattern-matching `"<name>|Unchecked"`
- * token (a previously-focused area may re-Check in the same delta; a lone
- * `Checked` token is a toggle back to the unfiltered default and names
- * nothing). Robust even when a click lands a row off from where we aimed.
+ * The authoritative signal is the dashboard's view TITLE — the response of a
+ * real area re-render carries exactly one `"<titlePrefix> <id>"` cstring (e.g.
+ * "Congressional District 23" → "CD 23"), which names the area whose figures
+ * the response holds. Checkbox `"<name>|Checked/Unchecked"` tokens are NOT
+ * reliable: the list often re-renders without shipping its token pool (spikes
+ * 35/36 saw title-and-figures responses with zero tokens), which stranded
+ * first-row areas like CD 23. Returns null when zero or multiple titles of the
+ * type appear (no re-render, or a cross-area layout dump).
  */
-export function selectedSubArea(responseText: string, pattern: RegExp): string | null {
-  const unchecked = new Set<string>();
-  for (const m of responseText.matchAll(/"([^"|]+)\|(Checked|Unchecked)"/g)) {
-    if (m[2] === "Unchecked" && pattern.test(m[1]!)) unchecked.add(m[1]!);
+export function areaFromResponse(
+  responseText: string,
+  geo: Pick<GeoTypeSpec, "titlePrefix" | "idPrefix" | "pattern">,
+): string | null {
+  const ids = new Set<string>();
+  const re = new RegExp(`"${geo.titlePrefix} ([A-Za-z0-9]+)\\s*"`, "g");
+  for (const m of responseText.matchAll(re)) {
+    const id = m[1] === "Unknown" ? "Unknown" : `${geo.idPrefix}${m[1]}`;
+    if (geo.pattern.test(id)) ids.add(id);
   }
-  return unchecked.size === 1 ? [...unchecked][0]! : null;
+  return ids.size === 1 ? [...ids][0]! : null;
 }
 
 /**
@@ -325,7 +353,7 @@ export function selectedSubArea(responseText: string, pattern: RegExp): string |
  * we poll until one arrives (or `timeoutMs` elapses, meaning the click missed a
  * mark) rather than guessing a fixed delay. Returns the captured response text.
  */
-async function clickSubAreaAt(embed: Embed, fx: number, fy: number, timeoutMs = 7000): Promise<string[]> {
+async function clickSubAreaAt(embed: Embed, fx: number, fy: number, timeoutMs = 4500): Promise<string[]> {
   const pt = await framePoint(embed, fx, fy);
   embed.drainResponses();
   await embed.page.mouse.click(pt.x, pt.y);
@@ -353,71 +381,59 @@ export interface AreaCapture {
 
 /**
  * Walk the Sub Administrative Area list top-to-bottom, capturing each distinct
- * area exactly once. The caller must have already selected the geo type. Rather
- * than trust pixel-perfect row math, we click down the list at ~one row pitch
- * and identify the area from the response (`selectedSubArea`), de-duplicating;
- * when the visible rows are exhausted we wheel-scroll and continue, stopping when
- * `expectedCount` areas are captured or progress stalls.
+ * area exactly once. The caller must have already selected the geo type — and
+ * should capture the type's DEFAULT area (first list member) from the
+ * geo-type-select response itself; this walk covers the rest by clicking.
  *
- * `skip` lets an idempotent re-run avoid re-capturing areas already on disk while
- * still stepping through the list to reach the uncaptured ones.
+ * Rather than trust pixel-perfect row math, we click down the list at ~one row
+ * pitch and identify each area from its response's re-rendered view title
+ * (`areaFromResponse`), de-duplicating; when the visible rows are exhausted we
+ * wheel-scroll and continue. Passes restart from the top of the list until
+ * `alreadyDone` + captures cover `expectedCount` areas or progress stalls.
  *
- * `isValid` guards against partial deltas that carry checkbox state but no
- * figures. Invalid captures are not marked as seen, so a later pass re-clicks
- * the row and recaptures the area.
+ * `doneNames` seeds the walk with areas already captured on disk — they count
+ * toward `expectedCount` without needing a click, so a resumed run stops as
+ * soon as the missing areas are found. `isValid` guards against re-renders
+ * that carry a title but no figures — those stay unseen, so a later pass
+ * re-clicks and recaptures them.
  */
 export async function* captureAllAreas(
   embed: Embed,
-  pattern: RegExp,
+  geo: Pick<GeoTypeSpec, "titlePrefix" | "idPrefix" | "pattern">,
   expectedCount: number,
-  skip: (geoId: string) => boolean = () => false,
+  doneNames: Iterable<string> = [],
   isValid: (responses: string[]) => boolean = () => true,
 ): AsyncGenerator<AreaCapture> {
   const zone = await subAreaZone(embed);
-  const seen = new Set<string>();
-  const PITCH = 16; // frame px ≈ one list row
+  const seen = new Set<string>(doneNames);
+  const PITCH = 16; // frame px ≈ half a list row (rows paint ~32px tall)
   const LIST_TOP = 30; // px below the zone's painted title
-  let staleScrolls = 0;
 
-  // Prime with the second row: the first click of a session sometimes lands
-  // before the viz accepts input, and starting one row in gives the walk a
-  // known-good response to calibrate on.
-  {
-    const primeBodies = await clickSubAreaAt(embed, zone.x + 18, zone.y + LIST_TOP + PITCH);
-    const primeName = selectedSubArea(primeBodies.join("\n"), pattern);
-    if (primeName && !seen.has(primeName)) {
-      if (skip(primeName)) {
-        seen.add(primeName);
-      } else if (isValid(primeBodies)) {
-        seen.add(primeName);
-        yield { geoId: primeName, responses: primeBodies };
-      }
-    }
-  }
+  const wheelInList = async (dy: number) => {
+    const center = await framePoint(embed, zone.x + zone.w / 2, zone.y + zone.h / 2);
+    await embed.page.mouse.move(center.x, center.y);
+    await embed.page.mouse.wheel(0, dy);
+    await sleep(700);
+  };
 
-  while (seen.size < expectedCount && staleScrolls < 3) {
+  let stalePasses = 0;
+  while (seen.size < expectedCount && stalePasses < 3) {
     const before = seen.size;
-    for (let dy = LIST_TOP; dy <= zone.h - 6 && seen.size < expectedCount; dy += PITCH) {
-      const bodies = await clickSubAreaAt(embed, zone.x + 18, zone.y + dy);
-      const name = selectedSubArea(bodies.join("\n"), pattern);
-      if (!name || seen.has(name)) continue;
-      if (skip(name)) {
+    // Rows are ~2×PITCH tall; sweep enough viewports to cover the domain.
+    const viewport = zone.h - LIST_TOP;
+    const maxScrolls = Math.ceil((expectedCount * 2 * PITCH * 2) / viewport) + 2;
+    for (let s = 0; s <= maxScrolls && seen.size < expectedCount; s++) {
+      for (let dy = LIST_TOP; dy <= zone.h - 6 && seen.size < expectedCount; dy += PITCH) {
+        const bodies = await clickSubAreaAt(embed, zone.x + 18, zone.y + dy);
+        const name = areaFromResponse(bodies.join("\n"), geo);
+        if (!name || seen.has(name) || !isValid(bodies)) continue;
         seen.add(name);
-        continue;
+        yield { geoId: name, responses: bodies };
       }
-      // A delta can carry checkbox state without figures (e.g. a click on the
-      // currently-focused row releasing focus). Leave the area unseen so a
-      // later pass re-clicks it and captures real data.
-      if (!isValid(bodies)) continue;
-      seen.add(name);
-      yield { geoId: name, responses: bodies };
+      if (seen.size >= expectedCount) break;
+      await wheelInList(viewport - PITCH);
     }
-    if (seen.size < expectedCount) {
-      const center = await framePoint(embed, zone.x + zone.w / 2, zone.y + zone.h / 2);
-      await embed.page.mouse.move(center.x, center.y);
-      await embed.page.mouse.wheel(0, zone.h - 40);
-      await sleep(700);
-      staleScrolls = seen.size === before ? staleScrolls + 1 : 0;
-    }
+    if (seen.size < expectedCount) await wheelInList(-viewport * (maxScrolls + 2)); // back to the top
+    stalePasses = seen.size === before ? stalePasses + 1 : 0;
   }
 }

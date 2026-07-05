@@ -1,29 +1,33 @@
 import { describe, expect, test } from "bun:test";
 import { monthLabelToKey, geoIdToFileStem } from "../src/capture";
-import { selectedSubArea } from "../src/embed";
+import { areaFromResponse, GEO_TYPES } from "../src/embed";
 import { extractRawCapture, captureHasData, type RawCaptureFrame } from "../src/vizql";
 
-describe("selectedSubArea", () => {
-  const spa = /^(SPA \d+|Unknown)$/;
+describe("areaFromResponse", () => {
+  const cd = GEO_TYPES.find((g) => g.geoType === "congressional_district")!;
+  const spa = GEO_TYPES.find((g) => g.geoType === "spa")!;
+  const zip = GEO_TYPES.find((g) => g.geoType === "zip")!;
 
-  test("names the newly-unchecked (focused) area of a plain selection", () => {
-    expect(selectedSubArea('"SPA 2|Unchecked"', spa)).toBe("SPA 2");
+  test("names an area from its re-rendered view title", () => {
+    expect(areaFromResponse('..."Congressional District 23"...', cd)).toBe("CD 23");
+    expect(areaFromResponse('..."Service Planning Area 3"...', spa)).toBe("SPA 3");
+    expect(areaFromResponse('..."Zip Code 90001"...', zip)).toBe("90001");
   });
 
-  test("names the focused area when the previous focus re-checks in the same response", () => {
-    expect(selectedSubArea('"SPA 4|Unchecked" ... "SPA 3|Checked"', spa)).toBe("SPA 4");
+  test("maps the Unknown title to the Unknown area", () => {
+    expect(areaFromResponse('"Congressional District Unknown"', cd)).toBe("Unknown");
   });
 
-  test("returns null for a focus release (view back to unfiltered default)", () => {
-    expect(selectedSubArea('"SPA 3|Checked"', spa)).toBeNull();
+  test("returns null when no title of the type appears (focus release / list-only render)", () => {
+    expect(areaFromResponse('"Congressional District|Unchecked" "CD 26|Checked"', cd)).toBeNull();
   });
 
-  test("returns null when multiple areas of the type uncheck at once", () => {
-    expect(selectedSubArea('"SPA 1|Unchecked" "SPA 2|Unchecked"', spa)).toBeNull();
+  test("returns null when multiple areas' titles appear (cross-area layout dump)", () => {
+    expect(areaFromResponse('"Congressional District 23" "Congressional District 26"', cd)).toBeNull();
   });
 
-  test("ignores tokens from other geo types", () => {
-    expect(selectedSubArea('"CD 23|Unchecked" "SPA 5|Unchecked"', spa)).toBe("SPA 5");
+  test("ignores titles of other geo types", () => {
+    expect(areaFromResponse('"State Senate District 20" "Congressional District 27"', cd)).toBe("CD 27");
   });
 });
 

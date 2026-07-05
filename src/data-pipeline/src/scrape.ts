@@ -23,16 +23,20 @@ import {
   selectGeoType,
   parseSubAreaDomain,
   captureAllAreas,
+  areaFromResponse,
   GEO_TYPES,
   type GeoType,
 } from "./embed";
 import { extractRawCapture, captureHasData } from "./vizql";
+import { statSync } from "node:fs";
+import { join } from "node:path";
 import {
   monthLabelToKey,
   writeBase,
   writeArea,
   readAreaCapture,
   geoIdToFileStem,
+  geoTypeDir,
   upsertManifest,
   readManifest,
   existingReportMonths,
@@ -141,7 +145,7 @@ async function captureMonthGeoType(
   const embed = await launchEmbed({ headless: !args.headed });
   try {
     await selectReportMonth(embed, monthLabel);
-    const baseResp = await selectGeoType(embed, geo.label);
+    const baseResp = await selectGeoType(embed, geo);
     const domain = parseSubAreaDomain(baseResp.join("\n"), geo.pattern);
     if (domain.length === 0) throw new Error("empty sub-area domain");
 
@@ -154,13 +158,22 @@ async function captureMonthGeoType(
     }
     writeBase(monthKey, geo.geoType, extractRawCapture(baseResp));
 
+    // The geo-type selection itself renders the type's default (first) area —
+    // capture it from the base response; its list row never needs a click.
+    const baseFrames = extractRawCapture(baseResp);
+    const defaultArea = areaFromResponse(baseResp.join("\n"), geo);
+    if (defaultArea && !validOnDisk(defaultArea) && captureHasData(baseFrames)) {
+      writeArea(monthKey, geo.geoType, defaultArea, baseFrames);
+      log(`${monthKey}/${geo.geoType}: captured default area ${defaultArea}`);
+    }
+
     const expected = args.maxAreas ? Math.min(args.maxAreas, domain.length) : domain.length;
     let captured = domain.filter(validOnDisk).length;
     for await (const cap of captureAllAreas(
       embed,
-      geo.pattern,
+      geo,
       expected,
-      validOnDisk,
+      domain.filter(validOnDisk),
       (responses) => captureHasData(extractRawCapture(responses)),
     )) {
       writeArea(monthKey, geo.geoType, cap.geoId, extractRawCapture(cap.responses));
@@ -179,7 +192,8 @@ async function captureMonthGeoType(
 
 /**
  * Manifest entry for a geo type, derived from what is actually valid on disk.
- * Order follows the domain (Tableau's list order), so phase 3 can rely on it.
+ * `order` is the capture order (file mtime rank) — significant because
+ * per-area frames are session-cumulative deltas (see capture.ts).
  */
 function buildGeoManifest(
   monthKey: string,
@@ -193,12 +207,20 @@ function buildGeoManifest(
   for (const a of prior?.areas ?? []) {
     if (!names.includes(a.geoId)) names.push(a.geoId);
   }
-  const areas: GeoTypeManifest["areas"] = [];
-  for (const geoId of names) {
-    if (!areaValidOnDisk(monthKey, geoType, geoId)) continue;
-    areas.push({ geoId, file: `${geoIdToFileStem(geoId)}.json`, order: areas.length });
-  }
-  return { geoType, areaCount: areas.length, domainCount: domain.length, areas };
+  const valid = names
+    .filter((geoId) => areaValidOnDisk(monthKey, geoType, geoId))
+    .map((geoId) => {
+      const file = `${geoIdToFileStem(geoId)}.json`;
+      const mtime = statSync(join(geoTypeDir(monthKey, geoType), file)).mtimeMs;
+      return { geoId, file, mtime };
+    })
+    .sort((a, b) => a.mtime - b.mtime);
+  return {
+    geoType,
+    areaCount: valid.length,
+    domainCount: domain.length,
+    areas: valid.map(({ geoId, file }, order) => ({ geoId, file, order })),
+  };
 }
 
 await main();
