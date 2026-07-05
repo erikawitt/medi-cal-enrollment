@@ -1,0 +1,15 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "medi-cal-disenrollment",
+    },
+    "src/data-pipeline": {
+      "name": "@medi-cal-disenrollment/data-pipeline",
+    },
+  },
+  "packages": {
+    "@medi-cal-disenrollment/data-pipeline": ["@medi-cal-disenrollment/data-pipeline@workspace:src/data-pipeline"],
+  }
+}

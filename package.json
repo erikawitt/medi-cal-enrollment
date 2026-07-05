@@ -1,0 +1,5 @@
+{
+  "name": "medi-cal-disenrollment",
+  "private": true,
+  "workspaces": ["src/*"]
+}
