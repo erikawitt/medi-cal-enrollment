@@ -2,5 +2,12 @@
   "name": "@medi-cal-disenrollment/data-pipeline",
   "private": true,
   "type": "module",
-  "scripts": {}
+  "scripts": {},
+  "dependencies": {
+    "@turf/turf": "^7.3.5",
+    "proj4": "^2.20.9"
+  },
+  "devDependencies": {
+    "@types/proj4": "^2.19.0"
+  }
 }
