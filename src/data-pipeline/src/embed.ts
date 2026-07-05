@@ -336,12 +336,17 @@ export interface AreaCapture {
  *
  * `skip` lets an idempotent re-run avoid re-capturing areas already on disk while
  * still stepping through the list to reach the uncaptured ones.
+ *
+ * `isValid` guards against toggle-only responses: clicking an already-selected
+ * mark deselects it and returns no figures. Invalid captures are not marked as
+ * seen, so a later click on the same row re-selects the area and recaptures it.
  */
 export async function* captureAllAreas(
   embed: Embed,
   pattern: RegExp,
   expectedCount: number,
   skip: (geoId: string) => boolean = () => false,
+  isValid: (responses: string[]) => boolean = () => true,
 ): AsyncGenerator<AreaCapture> {
   const zone = await subAreaZone(embed);
   const seen = new Set<string>();
@@ -357,8 +362,12 @@ export async function* captureAllAreas(
     const primeBodies = await clickSubAreaAt(embed, zone.x + 18, zone.y + LIST_TOP + PITCH);
     const primeName = selectedSubArea(primeBodies.join("\n"), pattern);
     if (primeName && !seen.has(primeName)) {
-      seen.add(primeName);
-      if (!skip(primeName)) yield { geoId: primeName, responses: primeBodies };
+      if (skip(primeName)) {
+        seen.add(primeName);
+      } else if (isValid(primeBodies)) {
+        seen.add(primeName);
+        yield { geoId: primeName, responses: primeBodies };
+      }
     }
   }
 
@@ -368,8 +377,16 @@ export async function* captureAllAreas(
       const bodies = await clickSubAreaAt(embed, zone.x + 18, zone.y + dy);
       const name = selectedSubArea(bodies.join("\n"), pattern);
       if (!name || seen.has(name)) continue;
+      if (skip(name)) {
+        seen.add(name);
+        continue;
+      }
+      // A click on an already-selected mark toggles it OFF: the response carries
+      // the "<name>|Unchecked" token but no figures. Leave the area unseen so a
+      // later pass re-clicks (re-selects) it and captures real data.
+      if (!isValid(bodies)) continue;
       seen.add(name);
-      if (!skip(name)) yield { geoId: name, responses: bodies };
+      yield { geoId: name, responses: bodies };
     }
     if (seen.size < expectedCount) {
       const center = await framePoint(embed, zone.x + zone.w / 2, zone.y + zone.h / 2);

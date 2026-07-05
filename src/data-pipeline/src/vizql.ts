@@ -79,6 +79,17 @@ function deepFind(obj: unknown, key: string, depth = 0): unknown {
   return undefined;
 }
 
+/** All occurrences of `key` anywhere in `obj` (document order). */
+function deepFindAll(obj: unknown, key: string, out: unknown[] = [], depth = 0): unknown[] {
+  if (obj == null || typeof obj !== "object" || depth > 60) return out;
+  const rec = obj as Record<string, unknown>;
+  for (const k of Object.keys(rec)) {
+    if (k === key) out.push(rec[k]);
+    deepFindAll(rec[k], key, out, depth + 1);
+  }
+  return out;
+}
+
 /**
  * Extract a compact `PresModel` from one or more VizQL response bodies.
  *
@@ -240,15 +251,39 @@ export function extractRawCapture(bodies: string[]): RawCaptureFrame[] {
   const frames: RawCaptureFrame[] = [];
   for (const body of bodies) {
     for (const chunk of parseVizqlBody(body)) {
-      const presModelMap = deepFind(chunk, "presModelMap");
-      const dataSegments = deepFind(chunk, "dataSegments");
-      if (presModelMap !== undefined || dataSegments !== undefined) {
-        frames.push({
-          ...(dataSegments !== undefined ? { dataSegments } : {}),
-          ...(presModelMap !== undefined ? { presModelMap } : {}),
-        });
+      const presModelMaps = deepFindAll(chunk, "presModelMap");
+      const allSegments = deepFindAll(chunk, "dataSegments");
+      // presModelMap subtrees carry their own dataSegments; keep top-level
+      // occurrences distinct so nothing is dropped or double-nested.
+      for (const presModelMap of presModelMaps) frames.push({ presModelMap });
+      for (const dataSegments of allSegments) {
+        const insidePresModel = presModelMaps.some((p) =>
+          deepFindAll(p, "dataSegments").includes(dataSegments),
+        );
+        if (!insidePresModel) frames.push({ dataSegments });
       }
     }
   }
   return frames;
+}
+
+/**
+ * Whether captured frames actually carry a geography's published figures — a
+ * numeric value pool of non-trivial size. Selection clicks that only toggled a
+ * checkbox (or missed) produce frames without one; those captures are invalid.
+ *
+ * The threshold is deliberately low: a normal area re-render ships ~190 real
+ * values, sparse areas ("Unknown") still ship ~25, and a checkbox-only toggle
+ * ships 0-1.
+ */
+export function captureHasData(frames: RawCaptureFrame[], minRealValues = 10): boolean {
+  for (const frame of frames) {
+    for (const cols of deepFindAll(frame, "dataColumns")) {
+      if (!Array.isArray(cols)) continue;
+      for (const col of cols as { dataType?: string; dataValues?: unknown[] }[]) {
+        if (col?.dataType === "real" && (col.dataValues?.length ?? 0) >= minRealValues) return true;
+      }
+    }
+  }
+  return false;
 }

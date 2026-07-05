@@ -25,13 +25,13 @@ import {
   GEO_TYPES,
   type GeoType,
 } from "./embed";
-import { extractRawCapture } from "./vizql";
+import { extractRawCapture, captureHasData } from "./vizql";
 import {
   monthLabelToKey,
   writeBase,
   writeArea,
-  areaAlreadyCaptured,
-  geoTypeComplete,
+  readAreaCapture,
+  geoIdToFileStem,
   upsertManifest,
   readManifest,
   existingReportMonths,
@@ -80,7 +80,9 @@ async function main() {
       await embed.close();
     }
   }
-  let keys = [...labelByKey.keys()].filter((k) => k >= args.minMonth).sort().reverse();
+  // Oldest first: report months age out of the dropdown on an unknown schedule,
+  // so the oldest published month is always the most at risk of disappearing.
+  let keys = [...labelByKey.keys()].filter((k) => k >= args.minMonth).sort();
   if (args.months) keys = keys.filter((k) => args.months!.includes(k));
   log(`report months to capture (>= ${args.minMonth}): ${keys.join(", ") || "(none)"}`);
 
@@ -109,6 +111,12 @@ async function main() {
   process.exit(exitCode);
 }
 
+/** An area counts as captured only when its on-disk frames carry real figures. */
+function areaValidOnDisk(monthKey: string, geoType: string, geoId: string): boolean {
+  const frames = readAreaCapture(monthKey, geoType, geoId);
+  return frames !== null && captureHasData(frames);
+}
+
 /** Capture one (report month, geo type) in a fresh embed session. Returns true when complete. */
 async function captureMonthGeoType(
   monthKey: string,
@@ -117,9 +125,14 @@ async function captureMonthGeoType(
   args: Args,
 ): Promise<boolean> {
   // Idempotency pre-check from the manifest (avoids a session when done).
+  // Trust it only when every listed area's file really carries figures.
   const prior = readManifest(monthKey)?.geoTypes.find((g) => g.geoType === geo.geoType);
-  if (prior?.domainCount && prior.areaCount >= prior.domainCount) {
-    log(`${monthKey}/${geo.geoType}: already complete (${prior.areaCount} areas), skipping`);
+  if (
+    prior?.domainCount &&
+    prior.areas.length >= prior.domainCount &&
+    prior.areas.every((a) => areaValidOnDisk(monthKey, geo.geoType, a.geoId))
+  ) {
+    log(`${monthKey}/${geo.geoType}: already complete (${prior.areas.length} areas), skipping`);
     return true;
   }
 
@@ -130,35 +143,60 @@ async function captureMonthGeoType(
     const domain = parseSubAreaDomain(baseResp.join("\n"), geo.pattern);
     if (domain.length === 0) throw new Error("empty sub-area domain");
 
-    if (geoTypeComplete(monthKey, geo.geoType, domain.length)) {
+    const validOnDisk = (id: string) => areaValidOnDisk(monthKey, geo.geoType, id);
+    if (domain.every(validOnDisk)) {
       log(`${monthKey}/${geo.geoType}: already complete (${domain.length} areas), skipping`);
+      // Manifest may predate the validity check; refresh it from disk state.
+      upsertManifest(monthKey, buildGeoManifest(monthKey, geo.geoType, domain, prior));
       return true;
     }
     writeBase(monthKey, geo.geoType, extractRawCapture(baseResp));
 
     const expected = args.maxAreas ? Math.min(args.maxAreas, domain.length) : domain.length;
-    const priorAreas = prior?.areas ?? [];
-    const areas: GeoTypeManifest["areas"] = [...priorAreas];
-    let order = areas.length;
-    for await (const cap of captureAllAreas(embed, geo.pattern, expected, (id) =>
-      areaAlreadyCaptured(monthKey, geo.geoType, id),
+    let captured = domain.filter(validOnDisk).length;
+    for await (const cap of captureAllAreas(
+      embed,
+      geo.pattern,
+      expected,
+      validOnDisk,
+      (responses) => captureHasData(extractRawCapture(responses)),
     )) {
-      const file = writeArea(monthKey, geo.geoType, cap.geoId, extractRawCapture(cap.responses));
-      areas.push({ geoId: cap.geoId, file, order: order++ });
-      if (order % 25 === 0) log(`${monthKey}/${geo.geoType}: captured ${order}/${expected}`);
-      if (args.maxAreas && areas.length >= args.maxAreas) break;
+      writeArea(monthKey, geo.geoType, cap.geoId, extractRawCapture(cap.responses));
+      captured++;
+      if (captured % 25 === 0) log(`${monthKey}/${geo.geoType}: captured ${captured}/${expected}`);
+      if (args.maxAreas && captured >= args.maxAreas) break;
     }
-    upsertManifest(monthKey, {
-      geoType: geo.geoType,
-      areaCount: areas.length,
-      domainCount: domain.length,
-      areas,
-    });
-    log(`${monthKey}/${geo.geoType}: wrote ${areas.length}/${domain.length} area captures`);
-    return areas.length >= expected;
+    const manifest = buildGeoManifest(monthKey, geo.geoType, domain, prior);
+    upsertManifest(monthKey, manifest);
+    log(`${monthKey}/${geo.geoType}: ${manifest.areaCount}/${domain.length} valid area captures`);
+    return manifest.areaCount >= expected;
   } finally {
     await embed.close();
   }
+}
+
+/**
+ * Manifest entry for a geo type, derived from what is actually valid on disk.
+ * Order follows the domain (Tableau's list order), so phase 3 can rely on it.
+ */
+function buildGeoManifest(
+  monthKey: string,
+  geoType: string,
+  domain: string[],
+  prior: GeoTypeManifest | undefined,
+): GeoTypeManifest {
+  // Keep any previously-recorded areas that are not in today's domain but are
+  // valid on disk (defensive: domain drift between runs).
+  const names = [...domain];
+  for (const a of prior?.areas ?? []) {
+    if (!names.includes(a.geoId)) names.push(a.geoId);
+  }
+  const areas: GeoTypeManifest["areas"] = [];
+  for (const geoId of names) {
+    if (!areaValidOnDisk(monthKey, geoType, geoId)) continue;
+    areas.push({ geoId, file: `${geoIdToFileStem(geoId)}.json`, order: areas.length });
+  }
+  return { geoType, areaCount: areas.length, domainCount: domain.length, areas };
 }
 
 await main();

@@ -91,6 +91,21 @@ export function areaAlreadyCaptured(reportMonth: string, geoType: string, geoId:
   return existsSync(join(geoTypeDir(reportMonth, geoType), `${geoIdToFileStem(geoId)}.json`));
 }
 
+/** Read an area's committed capture frames, or null when absent/unreadable. */
+export function readAreaCapture(
+  reportMonth: string,
+  geoType: string,
+  geoId: string,
+): RawCaptureFrame[] | null {
+  const p = join(geoTypeDir(reportMonth, geoType), `${geoIdToFileStem(geoId)}.json`);
+  if (!existsSync(p)) return null;
+  try {
+    return JSON.parse(readFileSync(p, "utf8")) as RawCaptureFrame[];
+  } catch {
+    return null;
+  }
+}
+
 /** A (month, geo_type) is done when its manifest entry lists every domain area. */
 export function geoTypeComplete(reportMonth: string, geoType: string, expectedCount: number): boolean {
   const m = readManifest(reportMonth);
