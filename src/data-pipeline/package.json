@@ -3,10 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "crosswalk": "bun run crosswalk/generate-crosswalk.ts"
+    "crosswalk": "bun run crosswalk/generate-crosswalk.ts",
+    "scrape": "bun run src/scrape.ts",
+    "test": "bun test"
   },
   "dependencies": {
     "@turf/turf": "^7.3.5",
+    "playwright": "^1.61.1",
     "proj4": "^2.20.9"
   },
   "devDependencies": {

@@ -95,12 +95,58 @@ data/raw/{YYYY-MM}/manifest.json                 # capture timestamp, extraction
 - **Gate C — bulk vs per-area**: Can one export include geography as a table column (all zips at once), or must the scraper filter to one geography value per export? This decides between ~5 exports/month and ~450+ exports/month (zip level is roughly 300-500 areas; the legislative levels add little — LA County intersects only on the order of 15 state senate and 25 assembly districts. A per-area loop is an estimated 30-90+ minutes/month — acceptable if unavoidable, but check bulk first).
 - **Gate D — filter semantics**: When a single geography value is selected, does the table show only that area's rows, or does geography become a column across all rows? (Determines per-area vs per-month file granularity in `data/raw/`.)
 
-### Decision log (fill in during the spike — this section is part of the deliverable)
+### Decision log (filled in during the spike)
 
-- Gate A: _unresolved_
-- Gate B: _unresolved_
-- Gate C: _unresolved_
-- Gate D: _unresolved_
+Spike ran against report month **May 2026** at the Department (countywide) and Service
+Planning Area levels, using headless Chromium via Playwright against the live APEX page.
+Full spike scripts are preserved under `src/data-pipeline/spike/` for auditability.
+
+- **Gate A — filter control: DOM/embed interaction, NOT the Embedding JS API.**
+  The Embedding API v3 exposes sheet switching (`activateSheetAsync('Table View')` works) but
+  parameter/filter *writes* are effectively unavailable to anonymous viewers:
+  `getParametersAsync()` → `PermissionDeniedException` (403), and
+  `changeParameterValueAsync('Select Month Filter Parameter', …)` → `invalid-parameter`
+  (the parameter is not resolvable through the public API). Geography is instead a pair of
+  **filter-action worksheets** inside the embed — "Administrative Area" (the geo *type*) and
+  "Sub Administrative Area" (the specific value). Selecting an item is a mark selection that
+  fires a VizQL `tabdoc/select` command (observed payload:
+  `worksheet="Administrative Area Filter"`, `selection={"objectIds":[N],"selectionType":"tuples"}`).
+  "Report Month" is a Tableau parameter-control dropdown (top-left) driven the same way — via
+  in-embed interaction, not the JS API. **Conclusion: drive selection by interacting with the
+  embed (clicking the rendered list marks); the JS API is used only for `activateSheetAsync`.**
+
+- **Gate B — export path: crosstab export FAILS; captured VizQL presModel JSON is the fallback.**
+  Both `tableauViz.displayDialogAsync('export-cross-tab')` and the native toolbar
+  Download → Crosstab surface a Tableau **"Unexpected Error"** inside the viz iframe and never
+  emit a download event (Playwright `waitForEvent('download')` times out). This matches the ADR
+  note that data-access paths are permission-gated for the anonymous embed. The plan's suggested
+  DOM-text fallback also does **not** apply as written: the table's numeric values are
+  **canvas-painted, not DOM text** (a scan for formatted numbers like `1,910,584` in the DOM
+  returns zero hits; only row/column *labels* are real DOM text). **Working extraction path
+  (chosen): capture the VizQL `bootstrapSession` / `tabdoc/select` response JSON, which contains
+  a `dataDictionary` (typed value pools) plus per-worksheet `paneColumnsData` (index tuples) that
+  reconstruct every published value.** We commit a compact, faithful extract of that presModel
+  (dictionary values + raw Tableau field captions + index tuples, ~45 KB/area, formatted value
+  strings preserved verbatim). Raw **`{ext}` = `.json`**. See ADR 0002 for the format decision.
+
+- **Gate C — bulk vs per-area: PER-AREA.** There is no mode that emits all zips at once. The embed
+  shows exactly one selected geography value at a time (pick a type in "Administrative Area", then
+  one value in "Sub Administrative Area"); the view re-renders for that single area. So capture is
+  one export per (report month × geo value): SPA = 8, plus the legislative/congressional levels
+  (tens each), plus zip (hundreds). Zip-level backfill is the long pole (tens of minutes/month).
+
+- **Gate D — filter semantics: SINGLE-VALUE filter; geography is NOT a column.** Selecting one
+  sub-area (e.g. "SPA 1") re-renders the whole dashboard/table for that area only (confirmed:
+  SPA 1 Medi-Cal Persons = 167,866 vs. countywide 3,153,672); geography never appears as a table
+  column. **Therefore per-area files: `data/raw/{YYYY-MM}/{geo_type}/{geo_id}.json`.**
+
+**Validation:** the captured May 2026 countywide (Department) presModel reconstructs to the exact
+reference values — Medi-Cal Cases 1,910,584; Persons 3,153,672; Citizen 2,267,316; Documented
+368,320; Undocumented 498,283; Other 19,753; Under 1 = 35,222; 1-2 = 72,285; 3-5 = 120,036.
+These are pinned as fixtures in the test suite.
+
+**Watch item (from Out of scope):** no native DPSS disenrollment dashboard has appeared; the
+At-A-Glance embed remains the only source. No change to the ADR is warranted at this time.
 
 ## Acceptance criteria
 
