@@ -1,0 +1,3933 @@
+{
+  "generated_at": "2026-07-05T09:08:55.978Z",
+  "zip_source": "https://public.gis.lacounty.gov/public/rest/services/LACounty_Dynamic/Administrative_Boundaries/MapServer/5/query?where=1%3D1&outFields=ZIPCODE&outSR=4326&f=geojson (LA County eGIS Zipcodes layer, retrieved 2026-07-05)",
+  "community_source": "https://stilesdata.com/la-geography/la_neighborhoods_comprehensive.geojson (la-geography comprehensive neighborhoods layer, retrieved 2026-07-05)",
+  "method": "proportional-overlap, EPSG:3310, sliver threshold 0.01, renormalized",
+  "entries": [
+    {
+      "zip": "90001",
+      "community": "florence",
+      "overlap_fraction": 0.2651838995579384
+    },
+    {
+      "zip": "90001",
+      "community": "florence-firestone",
+      "overlap_fraction": 0.6947966909590032
+    },
+    {
+      "zip": "90001",
+      "community": "huntington-park",
+      "overlap_fraction": 0.040019409483058425
+    },
+    {
+      "zip": "90002",
+      "community": "florence-firestone",
+      "overlap_fraction": 0.33381144902349924
+    },
+    {
+      "zip": "90002",
+      "community": "green-meadows",
+      "overlap_fraction": 0.2846485834468017
+    },
+    {
+      "zip": "90002",
+      "community": "watts",
+      "overlap_fraction": 0.381539967529699
+    },
+    {
+      "zip": "90003",
+      "community": "broadway-manchester",
+      "overlap_fraction": 0.23915145161298867
+    },
+    {
+      "zip": "90003",
+      "community": "florence",
+      "overlap_fraction": 0.4993913405376197
+    },
+    {
+      "zip": "90003",
+      "community": "green-meadows",
+      "overlap_fraction": 0.1095469340013656
+    },
+    {
+      "zip": "90003",
+      "community": "vermont-knolls",
+      "overlap_fraction": 0.040216255534855444
+    },
+    {
+      "zip": "90003",
+      "community": "vermont-slauson",
+      "overlap_fraction": 0.04077539732271824
+    },
+    {
+      "zip": "90003",
+      "community": "vermont-vista",
+      "overlap_fraction": 0.07091862099045229
+    },
+    {
+      "zip": "90004",
+      "community": "east-hollywood",
+      "overlap_fraction": 0.22795140694725466
+    },
+    {
+      "zip": "90004",
+      "community": "hancock-park",
+      "overlap_fraction": 0.22211814797961382
+    },
+    {
+      "zip": "90004",
+      "community": "koreatown",
+      "overlap_fraction": 0.2510315719655007
+    },
+    {
+      "zip": "90004",
+      "community": "larchmont",
+      "overlap_fraction": 0.15419834907070532
+    },
+    {
+      "zip": "90004",
+      "community": "westlake",
+      "overlap_fraction": 0.029985659651387962
+    },
+    {
+      "zip": "90004",
+      "community": "windsor-square",
+      "overlap_fraction": 0.11471486438553764
+    },
+    {
+      "zip": "90005",
+      "community": "hancock-park",
+      "overlap_fraction": 0.06845583561824259
+    },
+    {
+      "zip": "90005",
+      "community": "koreatown",
+      "overlap_fraction": 0.6121018068821449
+    },
+    {
+      "zip": "90005",
+      "community": "mid-wilshire",
+      "overlap_fraction": 0.19463986078539944
+    },
+    {
+      "zip": "90005",
+      "community": "westlake",
+      "overlap_fraction": 0.08218033121259136
+    },
+    {
+      "zip": "90005",
+      "community": "windsor-square",
+      "overlap_fraction": 0.04262216550162188
+    },
+    {
+      "zip": "90006",
+      "community": "harvard-heights",
+      "overlap_fraction": 0.234947768727414
+    },
+    {
+      "zip": "90006",
+      "community": "koreatown",
+      "overlap_fraction": 0.14558049347665322
+    },
+    {
+      "zip": "90006",
+      "community": "pico-union",
+      "overlap_fraction": 0.5358363127209677
+    },
+    {
+      "zip": "90006",
+      "community": "westlake",
+      "overlap_fraction": 0.0836354250749651
+    },
+    {
+      "zip": "90007",
+      "community": "adams-normandie",
+      "overlap_fraction": 0.1691111073790628
+    },
+    {
+      "zip": "90007",
+      "community": "exposition-park",
+      "overlap_fraction": 0.13028293024904763
+    },
+    {
+      "zip": "90007",
+      "community": "historic-south-central",
+      "overlap_fraction": 0.24048557210037363
+    },
+    {
+      "zip": "90007",
+      "community": "pico-union",
+      "overlap_fraction": 0.09520749778603967
+    },
+    {
+      "zip": "90007",
+      "community": "university-park",
+      "overlap_fraction": 0.36491289248547637
+    },
+    {
+      "zip": "90008",
+      "community": "baldwin-hillscrenshaw",
+      "overlap_fraction": 0.44467374696471024
+    },
+    {
+      "zip": "90008",
+      "community": "ladera-heights",
+      "overlap_fraction": 0.23342882944112517
+    },
+    {
+      "zip": "90008",
+      "community": "leimert-park",
+      "overlap_fraction": 0.24701168906897675
+    },
+    {
+      "zip": "90008",
+      "community": "view-park-windsor-hills",
+      "overlap_fraction": 0.07488573452518787
+    },
+    {
+      "zip": "90010",
+      "community": "hancock-park",
+      "overlap_fraction": 0.09514079925122443
+    },
+    {
+      "zip": "90010",
+      "community": "koreatown",
+      "overlap_fraction": 0.5539606461304523
+    },
+    {
+      "zip": "90010",
+      "community": "mid-wilshire",
+      "overlap_fraction": 0.17599022643434117
+    },
+    {
+      "zip": "90010",
+      "community": "westlake",
+      "overlap_fraction": 0.059978051966265634
+    },
+    {
+      "zip": "90010",
+      "community": "windsor-square",
+      "overlap_fraction": 0.11493027621771651
+    },
+    {
+      "zip": "90011",
+      "community": "central-alameda",
+      "overlap_fraction": 0.3821381770609512
+    },
+    {
+      "zip": "90011",
+      "community": "florence",
+      "overlap_fraction": 0.012245318395492588
+    },
+    {
+      "zip": "90011",
+      "community": "historic-south-central",
+      "overlap_fraction": 0.3735190847894663
+    },
+    {
+      "zip": "90011",
+      "community": "south-park",
+      "overlap_fraction": 0.23209741975408987
+    },
+    {
+      "zip": "90012",
+      "community": "chinatown",
+      "overlap_fraction": 0.25976762961040323
+    },
+    {
+      "zip": "90012",
+      "community": "downtown",
+      "overlap_fraction": 0.3169043772206175
+    },
+    {
+      "zip": "90012",
+      "community": "echo-park",
+      "overlap_fraction": 0.04580350284612587
+    },
+    {
+      "zip": "90012",
+      "community": "elysian-park",
+      "overlap_fraction": 0.3775244903228534
+    },
+    {
+      "zip": "90013",
+      "community": "downtown",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90014",
+      "community": "downtown",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90015",
+      "community": "downtown",
+      "overlap_fraction": 0.7075599924003138
+    },
+    {
+      "zip": "90015",
+      "community": "historic-south-central",
+      "overlap_fraction": 0.0184812714445275
+    },
+    {
+      "zip": "90015",
+      "community": "pico-union",
+      "overlap_fraction": 0.22693769167762076
+    },
+    {
+      "zip": "90015",
+      "community": "westlake",
+      "overlap_fraction": 0.047021044477538076
+    },
+    {
+      "zip": "90016",
+      "community": "baldwin-hillscrenshaw",
+      "overlap_fraction": 0.33065615453065106
+    },
+    {
+      "zip": "90016",
+      "community": "culver-city",
+      "overlap_fraction": 0.013480005483492341
+    },
+    {
+      "zip": "90016",
+      "community": "mid-city",
+      "overlap_fraction": 0.24827861258541195
+    },
+    {
+      "zip": "90016",
+      "community": "west-adams",
+      "overlap_fraction": 0.40758522740044467
+    },
+    {
+      "zip": "90017",
+      "community": "downtown",
+      "overlap_fraction": 0.25503322817470286
+    },
+    {
+      "zip": "90017",
+      "community": "westlake",
+      "overlap_fraction": 0.7449667718252971
+    },
+    {
+      "zip": "90018",
+      "community": "adams-normandie",
+      "overlap_fraction": 0.1303759151687318
+    },
+    {
+      "zip": "90018",
+      "community": "arlington-heights",
+      "overlap_fraction": 0.09981505540078679
+    },
+    {
+      "zip": "90018",
+      "community": "exposition-park",
+      "overlap_fraction": 0.18134926557904005
+    },
+    {
+      "zip": "90018",
+      "community": "harvard-heights",
+      "overlap_fraction": 0.05221872128713235
+    },
+    {
+      "zip": "90018",
+      "community": "jefferson-park",
+      "overlap_fraction": 0.46739306382537577
+    },
+    {
+      "zip": "90018",
+      "community": "leimert-park",
+      "overlap_fraction": 0.06884797873893334
+    },
+    {
+      "zip": "90019",
+      "community": "arlington-heights",
+      "overlap_fraction": 0.18915245830080327
+    },
+    {
+      "zip": "90019",
+      "community": "harvard-heights",
+      "overlap_fraction": 0.04402129543573932
+    },
+    {
+      "zip": "90019",
+      "community": "koreatown",
+      "overlap_fraction": 0.039870765456279884
+    },
+    {
+      "zip": "90019",
+      "community": "mid-city",
+      "overlap_fraction": 0.34682551057606775
+    },
+    {
+      "zip": "90019",
+      "community": "mid-wilshire",
+      "overlap_fraction": 0.38012997023110984
+    },
+    {
+      "zip": "90020",
+      "community": "hancock-park",
+      "overlap_fraction": 0.19626073736388755
+    },
+    {
+      "zip": "90020",
+      "community": "koreatown",
+      "overlap_fraction": 0.526693192504764
+    },
+    {
+      "zip": "90020",
+      "community": "westlake",
+      "overlap_fraction": 0.05339827431686235
+    },
+    {
+      "zip": "90020",
+      "community": "windsor-square",
+      "overlap_fraction": 0.22364779581448627
+    },
+    {
+      "zip": "90021",
+      "community": "downtown",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90022",
+      "community": "commerce",
+      "overlap_fraction": 0.10993649889190561
+    },
+    {
+      "zip": "90022",
+      "community": "east-los-angeles",
+      "overlap_fraction": 0.8900635011080944
+    },
+    {
+      "zip": "90023",
+      "community": "boyle-heights",
+      "overlap_fraction": 0.48529533597189717
+    },
+    {
+      "zip": "90023",
+      "community": "commerce",
+      "overlap_fraction": 0.10329543513772262
+    },
+    {
+      "zip": "90023",
+      "community": "east-los-angeles",
+      "overlap_fraction": 0.18703213793677537
+    },
+    {
+      "zip": "90023",
+      "community": "vernon",
+      "overlap_fraction": 0.22437709095360486
+    },
+    {
+      "zip": "90024",
+      "community": "veterans-administration",
+      "overlap_fraction": 0.016745075168151154
+    },
+    {
+      "zip": "90024",
+      "community": "westwood",
+      "overlap_fraction": 0.9832549248318488
+    },
+    {
+      "zip": "90025",
+      "community": "brentwood",
+      "overlap_fraction": 0.012599656853436291
+    },
+    {
+      "zip": "90025",
+      "community": "century-city",
+      "overlap_fraction": 0.05213416152781419
+    },
+    {
+      "zip": "90025",
+      "community": "sawtelle",
+      "overlap_fraction": 0.5849735409265419
+    },
+    {
+      "zip": "90025",
+      "community": "veterans-administration",
+      "overlap_fraction": 0.031255288735738324
+    },
+    {
+      "zip": "90025",
+      "community": "west-los-angeles",
+      "overlap_fraction": 0.25845842679202063
+    },
+    {
+      "zip": "90025",
+      "community": "westwood",
+      "overlap_fraction": 0.060578925164448655
+    },
+    {
+      "zip": "90026",
+      "community": "echo-park",
+      "overlap_fraction": 0.485379216439872
+    },
+    {
+      "zip": "90026",
+      "community": "elysian-park",
+      "overlap_fraction": 0.060496534187690125
+    },
+    {
+      "zip": "90026",
+      "community": "silver-lake",
+      "overlap_fraction": 0.273329474790929
+    },
+    {
+      "zip": "90026",
+      "community": "westlake",
+      "overlap_fraction": 0.18079477458150892
+    },
+    {
+      "zip": "90027",
+      "community": "east-hollywood",
+      "overlap_fraction": 0.05925444164201989
+    },
+    {
+      "zip": "90027",
+      "community": "griffith-park",
+      "overlap_fraction": 0.6354630670124496
+    },
+    {
+      "zip": "90027",
+      "community": "los-feliz",
+      "overlap_fraction": 0.30528249134553054
+    },
+    {
+      "zip": "90028",
+      "community": "hollywood",
+      "overlap_fraction": 0.9675529476771159
+    },
+    {
+      "zip": "90028",
+      "community": "hollywood-hills",
+      "overlap_fraction": 0.032447052322884154
+    },
+    {
+      "zip": "90029",
+      "community": "east-hollywood",
+      "overlap_fraction": 0.8463654006956784
+    },
+    {
+      "zip": "90029",
+      "community": "hollywood",
+      "overlap_fraction": 0.015535900355966631
+    },
+    {
+      "zip": "90029",
+      "community": "silver-lake",
+      "overlap_fraction": 0.138098698948355
+    },
+    {
+      "zip": "90031",
+      "community": "elysian-park",
+      "overlap_fraction": 0.01834081728966004
+    },
+    {
+      "zip": "90031",
+      "community": "elysian-valley",
+      "overlap_fraction": 0.0814323534932882
+    },
+    {
+      "zip": "90031",
+      "community": "highland-park",
+      "overlap_fraction": 0.034123516391612006
+    },
+    {
+      "zip": "90031",
+      "community": "lincoln-heights",
+      "overlap_fraction": 0.6163852229623629
+    },
+    {
+      "zip": "90031",
+      "community": "montecito-heights",
+      "overlap_fraction": 0.24971808986307695
+    },
+    {
+      "zip": "90032",
+      "community": "el-sereno",
+      "overlap_fraction": 0.8281842110861747
+    },
+    {
+      "zip": "90032",
+      "community": "lincoln-heights",
+      "overlap_fraction": 0.041350688112634315
+    },
+    {
+      "zip": "90032",
+      "community": "montecito-heights",
+      "overlap_fraction": 0.1304651008011911
+    },
+    {
+      "zip": "90033",
+      "community": "boyle-heights",
+      "overlap_fraction": 0.986125675959614
+    },
+    {
+      "zip": "90033",
+      "community": "lincoln-heights",
+      "overlap_fraction": 0.013874324040386072
+    },
+    {
+      "zip": "90034",
+      "community": "beverlywood",
+      "overlap_fraction": 0.13211462902228657
+    },
+    {
+      "zip": "90034",
+      "community": "cheviot-hills",
+      "overlap_fraction": 0.026416996640370588
+    },
+    {
+      "zip": "90034",
+      "community": "mid-city",
+      "overlap_fraction": 0.27353450017544284
+    },
+    {
+      "zip": "90034",
+      "community": "palms",
+      "overlap_fraction": 0.5679338741619
+    },
+    {
+      "zip": "90035",
+      "community": "beverlywood",
+      "overlap_fraction": 0.18257950796220143
+    },
+    {
+      "zip": "90035",
+      "community": "carthay",
+      "overlap_fraction": 0.12290710113607209
+    },
+    {
+      "zip": "90035",
+      "community": "mid-city",
+      "overlap_fraction": 0.19769803099354055
+    },
+    {
+      "zip": "90035",
+      "community": "pico-robertson",
+      "overlap_fraction": 0.49681535990818587
+    },
+    {
+      "zip": "90036",
+      "community": "beverly-grove",
+      "overlap_fraction": 0.014999689309726167
+    },
+    {
+      "zip": "90036",
+      "community": "fairfax",
+      "overlap_fraction": 0.36173014354860855
+    },
+    {
+      "zip": "90036",
+      "community": "hancock-park",
+      "overlap_fraction": 0.20392056984328663
+    },
+    {
+      "zip": "90036",
+      "community": "mid-wilshire",
+      "overlap_fraction": 0.4193495972983785
+    },
+    {
+      "zip": "90037",
+      "community": "exposition-park",
+      "overlap_fraction": 0.17280348829337755
+    },
+    {
+      "zip": "90037",
+      "community": "historic-south-central",
+      "overlap_fraction": 0.11018620175062081
+    },
+    {
+      "zip": "90037",
+      "community": "south-park",
+      "overlap_fraction": 0.14015471042293154
+    },
+    {
+      "zip": "90037",
+      "community": "vermont-slauson",
+      "overlap_fraction": 0.10187353782400503
+    },
+    {
+      "zip": "90037",
+      "community": "vermont-square",
+      "overlap_fraction": 0.4749820617090651
+    },
+    {
+      "zip": "90038",
+      "community": "hancock-park",
+      "overlap_fraction": 0.011631325343653109
+    },
+    {
+      "zip": "90038",
+      "community": "hollywood",
+      "overlap_fraction": 0.959649014438827
+    },
+    {
+      "zip": "90038",
+      "community": "larchmont",
+      "overlap_fraction": 0.015287301721794396
+    },
+    {
+      "zip": "90038",
+      "community": "west-hollywood",
+      "overlap_fraction": 0.01343235849572548
+    },
+    {
+      "zip": "90039",
+      "community": "atwater-village",
+      "overlap_fraction": 0.44229174251739123
+    },
+    {
+      "zip": "90039",
+      "community": "echo-park",
+      "overlap_fraction": 0.05839757278532435
+    },
+    {
+      "zip": "90039",
+      "community": "elysian-valley",
+      "overlap_fraction": 0.10644333027452338
+    },
+    {
+      "zip": "90039",
+      "community": "glassell-park",
+      "overlap_fraction": 0.013231916312316655
+    },
+    {
+      "zip": "90039",
+      "community": "griffith-park",
+      "overlap_fraction": 0.03965108791949956
+    },
+    {
+      "zip": "90039",
+      "community": "silver-lake",
+      "overlap_fraction": 0.3399843501909449
+    },
+    {
+      "zip": "90040",
+      "community": "commerce",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90041",
+      "community": "eagle-rock",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90042",
+      "community": "eagle-rock",
+      "overlap_fraction": 0.07464942758481372
+    },
+    {
+      "zip": "90042",
+      "community": "highland-park",
+      "overlap_fraction": 0.695000182123043
+    },
+    {
+      "zip": "90042",
+      "community": "montecito-heights",
+      "overlap_fraction": 0.1801796185952395
+    },
+    {
+      "zip": "90042",
+      "community": "mount-washington",
+      "overlap_fraction": 0.050170771696903815
+    },
+    {
+      "zip": "90043",
+      "community": "hyde-park",
+      "overlap_fraction": 0.6894361181302255
+    },
+    {
+      "zip": "90043",
+      "community": "view-park-windsor-hills",
+      "overlap_fraction": 0.3105638818697744
+    },
+    {
+      "zip": "90044",
+      "community": "athens",
+      "overlap_fraction": 0.10040474073513114
+    },
+    {
+      "zip": "90044",
+      "community": "harbor-gateway",
+      "overlap_fraction": 0.046709372852711824
+    },
+    {
+      "zip": "90044",
+      "community": "vermont-knolls",
+      "overlap_fraction": 0.20160360767669508
+    },
+    {
+      "zip": "90044",
+      "community": "vermont-slauson",
+      "overlap_fraction": 0.20174782005755518
+    },
+    {
+      "zip": "90044",
+      "community": "vermont-vista",
+      "overlap_fraction": 0.24779530058629337
+    },
+    {
+      "zip": "90044",
+      "community": "westmont",
+      "overlap_fraction": 0.20173915809161336
+    },
+    {
+      "zip": "90045",
+      "community": "westchester",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90046",
+      "community": "beverly-crest",
+      "overlap_fraction": 0.016025213563078827
+    },
+    {
+      "zip": "90046",
+      "community": "beverly-grove",
+      "overlap_fraction": 0.026412490601018683
+    },
+    {
+      "zip": "90046",
+      "community": "fairfax",
+      "overlap_fraction": 0.05580101245723521
+    },
+    {
+      "zip": "90046",
+      "community": "hollywood",
+      "overlap_fraction": 0.09569865702439248
+    },
+    {
+      "zip": "90046",
+      "community": "hollywood-hills",
+      "overlap_fraction": 0.023063930161387056
+    },
+    {
+      "zip": "90046",
+      "community": "hollywood-hills-west",
+      "overlap_fraction": 0.6239009271877086
+    },
+    {
+      "zip": "90046",
+      "community": "studio-city",
+      "overlap_fraction": 0.028895733315811706
+    },
+    {
+      "zip": "90046",
+      "community": "west-hollywood",
+      "overlap_fraction": 0.13020203568936736
+    },
+    {
+      "zip": "90047",
+      "community": "athens",
+      "overlap_fraction": 0.16810086764505558
+    },
+    {
+      "zip": "90047",
+      "community": "chesterfield-square",
+      "overlap_fraction": 0.10865887173019391
+    },
+    {
+      "zip": "90047",
+      "community": "gramercy-park",
+      "overlap_fraction": 0.23661277276116105
+    },
+    {
+      "zip": "90047",
+      "community": "harvard-park",
+      "overlap_fraction": 0.10358532954671551
+    },
+    {
+      "zip": "90047",
+      "community": "manchester-square",
+      "overlap_fraction": 0.20658029293682528
+    },
+    {
+      "zip": "90047",
+      "community": "westmont",
+      "overlap_fraction": 0.17646186538004868
+    },
+    {
+      "zip": "90048",
+      "community": "beverly-grove",
+      "overlap_fraction": 0.7220382151041955
+    },
+    {
+      "zip": "90048",
+      "community": "carthay",
+      "overlap_fraction": 0.1256137183499296
+    },
+    {
+      "zip": "90048",
+      "community": "west-hollywood",
+      "overlap_fraction": 0.15234806654587488
+    },
+    {
+      "zip": "90049",
+      "community": "bel-air",
+      "overlap_fraction": 0.09445286662337143
+    },
+    {
+      "zip": "90049",
+      "community": "brentwood",
+      "overlap_fraction": 0.8457735416219669
+    },
+    {
+      "zip": "90049",
+      "community": "encino",
+      "overlap_fraction": 0.01930252110636358
+    },
+    {
+      "zip": "90049",
+      "community": "pacific-palisades",
+      "overlap_fraction": 0.011023280767938808
+    },
+    {
+      "zip": "90049",
+      "community": "veterans-administration",
+      "overlap_fraction": 0.01315258602403452
+    },
+    {
+      "zip": "90049",
+      "community": "westwood",
+      "overlap_fraction": 0.0162952038563247
+    },
+    {
+      "zip": "90056",
+      "community": "ladera-heights",
+      "overlap_fraction": 0.7533126361901957
+    },
+    {
+      "zip": "90056",
+      "community": "view-park-windsor-hills",
+      "overlap_fraction": 0.191777761044404
+    },
+    {
+      "zip": "90056",
+      "community": "westchester",
+      "overlap_fraction": 0.05490960276540018
+    },
+    {
+      "zip": "90057",
+      "community": "westlake",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90058",
+      "community": "central-alameda",
+      "overlap_fraction": 0.11525235246940742
+    },
+    {
+      "zip": "90058",
+      "community": "downtown",
+      "overlap_fraction": 0.043628332004059016
+    },
+    {
+      "zip": "90058",
+      "community": "huntington-park",
+      "overlap_fraction": 0.012987311790324082
+    },
+    {
+      "zip": "90058",
+      "community": "vernon",
+      "overlap_fraction": 0.8281320037362095
+    },
+    {
+      "zip": "90059",
+      "community": "compton",
+      "overlap_fraction": 0.08747450063597437
+    },
+    {
+      "zip": "90059",
+      "community": "green-meadows",
+      "overlap_fraction": 0.20364004655532653
+    },
+    {
+      "zip": "90059",
+      "community": "watts",
+      "overlap_fraction": 0.3003674597376685
+    },
+    {
+      "zip": "90059",
+      "community": "willowbrook",
+      "overlap_fraction": 0.4085179930710307
+    },
+    {
+      "zip": "90061",
+      "community": "broadway-manchester",
+      "overlap_fraction": 0.2468305843154115
+    },
+    {
+      "zip": "90061",
+      "community": "green-meadows",
+      "overlap_fraction": 0.10811025110483971
+    },
+    {
+      "zip": "90061",
+      "community": "harbor-gateway",
+      "overlap_fraction": 0.05162203320998555
+    },
+    {
+      "zip": "90061",
+      "community": "vermont-vista",
+      "overlap_fraction": 0.05794392705593265
+    },
+    {
+      "zip": "90061",
+      "community": "willowbrook",
+      "overlap_fraction": 0.5354932043138305
+    },
+    {
+      "zip": "90062",
+      "community": "chesterfield-square",
+      "overlap_fraction": 0.06295690512104125
+    },
+    {
+      "zip": "90062",
+      "community": "exposition-park",
+      "overlap_fraction": 0.24336605614895665
+    },
+    {
+      "zip": "90062",
+      "community": "harvard-park",
+      "overlap_fraction": 0.06623026734889263
+    },
+    {
+      "zip": "90062",
+      "community": "hyde-park",
+      "overlap_fraction": 0.014668238454309628
+    },
+    {
+      "zip": "90062",
+      "community": "vermont-square",
+      "overlap_fraction": 0.6127785329267998
+    },
+    {
+      "zip": "90063",
+      "community": "boyle-heights",
+      "overlap_fraction": 0.2207273357888014
+    },
+    {
+      "zip": "90063",
+      "community": "east-los-angeles",
+      "overlap_fraction": 0.7657305961778643
+    },
+    {
+      "zip": "90063",
+      "community": "el-sereno",
+      "overlap_fraction": 0.013542068033334256
+    },
+    {
+      "zip": "90064",
+      "community": "century-city",
+      "overlap_fraction": 0.051673729927420815
+    },
+    {
+      "zip": "90064",
+      "community": "cheviot-hills",
+      "overlap_fraction": 0.3757195589303698
+    },
+    {
+      "zip": "90064",
+      "community": "rancho-park",
+      "overlap_fraction": 0.15758619288750914
+    },
+    {
+      "zip": "90064",
+      "community": "sawtelle",
+      "overlap_fraction": 0.3097929361763761
+    },
+    {
+      "zip": "90064",
+      "community": "west-los-angeles",
+      "overlap_fraction": 0.10522758207832415
+    },
+    {
+      "zip": "90065",
+      "community": "cypress-park",
+      "overlap_fraction": 0.12633696260901967
+    },
+    {
+      "zip": "90065",
+      "community": "eagle-rock",
+      "overlap_fraction": 0.06252608455325855
+    },
+    {
+      "zip": "90065",
+      "community": "glassell-park",
+      "overlap_fraction": 0.47557077887671
+    },
+    {
+      "zip": "90065",
+      "community": "highland-park",
+      "overlap_fraction": 0.01648423401842357
+    },
+    {
+      "zip": "90065",
+      "community": "mount-washington",
+      "overlap_fraction": 0.3190819399425882
+    },
+    {
+      "zip": "90066",
+      "community": "culver-city",
+      "overlap_fraction": 0.09120777810427098
+    },
+    {
+      "zip": "90066",
+      "community": "del-rey",
+      "overlap_fraction": 0.2575088642923291
+    },
+    {
+      "zip": "90066",
+      "community": "mar-vista",
+      "overlap_fraction": 0.5802859093573723
+    },
+    {
+      "zip": "90066",
+      "community": "playa-vista",
+      "overlap_fraction": 0.07099744824602756
+    },
+    {
+      "zip": "90067",
+      "community": "beverly-hills",
+      "overlap_fraction": 0.026109727601569436
+    },
+    {
+      "zip": "90067",
+      "community": "century-city",
+      "overlap_fraction": 0.9738902723984305
+    },
+    {
+      "zip": "90068",
+      "community": "griffith-park",
+      "overlap_fraction": 0.029055113954195428
+    },
+    {
+      "zip": "90068",
+      "community": "hollywood-hills",
+      "overlap_fraction": 0.921181008056435
+    },
+    {
+      "zip": "90068",
+      "community": "hollywood-hills-west",
+      "overlap_fraction": 0.021390103743802784
+    },
+    {
+      "zip": "90068",
+      "community": "studio-city",
+      "overlap_fraction": 0.028373774245566766
+    },
+    {
+      "zip": "90069",
+      "community": "beverly-grove",
+      "overlap_fraction": 0.0653279811700359
+    },
+    {
+      "zip": "90069",
+      "community": "hollywood-hills-west",
+      "overlap_fraction": 0.5416605894350468
+    },
+    {
+      "zip": "90069",
+      "community": "west-hollywood",
+      "overlap_fraction": 0.3930114293949173
+    },
+    {
+      "zip": "90071",
+      "community": "downtown",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90073",
+      "community": "brentwood",
+      "overlap_fraction": 0.08038353001962689
+    },
+    {
+      "zip": "90073",
+      "community": "veterans-administration",
+      "overlap_fraction": 0.9196164699803732
+    },
+    {
+      "zip": "90077",
+      "community": "bel-air",
+      "overlap_fraction": 0.6826199257688821
+    },
+    {
+      "zip": "90077",
+      "community": "beverly-crest",
+      "overlap_fraction": 0.29359105175752487
+    },
+    {
+      "zip": "90077",
+      "community": "sherman-oaks",
+      "overlap_fraction": 0.023789022473593022
+    },
+    {
+      "zip": "90089",
+      "community": "university-park",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90090",
+      "community": "echo-park",
+      "overlap_fraction": 0.0186702831734757
+    },
+    {
+      "zip": "90090",
+      "community": "elysian-park",
+      "overlap_fraction": 0.9813297168265243
+    },
+    {
+      "zip": "90094",
+      "community": "playa-del-rey",
+      "overlap_fraction": 0.4213701009684374
+    },
+    {
+      "zip": "90094",
+      "community": "playa-vista",
+      "overlap_fraction": 0.505258150879248
+    },
+    {
+      "zip": "90094",
+      "community": "westchester",
+      "overlap_fraction": 0.07337174815231466
+    },
+    {
+      "zip": "90095",
+      "community": "westwood",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90201",
+      "community": "bell",
+      "overlap_fraction": 0.40974958407533524
+    },
+    {
+      "zip": "90201",
+      "community": "bell-gardens",
+      "overlap_fraction": 0.39805155912045737
+    },
+    {
+      "zip": "90201",
+      "community": "cudahy",
+      "overlap_fraction": 0.1921988568042074
+    },
+    {
+      "zip": "90210",
+      "community": "beverly-crest",
+      "overlap_fraction": 0.5633567757467354
+    },
+    {
+      "zip": "90210",
+      "community": "beverly-hills",
+      "overlap_fraction": 0.378412749609205
+    },
+    {
+      "zip": "90210",
+      "community": "sherman-oaks",
+      "overlap_fraction": 0.044292073147778555
+    },
+    {
+      "zip": "90210",
+      "community": "studio-city",
+      "overlap_fraction": 0.013938401496281137
+    },
+    {
+      "zip": "90211",
+      "community": "beverly-hills",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90212",
+      "community": "beverly-hills",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90220",
+      "community": "compton",
+      "overlap_fraction": 0.7348350380585187
+    },
+    {
+      "zip": "90220",
+      "community": "rancho-dominguez",
+      "overlap_fraction": 0.19729114229595937
+    },
+    {
+      "zip": "90220",
+      "community": "west-compton",
+      "overlap_fraction": 0.06787381964552196
+    },
+    {
+      "zip": "90221",
+      "community": "carson",
+      "overlap_fraction": 0.012206813472242738
+    },
+    {
+      "zip": "90221",
+      "community": "compton",
+      "overlap_fraction": 0.5829237877359724
+    },
+    {
+      "zip": "90221",
+      "community": "east-compton",
+      "overlap_fraction": 0.15548595334393034
+    },
+    {
+      "zip": "90221",
+      "community": "rancho-dominguez",
+      "overlap_fraction": 0.2493834454478545
+    },
+    {
+      "zip": "90222",
+      "community": "compton",
+      "overlap_fraction": 0.6439980389248611
+    },
+    {
+      "zip": "90222",
+      "community": "willowbrook",
+      "overlap_fraction": 0.35600196107513893
+    },
+    {
+      "zip": "90230",
+      "community": "culver-city",
+      "overlap_fraction": 0.5742404218642613
+    },
+    {
+      "zip": "90230",
+      "community": "del-rey",
+      "overlap_fraction": 0.15918627453570108
+    },
+    {
+      "zip": "90230",
+      "community": "ladera-heights",
+      "overlap_fraction": 0.20155075042172016
+    },
+    {
+      "zip": "90230",
+      "community": "playa-vista",
+      "overlap_fraction": 0.06502255317831745
+    },
+    {
+      "zip": "90232",
+      "community": "culver-city",
+      "overlap_fraction": 0.9450637964733218
+    },
+    {
+      "zip": "90232",
+      "community": "palms",
+      "overlap_fraction": 0.054936203526678155
+    },
+    {
+      "zip": "90240",
+      "community": "downey",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90241",
+      "community": "downey",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90242",
+      "community": "downey",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90245",
+      "community": "el-segundo",
+      "overlap_fraction": 0.9871505247613135
+    },
+    {
+      "zip": "90245",
+      "community": "hawthorne",
+      "overlap_fraction": 0.012849475238686531
+    },
+    {
+      "zip": "90247",
+      "community": "gardena",
+      "overlap_fraction": 0.7287270996111495
+    },
+    {
+      "zip": "90247",
+      "community": "harbor-gateway",
+      "overlap_fraction": 0.27127290038885055
+    },
+    {
+      "zip": "90248",
+      "community": "carson",
+      "overlap_fraction": 0.31355607390227314
+    },
+    {
+      "zip": "90248",
+      "community": "gardena",
+      "overlap_fraction": 0.10706081304385438
+    },
+    {
+      "zip": "90248",
+      "community": "harbor-gateway",
+      "overlap_fraction": 0.3262412224348454
+    },
+    {
+      "zip": "90248",
+      "community": "west-compton",
+      "overlap_fraction": 0.25314189061902714
+    },
+    {
+      "zip": "90249",
+      "community": "alondra-park",
+      "overlap_fraction": 0.11479084612869321
+    },
+    {
+      "zip": "90249",
+      "community": "gardena",
+      "overlap_fraction": 0.8852091538713068
+    },
+    {
+      "zip": "90250",
+      "community": "del-aire",
+      "overlap_fraction": 0.122677697606113
+    },
+    {
+      "zip": "90250",
+      "community": "hawthorne",
+      "overlap_fraction": 0.877322302393887
+    },
+    {
+      "zip": "90254",
+      "community": "hermosa-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90255",
+      "community": "florence-firestone",
+      "overlap_fraction": 0.03961712921071408
+    },
+    {
+      "zip": "90255",
+      "community": "huntington-park",
+      "overlap_fraction": 0.7608949101799292
+    },
+    {
+      "zip": "90255",
+      "community": "walnut-park",
+      "overlap_fraction": 0.1994879606093567
+    },
+    {
+      "zip": "90260",
+      "community": "alondra-park",
+      "overlap_fraction": 0.2285450547899701
+    },
+    {
+      "zip": "90260",
+      "community": "hawthorne",
+      "overlap_fraction": 0.023777315117103463
+    },
+    {
+      "zip": "90260",
+      "community": "lawndale",
+      "overlap_fraction": 0.7476776300929264
+    },
+    {
+      "zip": "90261",
+      "community": "hawthorne",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90262",
+      "community": "lynwood",
+      "overlap_fraction": 0.9819242176693366
+    },
+    {
+      "zip": "90262",
+      "community": "paramount",
+      "overlap_fraction": 0.01807578233066344
+    },
+    {
+      "zip": "90263",
+      "community": "unincorporated-santa-monica-mountains",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90265",
+      "community": "malibu",
+      "overlap_fraction": 0.24390930783947243
+    },
+    {
+      "zip": "90265",
+      "community": "topanga",
+      "overlap_fraction": 0.0357819675218748
+    },
+    {
+      "zip": "90265",
+      "community": "unincorporated-santa-monica-mountains",
+      "overlap_fraction": 0.7203087246386527
+    },
+    {
+      "zip": "90266",
+      "community": "manhattan-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90270",
+      "community": "maywood",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90272",
+      "community": "brentwood",
+      "overlap_fraction": 0.08444090112968489
+    },
+    {
+      "zip": "90272",
+      "community": "pacific-palisades",
+      "overlap_fraction": 0.9155590988703151
+    },
+    {
+      "zip": "90274",
+      "community": "palos-verdes-estates",
+      "overlap_fraction": 0.39659210858567334
+    },
+    {
+      "zip": "90274",
+      "community": "rolling-hills",
+      "overlap_fraction": 0.2958250713440388
+    },
+    {
+      "zip": "90274",
+      "community": "rolling-hills-estates",
+      "overlap_fraction": 0.30758282007028787
+    },
+    {
+      "zip": "90275",
+      "community": "rancho-palos-verdes",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90277",
+      "community": "redondo-beach",
+      "overlap_fraction": 0.758966506265132
+    },
+    {
+      "zip": "90277",
+      "community": "torrance",
+      "overlap_fraction": 0.2410334937348681
+    },
+    {
+      "zip": "90278",
+      "community": "redondo-beach",
+      "overlap_fraction": 0.97489807673365
+    },
+    {
+      "zip": "90278",
+      "community": "torrance",
+      "overlap_fraction": 0.02510192326635001
+    },
+    {
+      "zip": "90280",
+      "community": "lynwood",
+      "overlap_fraction": 0.010498140434125558
+    },
+    {
+      "zip": "90280",
+      "community": "south-gate",
+      "overlap_fraction": 0.9895018595658744
+    },
+    {
+      "zip": "90290",
+      "community": "calabasas",
+      "overlap_fraction": 0.024194130609336967
+    },
+    {
+      "zip": "90290",
+      "community": "topanga",
+      "overlap_fraction": 0.8424406038380391
+    },
+    {
+      "zip": "90290",
+      "community": "unincorporated-santa-monica-mountains",
+      "overlap_fraction": 0.11738933154724285
+    },
+    {
+      "zip": "90290",
+      "community": "woodland-hills",
+      "overlap_fraction": 0.015975934005381092
+    },
+    {
+      "zip": "90291",
+      "community": "culver-city",
+      "overlap_fraction": 0.01525304486688853
+    },
+    {
+      "zip": "90291",
+      "community": "venice",
+      "overlap_fraction": 0.9847469551331114
+    },
+    {
+      "zip": "90292",
+      "community": "del-rey",
+      "overlap_fraction": 0.25912578645995793
+    },
+    {
+      "zip": "90292",
+      "community": "marina-del-rey",
+      "overlap_fraction": 0.483650928328964
+    },
+    {
+      "zip": "90292",
+      "community": "venice",
+      "overlap_fraction": 0.257223285211078
+    },
+    {
+      "zip": "90293",
+      "community": "playa-del-rey",
+      "overlap_fraction": 0.9368399380950484
+    },
+    {
+      "zip": "90293",
+      "community": "westchester",
+      "overlap_fraction": 0.06316006190495153
+    },
+    {
+      "zip": "90301",
+      "community": "inglewood",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90302",
+      "community": "inglewood",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90303",
+      "community": "hawthorne",
+      "overlap_fraction": 0.04579513483434785
+    },
+    {
+      "zip": "90303",
+      "community": "inglewood",
+      "overlap_fraction": 0.9542048651656522
+    },
+    {
+      "zip": "90304",
+      "community": "del-aire",
+      "overlap_fraction": 0.07554943021941575
+    },
+    {
+      "zip": "90304",
+      "community": "hawthorne",
+      "overlap_fraction": 0.12271036190024501
+    },
+    {
+      "zip": "90304",
+      "community": "inglewood",
+      "overlap_fraction": 0.1489397870780615
+    },
+    {
+      "zip": "90304",
+      "community": "lennox",
+      "overlap_fraction": 0.6528004208022777
+    },
+    {
+      "zip": "90305",
+      "community": "inglewood",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90401",
+      "community": "santa-monica",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90402",
+      "community": "brentwood",
+      "overlap_fraction": 0.010950607616908446
+    },
+    {
+      "zip": "90402",
+      "community": "pacific-palisades",
+      "overlap_fraction": 0.22913592311393138
+    },
+    {
+      "zip": "90402",
+      "community": "santa-monica",
+      "overlap_fraction": 0.7599134692691601
+    },
+    {
+      "zip": "90403",
+      "community": "santa-monica",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90404",
+      "community": "santa-monica",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90405",
+      "community": "santa-monica",
+      "overlap_fraction": 0.9632872439410389
+    },
+    {
+      "zip": "90405",
+      "community": "sawtelle",
+      "overlap_fraction": 0.01007805675042254
+    },
+    {
+      "zip": "90405",
+      "community": "venice",
+      "overlap_fraction": 0.026634699308538557
+    },
+    {
+      "zip": "90501",
+      "community": "harbor-gateway",
+      "overlap_fraction": 0.2959340734909095
+    },
+    {
+      "zip": "90501",
+      "community": "torrance",
+      "overlap_fraction": 0.7040659265090905
+    },
+    {
+      "zip": "90502",
+      "community": "carson",
+      "overlap_fraction": 0.010574173264881347
+    },
+    {
+      "zip": "90502",
+      "community": "harbor-gateway",
+      "overlap_fraction": 0.26599234774030867
+    },
+    {
+      "zip": "90502",
+      "community": "west-carson",
+      "overlap_fraction": 0.72343347899481
+    },
+    {
+      "zip": "90503",
+      "community": "torrance",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90504",
+      "community": "torrance",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90505",
+      "community": "torrance",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90506",
+      "community": "alondra-park",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90601",
+      "community": "avocado-heights",
+      "overlap_fraction": 0.10164623761522588
+    },
+    {
+      "zip": "90601",
+      "community": "hacienda-heights",
+      "overlap_fraction": 0.010769467433038712
+    },
+    {
+      "zip": "90601",
+      "community": "industry",
+      "overlap_fraction": 0.06752270013322625
+    },
+    {
+      "zip": "90601",
+      "community": "north-whittier",
+      "overlap_fraction": 0.43863783445427035
+    },
+    {
+      "zip": "90601",
+      "community": "pico-rivera",
+      "overlap_fraction": 0.030276890498483575
+    },
+    {
+      "zip": "90601",
+      "community": "whittier",
+      "overlap_fraction": 0.33929043363436384
+    },
+    {
+      "zip": "90601",
+      "community": "whittier-narrows",
+      "overlap_fraction": 0.011856436231391342
+    },
+    {
+      "zip": "90602",
+      "community": "whittier",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90603",
+      "community": "whittier",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90604",
+      "community": "east-whittier",
+      "overlap_fraction": 0.25602415979332566
+    },
+    {
+      "zip": "90604",
+      "community": "south-whittier",
+      "overlap_fraction": 0.6948746364450467
+    },
+    {
+      "zip": "90604",
+      "community": "whittier",
+      "overlap_fraction": 0.04910120376162768
+    },
+    {
+      "zip": "90605",
+      "community": "santa-fe-springs",
+      "overlap_fraction": 0.023186790180783807
+    },
+    {
+      "zip": "90605",
+      "community": "south-whittier",
+      "overlap_fraction": 0.37613709437781195
+    },
+    {
+      "zip": "90605",
+      "community": "whittier",
+      "overlap_fraction": 0.6006761154414042
+    },
+    {
+      "zip": "90606",
+      "community": "pico-rivera",
+      "overlap_fraction": 0.04036204841975175
+    },
+    {
+      "zip": "90606",
+      "community": "santa-fe-springs",
+      "overlap_fraction": 0.05228963547813992
+    },
+    {
+      "zip": "90606",
+      "community": "west-whittier-los-nietos",
+      "overlap_fraction": 0.6855317894357109
+    },
+    {
+      "zip": "90606",
+      "community": "whittier",
+      "overlap_fraction": 0.2218165266663974
+    },
+    {
+      "zip": "90623",
+      "community": "cerritos",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90630",
+      "community": "hawaiian-gardens",
+      "overlap_fraction": 0.1725939268587594
+    },
+    {
+      "zip": "90630",
+      "community": "lakewood",
+      "overlap_fraction": 0.8274060731412406
+    },
+    {
+      "zip": "90631",
+      "community": "la-habra-heights",
+      "overlap_fraction": 0.9727993561474313
+    },
+    {
+      "zip": "90631",
+      "community": "rowland-heights",
+      "overlap_fraction": 0.027200643852568682
+    },
+    {
+      "zip": "90638",
+      "community": "la-mirada",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90639",
+      "community": "la-mirada",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90640",
+      "community": "montebello",
+      "overlap_fraction": 0.9839680119233979
+    },
+    {
+      "zip": "90640",
+      "community": "whittier-narrows",
+      "overlap_fraction": 0.016031988076602163
+    },
+    {
+      "zip": "90650",
+      "community": "norwalk",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90660",
+      "community": "pico-rivera",
+      "overlap_fraction": 0.8962785586673836
+    },
+    {
+      "zip": "90660",
+      "community": "whittier-narrows",
+      "overlap_fraction": 0.10372144133261635
+    },
+    {
+      "zip": "90670",
+      "community": "santa-fe-springs",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90701",
+      "community": "artesia",
+      "overlap_fraction": 0.989852656352118
+    },
+    {
+      "zip": "90701",
+      "community": "cerritos",
+      "overlap_fraction": 0.010147343647881928
+    },
+    {
+      "zip": "90703",
+      "community": "cerritos",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90704",
+      "community": "avalon",
+      "overlap_fraction": 0.03936414581435831
+    },
+    {
+      "zip": "90704",
+      "community": "unincorporated-catalina-island",
+      "overlap_fraction": 0.9606358541856417
+    },
+    {
+      "zip": "90706",
+      "community": "bellflower",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90710",
+      "community": "harbor-city",
+      "overlap_fraction": 0.786769230913789
+    },
+    {
+      "zip": "90710",
+      "community": "west-carson",
+      "overlap_fraction": 0.21323076908621091
+    },
+    {
+      "zip": "90712",
+      "community": "lakewood",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90713",
+      "community": "bellflower",
+      "overlap_fraction": 0.010334340797751307
+    },
+    {
+      "zip": "90713",
+      "community": "lakewood",
+      "overlap_fraction": 0.9896656592022487
+    },
+    {
+      "zip": "90715",
+      "community": "lakewood",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90716",
+      "community": "hawaiian-gardens",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90717",
+      "community": "harbor-city",
+      "overlap_fraction": 0.05030720742204664
+    },
+    {
+      "zip": "90717",
+      "community": "lomita",
+      "overlap_fraction": 0.9392748493596632
+    },
+    {
+      "zip": "90717",
+      "community": "torrance",
+      "overlap_fraction": 0.010417943218290116
+    },
+    {
+      "zip": "90723",
+      "community": "compton",
+      "overlap_fraction": 0.030264679322414726
+    },
+    {
+      "zip": "90723",
+      "community": "paramount",
+      "overlap_fraction": 0.9697353206775853
+    },
+    {
+      "zip": "90731",
+      "community": "san-pedro",
+      "overlap_fraction": 0.8339038190781041
+    },
+    {
+      "zip": "90731",
+      "community": "wilmington",
+      "overlap_fraction": 0.16609618092189582
+    },
+    {
+      "zip": "90732",
+      "community": "lomita",
+      "overlap_fraction": 0.010964857452622559
+    },
+    {
+      "zip": "90732",
+      "community": "rancho-palos-verdes",
+      "overlap_fraction": 0.05533304743528175
+    },
+    {
+      "zip": "90732",
+      "community": "san-pedro",
+      "overlap_fraction": 0.9337020951120958
+    },
+    {
+      "zip": "90744",
+      "community": "harbor-city",
+      "overlap_fraction": 0.050837752822904654
+    },
+    {
+      "zip": "90744",
+      "community": "long-beach",
+      "overlap_fraction": 0.03694526933621874
+    },
+    {
+      "zip": "90744",
+      "community": "wilmington",
+      "overlap_fraction": 0.9122169778408766
+    },
+    {
+      "zip": "90745",
+      "community": "carson",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90746",
+      "community": "carson",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90747",
+      "community": "carson",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90755",
+      "community": "long-beach",
+      "overlap_fraction": 0.013464284233382494
+    },
+    {
+      "zip": "90755",
+      "community": "signal-hill",
+      "overlap_fraction": 0.9865357157666175
+    },
+    {
+      "zip": "90802",
+      "community": "long-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90803",
+      "community": "long-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90804",
+      "community": "long-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90805",
+      "community": "long-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90806",
+      "community": "long-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90807",
+      "community": "long-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90808",
+      "community": "long-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90810",
+      "community": "carson",
+      "overlap_fraction": 0.4732590409129071
+    },
+    {
+      "zip": "90810",
+      "community": "long-beach",
+      "overlap_fraction": 0.4615922181507097
+    },
+    {
+      "zip": "90810",
+      "community": "wilmington",
+      "overlap_fraction": 0.06514874093638329
+    },
+    {
+      "zip": "90813",
+      "community": "long-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90814",
+      "community": "long-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90815",
+      "community": "long-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90822",
+      "community": "long-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90831",
+      "community": "long-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90840",
+      "community": "long-beach",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "90846",
+      "community": "lakewood",
+      "overlap_fraction": 0.09036692826443532
+    },
+    {
+      "zip": "90846",
+      "community": "long-beach",
+      "overlap_fraction": 0.9096330717355647
+    },
+    {
+      "zip": "91001",
+      "community": "altadena",
+      "overlap_fraction": 0.2437620408137441
+    },
+    {
+      "zip": "91001",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.726209517357725
+    },
+    {
+      "zip": "91001",
+      "community": "pasadena",
+      "overlap_fraction": 0.030028441828530813
+    },
+    {
+      "zip": "91006",
+      "community": "arcadia",
+      "overlap_fraction": 0.8677843037887033
+    },
+    {
+      "zip": "91006",
+      "community": "mayflower-village",
+      "overlap_fraction": 0.06768056993293213
+    },
+    {
+      "zip": "91006",
+      "community": "monrovia",
+      "overlap_fraction": 0.017769303502486965
+    },
+    {
+      "zip": "91006",
+      "community": "north-el-monte",
+      "overlap_fraction": 0.046765822775877604
+    },
+    {
+      "zip": "91007",
+      "community": "arcadia",
+      "overlap_fraction": 0.9490669563356581
+    },
+    {
+      "zip": "91007",
+      "community": "east-san-gabriel",
+      "overlap_fraction": 0.03349537698499828
+    },
+    {
+      "zip": "91007",
+      "community": "temple-city",
+      "overlap_fraction": 0.017437666679343645
+    },
+    {
+      "zip": "91008",
+      "community": "bradbury",
+      "overlap_fraction": 0.9066056564704849
+    },
+    {
+      "zip": "91008",
+      "community": "duarte",
+      "overlap_fraction": 0.09339434352951526
+    },
+    {
+      "zip": "91010",
+      "community": "azusa",
+      "overlap_fraction": 0.18239917441448428
+    },
+    {
+      "zip": "91010",
+      "community": "bradbury",
+      "overlap_fraction": 0.016031070273676472
+    },
+    {
+      "zip": "91010",
+      "community": "duarte",
+      "overlap_fraction": 0.5107057484346191
+    },
+    {
+      "zip": "91010",
+      "community": "irwindale",
+      "overlap_fraction": 0.0940855468182094
+    },
+    {
+      "zip": "91010",
+      "community": "mayflower-village",
+      "overlap_fraction": 0.032902968670263634
+    },
+    {
+      "zip": "91010",
+      "community": "monrovia",
+      "overlap_fraction": 0.16387549138874716
+    },
+    {
+      "zip": "91011",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.46266519968932485
+    },
+    {
+      "zip": "91011",
+      "community": "la-canada-flintridge",
+      "overlap_fraction": 0.2871020118365402
+    },
+    {
+      "zip": "91011",
+      "community": "pasadena",
+      "overlap_fraction": 0.05622950135064765
+    },
+    {
+      "zip": "91011",
+      "community": "tujunga-canyons",
+      "overlap_fraction": 0.19400328712348722
+    },
+    {
+      "zip": "91016",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.5336672208908751
+    },
+    {
+      "zip": "91016",
+      "community": "duarte",
+      "overlap_fraction": 0.037976094597964895
+    },
+    {
+      "zip": "91016",
+      "community": "mayflower-village",
+      "overlap_fraction": 0.015984090784066967
+    },
+    {
+      "zip": "91016",
+      "community": "monrovia",
+      "overlap_fraction": 0.41237259372709295
+    },
+    {
+      "zip": "91020",
+      "community": "glendale",
+      "overlap_fraction": 0.29620088063007566
+    },
+    {
+      "zip": "91020",
+      "community": "la-canada-flintridge",
+      "overlap_fraction": 0.010316051600151824
+    },
+    {
+      "zip": "91020",
+      "community": "la-crescenta-montrose",
+      "overlap_fraction": 0.6934830677697725
+    },
+    {
+      "zip": "91023",
+      "community": "angeles-crest",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91024",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.9311429664633439
+    },
+    {
+      "zip": "91024",
+      "community": "monrovia",
+      "overlap_fraction": 0.01796913335827264
+    },
+    {
+      "zip": "91024",
+      "community": "sierra-madre",
+      "overlap_fraction": 0.0508879001783834
+    },
+    {
+      "zip": "91030",
+      "community": "south-pasadena",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91040",
+      "community": "hansen-dam",
+      "overlap_fraction": 0.1606111960901877
+    },
+    {
+      "zip": "91040",
+      "community": "lake-view-terrace",
+      "overlap_fraction": 0.045470983554102375
+    },
+    {
+      "zip": "91040",
+      "community": "shadow-hills",
+      "overlap_fraction": 0.3837918300698234
+    },
+    {
+      "zip": "91040",
+      "community": "sunland",
+      "overlap_fraction": 0.29084859308241395
+    },
+    {
+      "zip": "91040",
+      "community": "tujunga",
+      "overlap_fraction": 0.055250556765489775
+    },
+    {
+      "zip": "91040",
+      "community": "tujunga-canyons",
+      "overlap_fraction": 0.06402684043798271
+    },
+    {
+      "zip": "91042",
+      "community": "tujunga",
+      "overlap_fraction": 0.15685721239265765
+    },
+    {
+      "zip": "91042",
+      "community": "tujunga-canyons",
+      "overlap_fraction": 0.8431427876073424
+    },
+    {
+      "zip": "91046",
+      "community": "glendale",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91101",
+      "community": "pasadena",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91103",
+      "community": "pasadena",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91104",
+      "community": "altadena",
+      "overlap_fraction": 0.17813312173778356
+    },
+    {
+      "zip": "91104",
+      "community": "pasadena",
+      "overlap_fraction": 0.8218668782622164
+    },
+    {
+      "zip": "91105",
+      "community": "pasadena",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91106",
+      "community": "pasadena",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91107",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.06858339877966259
+    },
+    {
+      "zip": "91107",
+      "community": "east-pasadena",
+      "overlap_fraction": 0.16415472084764118
+    },
+    {
+      "zip": "91107",
+      "community": "pasadena",
+      "overlap_fraction": 0.7346619843002147
+    },
+    {
+      "zip": "91107",
+      "community": "san-pasqual",
+      "overlap_fraction": 0.0325998960724816
+    },
+    {
+      "zip": "91108",
+      "community": "pasadena",
+      "overlap_fraction": 0.017208687410511948
+    },
+    {
+      "zip": "91108",
+      "community": "san-marino",
+      "overlap_fraction": 0.9827913125894882
+    },
+    {
+      "zip": "91125",
+      "community": "pasadena",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91126",
+      "community": "pasadena",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91201",
+      "community": "glendale",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91202",
+      "community": "glendale",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91203",
+      "community": "glendale",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91204",
+      "community": "glendale",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91205",
+      "community": "glassell-park",
+      "overlap_fraction": 0.14326941176223304
+    },
+    {
+      "zip": "91205",
+      "community": "glendale",
+      "overlap_fraction": 0.8567305882377669
+    },
+    {
+      "zip": "91206",
+      "community": "eagle-rock",
+      "overlap_fraction": 0.017490017609492644
+    },
+    {
+      "zip": "91206",
+      "community": "glendale",
+      "overlap_fraction": 0.9825099823905074
+    },
+    {
+      "zip": "91207",
+      "community": "glendale",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91208",
+      "community": "glendale",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91210",
+      "community": "glendale",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91214",
+      "community": "glendale",
+      "overlap_fraction": 0.42965026927782757
+    },
+    {
+      "zip": "91214",
+      "community": "la-crescenta-montrose",
+      "overlap_fraction": 0.3305003900669153
+    },
+    {
+      "zip": "91214",
+      "community": "tujunga",
+      "overlap_fraction": 0.11687314850020637
+    },
+    {
+      "zip": "91214",
+      "community": "tujunga-canyons",
+      "overlap_fraction": 0.12297619215505078
+    },
+    {
+      "zip": "91301",
+      "community": "agoura-hills",
+      "overlap_fraction": 0.30497269102771696
+    },
+    {
+      "zip": "91301",
+      "community": "calabasas",
+      "overlap_fraction": 0.1107596026712078
+    },
+    {
+      "zip": "91301",
+      "community": "unincorporated-santa-monica-mountains",
+      "overlap_fraction": 0.5842677063010753
+    },
+    {
+      "zip": "91302",
+      "community": "calabasas",
+      "overlap_fraction": 0.5126947990359367
+    },
+    {
+      "zip": "91302",
+      "community": "hidden-hills",
+      "overlap_fraction": 0.056808268400125865
+    },
+    {
+      "zip": "91302",
+      "community": "unincorporated-santa-monica-mountains",
+      "overlap_fraction": 0.43049693256393745
+    },
+    {
+      "zip": "91303",
+      "community": "canoga-park",
+      "overlap_fraction": 0.9803900911723344
+    },
+    {
+      "zip": "91303",
+      "community": "winnetka",
+      "overlap_fraction": 0.019609908827665574
+    },
+    {
+      "zip": "91304",
+      "community": "canoga-park",
+      "overlap_fraction": 0.22539810629376952
+    },
+    {
+      "zip": "91304",
+      "community": "chatsworth",
+      "overlap_fraction": 0.18246127572207582
+    },
+    {
+      "zip": "91304",
+      "community": "chatsworth-reservoir",
+      "overlap_fraction": 0.16692674956640066
+    },
+    {
+      "zip": "91304",
+      "community": "west-hills",
+      "overlap_fraction": 0.4252138684177539
+    },
+    {
+      "zip": "91306",
+      "community": "winnetka",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91307",
+      "community": "west-hills",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91311",
+      "community": "chatsworth",
+      "overlap_fraction": 0.4979519176234561
+    },
+    {
+      "zip": "91311",
+      "community": "unincorporated-santa-susana-mountains",
+      "overlap_fraction": 0.5020480823765439
+    },
+    {
+      "zip": "91316",
+      "community": "encino",
+      "overlap_fraction": 0.8306810430153495
+    },
+    {
+      "zip": "91316",
+      "community": "sepulveda-basin",
+      "overlap_fraction": 0.10273768777089974
+    },
+    {
+      "zip": "91316",
+      "community": "tarzana",
+      "overlap_fraction": 0.06658126921375063
+    },
+    {
+      "zip": "91321",
+      "community": "santa-clarita",
+      "overlap_fraction": 0.4774030196638013
+    },
+    {
+      "zip": "91321",
+      "community": "tujunga-canyons",
+      "overlap_fraction": 0.23001034158359934
+    },
+    {
+      "zip": "91321",
+      "community": "unincorporated-santa-susana-mountains",
+      "overlap_fraction": 0.2925866387525993
+    },
+    {
+      "zip": "91324",
+      "community": "chatsworth",
+      "overlap_fraction": 0.015142318610127626
+    },
+    {
+      "zip": "91324",
+      "community": "northridge",
+      "overlap_fraction": 0.9038131823305412
+    },
+    {
+      "zip": "91324",
+      "community": "porter-ranch",
+      "overlap_fraction": 0.012302287325701178
+    },
+    {
+      "zip": "91324",
+      "community": "reseda",
+      "overlap_fraction": 0.01241039993016206
+    },
+    {
+      "zip": "91324",
+      "community": "winnetka",
+      "overlap_fraction": 0.05633181180346785
+    },
+    {
+      "zip": "91325",
+      "community": "granada-hills",
+      "overlap_fraction": 0.014849659543195455
+    },
+    {
+      "zip": "91325",
+      "community": "lake-balboa",
+      "overlap_fraction": 0.0994957902482688
+    },
+    {
+      "zip": "91325",
+      "community": "northridge",
+      "overlap_fraction": 0.8856545502085357
+    },
+    {
+      "zip": "91326",
+      "community": "chatsworth",
+      "overlap_fraction": 0.2112861867246624
+    },
+    {
+      "zip": "91326",
+      "community": "porter-ranch",
+      "overlap_fraction": 0.49061219542543305
+    },
+    {
+      "zip": "91326",
+      "community": "unincorporated-santa-susana-mountains",
+      "overlap_fraction": 0.2981016178499045
+    },
+    {
+      "zip": "91330",
+      "community": "northridge",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91331",
+      "community": "arleta",
+      "overlap_fraction": 0.3395681947033178
+    },
+    {
+      "zip": "91331",
+      "community": "pacoima",
+      "overlap_fraction": 0.6604318052966822
+    },
+    {
+      "zip": "91335",
+      "community": "reseda",
+      "overlap_fraction": 0.8829474750077957
+    },
+    {
+      "zip": "91335",
+      "community": "tarzana",
+      "overlap_fraction": 0.11705252499220435
+    },
+    {
+      "zip": "91340",
+      "community": "mission-hills",
+      "overlap_fraction": 0.032736652791783755
+    },
+    {
+      "zip": "91340",
+      "community": "pacoima",
+      "overlap_fraction": 0.24294942716259202
+    },
+    {
+      "zip": "91340",
+      "community": "san-fernando",
+      "overlap_fraction": 0.6659226109703915
+    },
+    {
+      "zip": "91340",
+      "community": "sylmar",
+      "overlap_fraction": 0.058391309075232746
+    },
+    {
+      "zip": "91342",
+      "community": "granada-hills",
+      "overlap_fraction": 0.013901282592669111
+    },
+    {
+      "zip": "91342",
+      "community": "lake-view-terrace",
+      "overlap_fraction": 0.0560391222470804
+    },
+    {
+      "zip": "91342",
+      "community": "lopezkagel-canyons",
+      "overlap_fraction": 0.056040288164767124
+    },
+    {
+      "zip": "91342",
+      "community": "sylmar",
+      "overlap_fraction": 0.19068243331194046
+    },
+    {
+      "zip": "91342",
+      "community": "tujunga-canyons",
+      "overlap_fraction": 0.6833368736835429
+    },
+    {
+      "zip": "91343",
+      "community": "north-hills",
+      "overlap_fraction": 0.885723528238393
+    },
+    {
+      "zip": "91343",
+      "community": "northridge",
+      "overlap_fraction": 0.11427647176160706
+    },
+    {
+      "zip": "91344",
+      "community": "granada-hills",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91345",
+      "community": "arleta",
+      "overlap_fraction": 0.04403268835162018
+    },
+    {
+      "zip": "91345",
+      "community": "mission-hills",
+      "overlap_fraction": 0.9436182688278762
+    },
+    {
+      "zip": "91345",
+      "community": "north-hills",
+      "overlap_fraction": 0.012349042820503538
+    },
+    {
+      "zip": "91350",
+      "community": "castaic-canyons",
+      "overlap_fraction": 0.25046579412017844
+    },
+    {
+      "zip": "91350",
+      "community": "santa-clarita",
+      "overlap_fraction": 0.7495342058798216
+    },
+    {
+      "zip": "91351",
+      "community": "castaic-canyons",
+      "overlap_fraction": 0.42404684753939903
+    },
+    {
+      "zip": "91351",
+      "community": "santa-clarita",
+      "overlap_fraction": 0.575953152460601
+    },
+    {
+      "zip": "91352",
+      "community": "glendale",
+      "overlap_fraction": 0.02537493348735037
+    },
+    {
+      "zip": "91352",
+      "community": "pacoima",
+      "overlap_fraction": 0.04359555216435335
+    },
+    {
+      "zip": "91352",
+      "community": "shadow-hills",
+      "overlap_fraction": 0.5186753564645366
+    },
+    {
+      "zip": "91352",
+      "community": "sun-valley",
+      "overlap_fraction": 0.3923037881344722
+    },
+    {
+      "zip": "91352",
+      "community": "tujunga",
+      "overlap_fraction": 0.02005036974928756
+    },
+    {
+      "zip": "91354",
+      "community": "castaic-canyons",
+      "overlap_fraction": 0.5865350635360659
+    },
+    {
+      "zip": "91354",
+      "community": "santa-clarita",
+      "overlap_fraction": 0.41346493646393395
+    },
+    {
+      "zip": "91355",
+      "community": "santa-clarita",
+      "overlap_fraction": 0.6967978982151952
+    },
+    {
+      "zip": "91355",
+      "community": "unincorporated-santa-susana-mountains",
+      "overlap_fraction": 0.3032021017848048
+    },
+    {
+      "zip": "91356",
+      "community": "tarzana",
+      "overlap_fraction": 0.9706462065173792
+    },
+    {
+      "zip": "91356",
+      "community": "woodland-hills",
+      "overlap_fraction": 0.029353793482620846
+    },
+    {
+      "zip": "91361",
+      "community": "unincorporated-santa-monica-mountains",
+      "overlap_fraction": 0.15104682631972127
+    },
+    {
+      "zip": "91361",
+      "community": "westlake-village",
+      "overlap_fraction": 0.8489531736802788
+    },
+    {
+      "zip": "91362",
+      "community": "westlake-village",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91364",
+      "community": "tarzana",
+      "overlap_fraction": 0.029112267577752916
+    },
+    {
+      "zip": "91364",
+      "community": "topanga",
+      "overlap_fraction": 0.03828291881878816
+    },
+    {
+      "zip": "91364",
+      "community": "woodland-hills",
+      "overlap_fraction": 0.9326048136034589
+    },
+    {
+      "zip": "91367",
+      "community": "winnetka",
+      "overlap_fraction": 0.020772047308324465
+    },
+    {
+      "zip": "91367",
+      "community": "woodland-hills",
+      "overlap_fraction": 0.9792279526916755
+    },
+    {
+      "zip": "91381",
+      "community": "stevenson-ranch",
+      "overlap_fraction": 0.0658175660603346
+    },
+    {
+      "zip": "91381",
+      "community": "unincorporated-santa-susana-mountains",
+      "overlap_fraction": 0.9341824339396654
+    },
+    {
+      "zip": "91382",
+      "community": "unincorporated-santa-susana-mountains",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91384",
+      "community": "castaic",
+      "overlap_fraction": 0.033786625252713705
+    },
+    {
+      "zip": "91384",
+      "community": "castaic-canyons",
+      "overlap_fraction": 0.10380461664971236
+    },
+    {
+      "zip": "91384",
+      "community": "hasley-canyon",
+      "overlap_fraction": 0.013059831275291651
+    },
+    {
+      "zip": "91384",
+      "community": "ridge-route",
+      "overlap_fraction": 0.7548057634861546
+    },
+    {
+      "zip": "91384",
+      "community": "unincorporated-santa-susana-mountains",
+      "overlap_fraction": 0.09454316333612779
+    },
+    {
+      "zip": "91387",
+      "community": "castaic-canyons",
+      "overlap_fraction": 0.11583940724693452
+    },
+    {
+      "zip": "91387",
+      "community": "santa-clarita",
+      "overlap_fraction": 0.4482485006113235
+    },
+    {
+      "zip": "91387",
+      "community": "tujunga-canyons",
+      "overlap_fraction": 0.435912092141742
+    },
+    {
+      "zip": "91390",
+      "community": "agua-dulce",
+      "overlap_fraction": 0.1251338505561367
+    },
+    {
+      "zip": "91390",
+      "community": "castaic-canyons",
+      "overlap_fraction": 0.6222239173836451
+    },
+    {
+      "zip": "91390",
+      "community": "green-valley",
+      "overlap_fraction": 0.01111878939194675
+    },
+    {
+      "zip": "91390",
+      "community": "palmdale",
+      "overlap_fraction": 0.022357398344839494
+    },
+    {
+      "zip": "91390",
+      "community": "ridge-route",
+      "overlap_fraction": 0.07128401528243435
+    },
+    {
+      "zip": "91390",
+      "community": "tujunga-canyons",
+      "overlap_fraction": 0.14788202904099765
+    },
+    {
+      "zip": "91401",
+      "community": "sherman-oaks",
+      "overlap_fraction": 0.26583989612691344
+    },
+    {
+      "zip": "91401",
+      "community": "valley-glen",
+      "overlap_fraction": 0.5372815806287438
+    },
+    {
+      "zip": "91401",
+      "community": "van-nuys",
+      "overlap_fraction": 0.19687852324434277
+    },
+    {
+      "zip": "91402",
+      "community": "arleta",
+      "overlap_fraction": 0.03631908514222187
+    },
+    {
+      "zip": "91402",
+      "community": "panorama-city",
+      "overlap_fraction": 0.9636809148577781
+    },
+    {
+      "zip": "91403",
+      "community": "encino",
+      "overlap_fraction": 0.1943178238587278
+    },
+    {
+      "zip": "91403",
+      "community": "sherman-oaks",
+      "overlap_fraction": 0.8056821761412721
+    },
+    {
+      "zip": "91405",
+      "community": "valley-glen",
+      "overlap_fraction": 0.09320163884332748
+    },
+    {
+      "zip": "91405",
+      "community": "van-nuys",
+      "overlap_fraction": 0.9067983611566725
+    },
+    {
+      "zip": "91406",
+      "community": "lake-balboa",
+      "overlap_fraction": 0.39109606696161553
+    },
+    {
+      "zip": "91406",
+      "community": "northridge",
+      "overlap_fraction": 0.012995931292164014
+    },
+    {
+      "zip": "91406",
+      "community": "sepulveda-basin",
+      "overlap_fraction": 0.018446841503785765
+    },
+    {
+      "zip": "91406",
+      "community": "van-nuys",
+      "overlap_fraction": 0.5774611602424347
+    },
+    {
+      "zip": "91411",
+      "community": "sepulveda-basin",
+      "overlap_fraction": 0.0248613169117521
+    },
+    {
+      "zip": "91411",
+      "community": "sherman-oaks",
+      "overlap_fraction": 0.2494215178362179
+    },
+    {
+      "zip": "91411",
+      "community": "van-nuys",
+      "overlap_fraction": 0.72571716525203
+    },
+    {
+      "zip": "91423",
+      "community": "sherman-oaks",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91436",
+      "community": "encino",
+      "overlap_fraction": 0.6263471141052157
+    },
+    {
+      "zip": "91436",
+      "community": "sepulveda-basin",
+      "overlap_fraction": 0.3736528858947842
+    },
+    {
+      "zip": "91501",
+      "community": "burbank",
+      "overlap_fraction": 0.9328619176710389
+    },
+    {
+      "zip": "91501",
+      "community": "glendale",
+      "overlap_fraction": 0.06713808232896115
+    },
+    {
+      "zip": "91502",
+      "community": "burbank",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91504",
+      "community": "burbank",
+      "overlap_fraction": 0.8920513847322926
+    },
+    {
+      "zip": "91504",
+      "community": "shadow-hills",
+      "overlap_fraction": 0.09078889023951439
+    },
+    {
+      "zip": "91504",
+      "community": "sun-valley",
+      "overlap_fraction": 0.017159725028193122
+    },
+    {
+      "zip": "91505",
+      "community": "burbank",
+      "overlap_fraction": 0.96135708733711
+    },
+    {
+      "zip": "91505",
+      "community": "sun-valley",
+      "overlap_fraction": 0.03864291266288997
+    },
+    {
+      "zip": "91506",
+      "community": "burbank",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91521",
+      "community": "burbank",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91522",
+      "community": "burbank",
+      "overlap_fraction": 0.9324345604652053
+    },
+    {
+      "zip": "91522",
+      "community": "hollywood-hills",
+      "overlap_fraction": 0.06756543953479467
+    },
+    {
+      "zip": "91523",
+      "community": "burbank",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91601",
+      "community": "north-hollywood",
+      "overlap_fraction": 0.813438686603584
+    },
+    {
+      "zip": "91601",
+      "community": "toluca-lake",
+      "overlap_fraction": 0.06539608977529324
+    },
+    {
+      "zip": "91601",
+      "community": "valley-village",
+      "overlap_fraction": 0.12116522362112268
+    },
+    {
+      "zip": "91602",
+      "community": "north-hollywood",
+      "overlap_fraction": 0.09781539335955838
+    },
+    {
+      "zip": "91602",
+      "community": "studio-city",
+      "overlap_fraction": 0.3501655931021033
+    },
+    {
+      "zip": "91602",
+      "community": "toluca-lake",
+      "overlap_fraction": 0.4923555771743898
+    },
+    {
+      "zip": "91602",
+      "community": "valley-village",
+      "overlap_fraction": 0.05966343636394842
+    },
+    {
+      "zip": "91604",
+      "community": "sherman-oaks",
+      "overlap_fraction": 0.05295092713431518
+    },
+    {
+      "zip": "91604",
+      "community": "studio-city",
+      "overlap_fraction": 0.9470490728656848
+    },
+    {
+      "zip": "91605",
+      "community": "north-hollywood",
+      "overlap_fraction": 0.19627336691721983
+    },
+    {
+      "zip": "91605",
+      "community": "sun-valley",
+      "overlap_fraction": 0.6130339921066714
+    },
+    {
+      "zip": "91605",
+      "community": "valley-glen",
+      "overlap_fraction": 0.19069264097610877
+    },
+    {
+      "zip": "91606",
+      "community": "north-hollywood",
+      "overlap_fraction": 0.6987706851749954
+    },
+    {
+      "zip": "91606",
+      "community": "valley-glen",
+      "overlap_fraction": 0.3012293148250046
+    },
+    {
+      "zip": "91607",
+      "community": "north-hollywood",
+      "overlap_fraction": 0.050127705727067706
+    },
+    {
+      "zip": "91607",
+      "community": "studio-city",
+      "overlap_fraction": 0.0754391958125338
+    },
+    {
+      "zip": "91607",
+      "community": "valley-glen",
+      "overlap_fraction": 0.227863579135677
+    },
+    {
+      "zip": "91607",
+      "community": "valley-village",
+      "overlap_fraction": 0.6465695193247215
+    },
+    {
+      "zip": "91608",
+      "community": "hollywood-hills",
+      "overlap_fraction": 0.014417827944616532
+    },
+    {
+      "zip": "91608",
+      "community": "studio-city",
+      "overlap_fraction": 0.17494301226436246
+    },
+    {
+      "zip": "91608",
+      "community": "universal-city",
+      "overlap_fraction": 0.810639159791021
+    },
+    {
+      "zip": "91702",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.8512114325117677
+    },
+    {
+      "zip": "91702",
+      "community": "azusa",
+      "overlap_fraction": 0.13525007390084837
+    },
+    {
+      "zip": "91702",
+      "community": "citrus",
+      "overlap_fraction": 0.013538493587383864
+    },
+    {
+      "zip": "91706",
+      "community": "baldwin-park",
+      "overlap_fraction": 0.4438376084315968
+    },
+    {
+      "zip": "91706",
+      "community": "irwindale",
+      "overlap_fraction": 0.5561623915684032
+    },
+    {
+      "zip": "91709",
+      "community": "pomona",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91711",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.2842868642411559
+    },
+    {
+      "zip": "91711",
+      "community": "claremont",
+      "overlap_fraction": 0.7157131357588441
+    },
+    {
+      "zip": "91722",
+      "community": "azusa",
+      "overlap_fraction": 0.015046504809239393
+    },
+    {
+      "zip": "91722",
+      "community": "charter-oak",
+      "overlap_fraction": 0.021494607670092453
+    },
+    {
+      "zip": "91722",
+      "community": "citrus",
+      "overlap_fraction": 0.04791637147012722
+    },
+    {
+      "zip": "91722",
+      "community": "covina",
+      "overlap_fraction": 0.6235896152967337
+    },
+    {
+      "zip": "91722",
+      "community": "vincent",
+      "overlap_fraction": 0.2919529007538072
+    },
+    {
+      "zip": "91723",
+      "community": "covina",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91724",
+      "community": "charter-oak",
+      "overlap_fraction": 0.13237920166487568
+    },
+    {
+      "zip": "91724",
+      "community": "covina",
+      "overlap_fraction": 0.4871287709215597
+    },
+    {
+      "zip": "91724",
+      "community": "san-dimas",
+      "overlap_fraction": 0.09790530947628466
+    },
+    {
+      "zip": "91724",
+      "community": "west-covina",
+      "overlap_fraction": 0.28258671793727996
+    },
+    {
+      "zip": "91731",
+      "community": "el-monte",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91732",
+      "community": "baldwin-park",
+      "overlap_fraction": 0.025909475006847926
+    },
+    {
+      "zip": "91732",
+      "community": "el-monte",
+      "overlap_fraction": 0.9109871745593691
+    },
+    {
+      "zip": "91732",
+      "community": "industry",
+      "overlap_fraction": 0.040509104890560116
+    },
+    {
+      "zip": "91732",
+      "community": "irwindale",
+      "overlap_fraction": 0.02259424554322292
+    },
+    {
+      "zip": "91733",
+      "community": "avocado-heights",
+      "overlap_fraction": 0.03558681421363934
+    },
+    {
+      "zip": "91733",
+      "community": "el-monte",
+      "overlap_fraction": 0.2084441976741092
+    },
+    {
+      "zip": "91733",
+      "community": "south-el-monte",
+      "overlap_fraction": 0.4759118598951409
+    },
+    {
+      "zip": "91733",
+      "community": "whittier-narrows",
+      "overlap_fraction": 0.2800571282171106
+    },
+    {
+      "zip": "91740",
+      "community": "glendora",
+      "overlap_fraction": 0.9864672435445299
+    },
+    {
+      "zip": "91740",
+      "community": "san-dimas",
+      "overlap_fraction": 0.013532756455470097
+    },
+    {
+      "zip": "91741",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.31416801685076823
+    },
+    {
+      "zip": "91741",
+      "community": "glendora",
+      "overlap_fraction": 0.6188045071199094
+    },
+    {
+      "zip": "91741",
+      "community": "san-dimas",
+      "overlap_fraction": 0.0670274760293224
+    },
+    {
+      "zip": "91744",
+      "community": "industry",
+      "overlap_fraction": 0.20966001151871835
+    },
+    {
+      "zip": "91744",
+      "community": "la-puente",
+      "overlap_fraction": 0.32754190352418516
+    },
+    {
+      "zip": "91744",
+      "community": "south-san-jose-hills",
+      "overlap_fraction": 0.15005362323535756
+    },
+    {
+      "zip": "91744",
+      "community": "valinda",
+      "overlap_fraction": 0.22082319601554395
+    },
+    {
+      "zip": "91744",
+      "community": "west-puente-valley",
+      "overlap_fraction": 0.09192126570619502
+    },
+    {
+      "zip": "91745",
+      "community": "hacienda-heights",
+      "overlap_fraction": 0.7976492378983276
+    },
+    {
+      "zip": "91745",
+      "community": "industry",
+      "overlap_fraction": 0.1000136847732308
+    },
+    {
+      "zip": "91745",
+      "community": "north-whittier",
+      "overlap_fraction": 0.043395946721288166
+    },
+    {
+      "zip": "91745",
+      "community": "whittier",
+      "overlap_fraction": 0.058941130607153336
+    },
+    {
+      "zip": "91746",
+      "community": "avocado-heights",
+      "overlap_fraction": 0.2671727469417339
+    },
+    {
+      "zip": "91746",
+      "community": "baldwin-park",
+      "overlap_fraction": 0.014073966868983106
+    },
+    {
+      "zip": "91746",
+      "community": "hacienda-heights",
+      "overlap_fraction": 0.01811678412628902
+    },
+    {
+      "zip": "91746",
+      "community": "industry",
+      "overlap_fraction": 0.35332713432340646
+    },
+    {
+      "zip": "91746",
+      "community": "la-puente",
+      "overlap_fraction": 0.0881102317472859
+    },
+    {
+      "zip": "91746",
+      "community": "north-whittier",
+      "overlap_fraction": 0.09736324119847746
+    },
+    {
+      "zip": "91746",
+      "community": "west-puente-valley",
+      "overlap_fraction": 0.1618358947938242
+    },
+    {
+      "zip": "91748",
+      "community": "industry",
+      "overlap_fraction": 0.19832225815134902
+    },
+    {
+      "zip": "91748",
+      "community": "rowland-heights",
+      "overlap_fraction": 0.8016777418486509
+    },
+    {
+      "zip": "91750",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.8484243080271101
+    },
+    {
+      "zip": "91750",
+      "community": "claremont",
+      "overlap_fraction": 0.04243874424872742
+    },
+    {
+      "zip": "91750",
+      "community": "la-verne",
+      "overlap_fraction": 0.10913694772416249
+    },
+    {
+      "zip": "91754",
+      "community": "monterey-park",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91755",
+      "community": "monterey-park",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91759",
+      "community": "angeles-crest",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91765",
+      "community": "diamond-bar",
+      "overlap_fraction": 0.7111960355899153
+    },
+    {
+      "zip": "91765",
+      "community": "south-diamond-bar",
+      "overlap_fraction": 0.2888039644100847
+    },
+    {
+      "zip": "91766",
+      "community": "pomona",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91767",
+      "community": "pomona",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91768",
+      "community": "pomona",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91770",
+      "community": "rosemead",
+      "overlap_fraction": 0.7874235396119632
+    },
+    {
+      "zip": "91770",
+      "community": "south-san-gabriel",
+      "overlap_fraction": 0.2125764603880368
+    },
+    {
+      "zip": "91773",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.05533142809334907
+    },
+    {
+      "zip": "91773",
+      "community": "la-verne",
+      "overlap_fraction": 0.013461953244980328
+    },
+    {
+      "zip": "91773",
+      "community": "pomona",
+      "overlap_fraction": 0.012630387917741905
+    },
+    {
+      "zip": "91773",
+      "community": "san-dimas",
+      "overlap_fraction": 0.9185762307439287
+    },
+    {
+      "zip": "91775",
+      "community": "east-san-gabriel",
+      "overlap_fraction": 0.5178797712956089
+    },
+    {
+      "zip": "91775",
+      "community": "san-gabriel",
+      "overlap_fraction": 0.40112241556895745
+    },
+    {
+      "zip": "91775",
+      "community": "san-marino",
+      "overlap_fraction": 0.011402285560375168
+    },
+    {
+      "zip": "91775",
+      "community": "temple-city",
+      "overlap_fraction": 0.06959552757505841
+    },
+    {
+      "zip": "91776",
+      "community": "alhambra",
+      "overlap_fraction": 0.022210192694565593
+    },
+    {
+      "zip": "91776",
+      "community": "east-san-gabriel",
+      "overlap_fraction": 0.1258652314462791
+    },
+    {
+      "zip": "91776",
+      "community": "rosemead",
+      "overlap_fraction": 0.01188728258904471
+    },
+    {
+      "zip": "91776",
+      "community": "san-gabriel",
+      "overlap_fraction": 0.8400372932701106
+    },
+    {
+      "zip": "91780",
+      "community": "el-monte",
+      "overlap_fraction": 0.01278107628326148
+    },
+    {
+      "zip": "91780",
+      "community": "north-el-monte",
+      "overlap_fraction": 0.02958956318519389
+    },
+    {
+      "zip": "91780",
+      "community": "temple-city",
+      "overlap_fraction": 0.9576293605315447
+    },
+    {
+      "zip": "91789",
+      "community": "diamond-bar",
+      "overlap_fraction": 0.10590049693320301
+    },
+    {
+      "zip": "91789",
+      "community": "industry",
+      "overlap_fraction": 0.19001966210826518
+    },
+    {
+      "zip": "91789",
+      "community": "pomona",
+      "overlap_fraction": 0.05301299704181252
+    },
+    {
+      "zip": "91789",
+      "community": "rowland-heights",
+      "overlap_fraction": 0.0838430929443596
+    },
+    {
+      "zip": "91789",
+      "community": "walnut",
+      "overlap_fraction": 0.5672237509723597
+    },
+    {
+      "zip": "91790",
+      "community": "west-covina",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91791",
+      "community": "west-covina",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91792",
+      "community": "south-san-jose-hills",
+      "overlap_fraction": 0.03803159970743629
+    },
+    {
+      "zip": "91792",
+      "community": "west-covina",
+      "overlap_fraction": 0.9619684002925637
+    },
+    {
+      "zip": "91801",
+      "community": "alhambra",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "91803",
+      "community": "alhambra",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "92397",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.7380040832550623
+    },
+    {
+      "zip": "92397",
+      "community": "southeast-antelope-valley",
+      "overlap_fraction": 0.2619959167449376
+    },
+    {
+      "zip": "93243",
+      "community": "ridge-route",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "93510",
+      "community": "acton",
+      "overlap_fraction": 0.3941208845893625
+    },
+    {
+      "zip": "93510",
+      "community": "agua-dulce",
+      "overlap_fraction": 0.013425040760690947
+    },
+    {
+      "zip": "93510",
+      "community": "tujunga-canyons",
+      "overlap_fraction": 0.5924540746499464
+    },
+    {
+      "zip": "93523",
+      "community": "northeast-antelope-valley",
+      "overlap_fraction": 1
+    },
+    {
+      "zip": "93532",
+      "community": "castaic-canyons",
+      "overlap_fraction": 0.1054838611282508
+    },
+    {
+      "zip": "93532",
+      "community": "elizabeth-lake",
+      "overlap_fraction": 0.03815977960357414
+    },
+    {
+      "zip": "93532",
+      "community": "lake-hughes",
+      "overlap_fraction": 0.05885302362269831
+    },
+    {
+      "zip": "93532",
+      "community": "northwest-antelope-valley",
+      "overlap_fraction": 0.13739398973732578
+    },
+    {
+      "zip": "93532",
+      "community": "ridge-route",
+      "overlap_fraction": 0.660109345908151
+    },
+    {
+      "zip": "93534",
+      "community": "lancaster",
+      "overlap_fraction": 0.5532135169806538
+    },
+    {
+      "zip": "93534",
+      "community": "northeast-antelope-valley",
+      "overlap_fraction": 0.44678648301934626
+    },
+    {
+      "zip": "93535",
+      "community": "lake-los-angeles",
+      "overlap_fraction": 0.013303828912872927
+    },
+    {
+      "zip": "93535",
+      "community": "lancaster",
+      "overlap_fraction": 0.1196544995804951
+    },
+    {
+      "zip": "93535",
+      "community": "northeast-antelope-valley",
+      "overlap_fraction": 0.867041671506632
+    },
+    {
+      "zip": "93536",
+      "community": "lancaster",
+      "overlap_fraction": 0.21587948071513288
+    },
+    {
+      "zip": "93536",
+      "community": "northwest-antelope-valley",
+      "overlap_fraction": 0.6974662537403745
+    },
+    {
+      "zip": "93536",
+      "community": "quartz-hill",
+      "overlap_fraction": 0.0136604480482476
+    },
+    {
+      "zip": "93536",
+      "community": "ridge-route",
+      "overlap_fraction": 0.07299381749624508
+    },
+    {
+      "zip": "93543",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.1936482199899513
+    },
+    {
+      "zip": "93543",
+      "community": "littlerock",
+      "overlap_fraction": 0.025226306175014996
+    },
+    {
+      "zip": "93543",
+      "community": "northeast-antelope-valley",
+      "overlap_fraction": 0.09688719274223427
+    },
+    {
+      "zip": "93543",
+      "community": "palmdale",
+      "overlap_fraction": 0.029868068490021014
+    },
+    {
+      "zip": "93543",
+      "community": "southeast-antelope-valley",
+      "overlap_fraction": 0.5348591671268517
+    },
+    {
+      "zip": "93543",
+      "community": "sun-village",
+      "overlap_fraction": 0.11951104547592674
+    },
+    {
+      "zip": "93544",
+      "community": "northeast-antelope-valley",
+      "overlap_fraction": 0.5042758171914582
+    },
+    {
+      "zip": "93544",
+      "community": "southeast-antelope-valley",
+      "overlap_fraction": 0.4957241828085419
+    },
+    {
+      "zip": "93550",
+      "community": "acton",
+      "overlap_fraction": 0.02919639358819345
+    },
+    {
+      "zip": "93550",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.4599449022167689
+    },
+    {
+      "zip": "93550",
+      "community": "palmdale",
+      "overlap_fraction": 0.20944013912273451
+    },
+    {
+      "zip": "93550",
+      "community": "southeast-antelope-valley",
+      "overlap_fraction": 0.07276450924676515
+    },
+    {
+      "zip": "93550",
+      "community": "tujunga-canyons",
+      "overlap_fraction": 0.22865405582553794
+    },
+    {
+      "zip": "93551",
+      "community": "acton",
+      "overlap_fraction": 0.01981147945040715
+    },
+    {
+      "zip": "93551",
+      "community": "castaic-canyons",
+      "overlap_fraction": 0.061888245727751985
+    },
+    {
+      "zip": "93551",
+      "community": "elizabeth-lake",
+      "overlap_fraction": 0.022046427330661655
+    },
+    {
+      "zip": "93551",
+      "community": "leona-valley",
+      "overlap_fraction": 0.17604714471702046
+    },
+    {
+      "zip": "93551",
+      "community": "northwest-antelope-valley",
+      "overlap_fraction": 0.06333754188003039
+    },
+    {
+      "zip": "93551",
+      "community": "northwest-palmdale",
+      "overlap_fraction": 0.07227183502206205
+    },
+    {
+      "zip": "93551",
+      "community": "palmdale",
+      "overlap_fraction": 0.4576467561410147
+    },
+    {
+      "zip": "93551",
+      "community": "southeast-antelope-valley",
+      "overlap_fraction": 0.12695056973105168
+    },
+    {
+      "zip": "93552",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.1690817845229279
+    },
+    {
+      "zip": "93552",
+      "community": "palmdale",
+      "overlap_fraction": 0.5985629655100568
+    },
+    {
+      "zip": "93552",
+      "community": "southeast-antelope-valley",
+      "overlap_fraction": 0.23235524996701534
+    },
+    {
+      "zip": "93553",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.419748052373076
+    },
+    {
+      "zip": "93553",
+      "community": "northeast-antelope-valley",
+      "overlap_fraction": 0.11639813531264633
+    },
+    {
+      "zip": "93553",
+      "community": "southeast-antelope-valley",
+      "overlap_fraction": 0.46385381231427764
+    },
+    {
+      "zip": "93563",
+      "community": "angeles-crest",
+      "overlap_fraction": 0.5188503664037574
+    },
+    {
+      "zip": "93563",
+      "community": "southeast-antelope-valley",
+      "overlap_fraction": 0.48114963359624263
+    },
+    {
+      "zip": "93591",
+      "community": "lake-los-angeles",
+      "overlap_fraction": 0.03117783018702182
+    },
+    {
+      "zip": "93591",
+      "community": "northeast-antelope-valley",
+      "overlap_fraction": 0.8024299219797483
+    },
+    {
+      "zip": "93591",
+      "community": "palmdale",
+      "overlap_fraction": 0.16639224783322995
+    }
+  ]
+}

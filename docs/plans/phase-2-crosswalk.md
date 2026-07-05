@@ -4,22 +4,22 @@ overview: Fetch and commit the zip and community boundary GeoJSONs, then generat
 todos:
   - id: setup
     content: "Scaffold crosswalk-gen script in src/data-pipeline/ (create the workspace package if phase 1 hasn't)"
-    status: pending
+    status: completed
   - id: fetch-communities
     content: Fetch and commit la-geography communities GeoJSON to data/boundaries/
-    status: pending
+    status: completed
   - id: zip-layer-gate
     content: "Decision gate: evaluate LA County eGIS ZIP layer vs Census TIGER ZCTA; record choice"
-    status: pending
+    status: completed
   - id: fetch-zips
     content: Fetch and commit the chosen zip boundary layer to data/boundaries/
-    status: pending
+    status: completed
   - id: spatial-join
     content: Implement proportional-overlap spatial join (EPSG:3310, threshold, normalize)
-    status: pending
+    status: completed
   - id: commit-crosswalk
     content: Generate and commit data/crosswalk/zip-community.json with provenance metadata
-    status: pending
+    status: completed
 ---
 
 # Phase 2: Zip-to-community crosswalk
@@ -102,8 +102,8 @@ data/crosswalk/zip-community.json          # the crosswalk artifact
 
 ### Decision log (fill in — part of the deliverable)
 
-- Gate A: _unresolved_
-- Area-computation approach (proj4+planar vs geodesic): _unresolved_
+- **Gate A: LA County eGIS ZIP layer** (`LACounty_Dynamic/Administrative_Boundaries/MapServer/5`, resolved 2026-07-05). Verified live against the plan's concerns: layer is named "Zipcodes" with a clean `ZIPCODE` string field (all values 5-digit); 313 features / 309 unique zips — inside the expected ~300-500 range; no null geometries; `maxRecordCount` is 1000, so the full layer arrives in a single request with no pagination (`exceededTransferLimit` absent from the response). The service reprojects to WGS84 on request (`outSR=4326`) and is already scoped to LA County, so no clipping step is needed. Census TIGER ZCTA was rejected because it adds a shapefile download, format conversion, and a county-clip step for no accuracy gain (both layers are approximations of USPS zips). Quirk handled in code: four duplicate-`ZIPCODE` features (90802 ×2, 90803 ×4 — harbor/island fragments) are merged into one MultiPolygon per zip before the join.
+- **Area computation: proj4 reprojection to EPSG:3310 + planar shoelace area**, applied consistently to zip areas and intersection areas. Chosen over turf's geodesic `area()` because turf's `intersect()` is planar regardless — computing the intersections in an equal-area projection keeps the geometry math and the area math in the same space. Hole rings are subtracted; `Math.abs` per ring makes the result independent of winding order (which neither source guarantees).
 
 ## Acceptance criteria
 
