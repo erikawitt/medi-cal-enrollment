@@ -6,7 +6,7 @@ import {
   reconstructWorksheet,
   worksheetNames,
   type PresModel,
-} from "../src/vizql.ts";
+} from "../src/vizql";
 
 /**
  * Fixture: a compact presModel extracted from the real May 2026 countywide

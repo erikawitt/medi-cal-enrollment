@@ -99,11 +99,18 @@ export function extractPresModel(bodies: string[]): PresModel {
       const segments = deepFind(presModelMap.dataDictionary ?? {}, "dataSegments") as
         | Record<string, { dataColumns?: { dataType: string; dataValues: (string | number)[] }[] }>
         | undefined;
-      const dataColumns = segments?.["0"]?.dataColumns;
-      if (dataColumns) {
+      if (segments) {
+        // Tableau streams the dictionary as numbered segments ("0", "1", …);
+        // the value pools are the segments concatenated in key order, and
+        // aliasIndices/valueIndices reference that concatenated pool.
         const next: Record<string, (string | number)[]> = {};
-        for (const dc of dataColumns) next[dc.dataType] = dc.dataValues;
-        dataDictionary = next;
+        const keys = Object.keys(segments).sort((a, b) => Number(a) - Number(b));
+        for (const key of keys) {
+          for (const dc of segments[key]?.dataColumns ?? []) {
+            (next[dc.dataType] ??= []).push(...dc.dataValues);
+          }
+        }
+        if (keys.length) dataDictionary = next;
       }
 
       const vizPresModelMap = deepFind(presModelMap.vizData ?? {}, "presModelMap") as
@@ -204,4 +211,44 @@ export function reconstructWorksheet(model: PresModel, worksheetName: string): W
 /** List the data-bearing worksheet names present in a `PresModel`. */
 export function worksheetNames(model: PresModel): string[] {
   return Object.keys(model.worksheets);
+}
+
+/**
+ * The data-bearing subtree of one VizQL response, kept verbatim.
+ *
+ * The embed re-renders per geography via session-cumulative deltas (a fresh
+ * `bootstrapSession` only reflects the geography selected at page load), so a
+ * faithful capture keeps the ordered stream of these subtrees. We preserve
+ * exactly what Tableau served — dictionary segments (typed value pools) and any
+ * `presModelMap` (worksheet layouts) — and drop only rendering geometry / image
+ * tiles that carry no published value. Reconstruction of a specific geography
+ * from the delta stream is phase 3's job.
+ */
+export interface RawCaptureFrame {
+  /** dataDictionary.dataSegments as served (segment key -> dataColumns). */
+  dataSegments?: unknown;
+  /** presModelMap as served (worksheet layouts + base dictionary), when present. */
+  presModelMap?: unknown;
+}
+
+/**
+ * Extract the verbatim data-bearing subtree(s) from raw VizQL response bodies.
+ * Accepts the ordered list of response bodies captured for one selection (a
+ * mark selection produces several responses); each is parsed independently.
+ */
+export function extractRawCapture(bodies: string[]): RawCaptureFrame[] {
+  const frames: RawCaptureFrame[] = [];
+  for (const body of bodies) {
+    for (const chunk of parseVizqlBody(body)) {
+      const presModelMap = deepFind(chunk, "presModelMap");
+      const dataSegments = deepFind(chunk, "dataSegments");
+      if (presModelMap !== undefined || dataSegments !== undefined) {
+        frames.push({
+          ...(dataSegments !== undefined ? { dataSegments } : {}),
+          ...(presModelMap !== undefined ? { presModelMap } : {}),
+        });
+      }
+    }
+  }
+  return frames;
 }
