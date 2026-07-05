@@ -14,7 +14,7 @@ export interface CrosswalkEntry {
   overlap_fraction: number;
 }
 
-export const SLIVER_THRESHOLD = 0.01;
+const SLIVER_THRESHOLD = 0.01;
 
 // EPSG:3310 — NAD83 / California Albers, equal-area, meters.
 const EPSG_3310 =
@@ -22,6 +22,11 @@ const EPSG_3310 =
 const toCalAlbers = proj4("EPSG:4326", EPSG_3310);
 
 type PolyGeom = Polygon | MultiPolygon;
+
+/** View any Polygon/MultiPolygon as a list of single-polygon coordinate arrays. */
+function polygonsOf(geom: PolyGeom): Position[][][] {
+  return geom.type === "Polygon" ? [geom.coordinates] : geom.coordinates;
+}
 
 function reprojectPositions(ring: Position[]): Position[] {
   return ring.map((p) => toCalAlbers.forward([p[0]!, p[1]!]));
@@ -49,9 +54,8 @@ function ringArea(ring: Position[]): number {
 }
 
 function planarArea(geom: PolyGeom): number {
-  const polys = geom.type === "Polygon" ? [geom.coordinates] : geom.coordinates;
   let total = 0;
-  for (const poly of polys) {
+  for (const poly of polygonsOf(geom)) {
     // Exterior ring minus holes; use absolute values so winding order
     // (which the sources do not guarantee) cannot flip signs.
     const [exterior, ...holes] = poly;
@@ -74,8 +78,7 @@ function bboxOf(geom: PolyGeom): Bbox {
     minY = Infinity,
     maxX = -Infinity,
     maxY = -Infinity;
-  const polys = geom.type === "Polygon" ? [geom.coordinates] : geom.coordinates;
-  for (const poly of polys) {
+  for (const poly of polygonsOf(geom)) {
     for (const [x, y] of poly[0] ?? []) {
       if (x! < minX) minX = x!;
       if (x! > maxX) maxX = x!;
@@ -102,10 +105,7 @@ function mergeByZip(
   for (const feature of zips.features) {
     const zip = feature.properties?.["ZIPCODE"];
     if (typeof zip !== "string" || !feature.geometry) continue;
-    const polys =
-      feature.geometry.type === "Polygon"
-        ? [feature.geometry.coordinates]
-        : feature.geometry.coordinates;
+    const polys = polygonsOf(feature.geometry);
     const existing = merged.get(zip);
     if (existing) {
       existing.coordinates.push(...polys);
