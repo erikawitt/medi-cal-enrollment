@@ -19,6 +19,9 @@ Roughly in order of discovery:
   values, including age 0-5.
 - `23`–`31` — build up and calibrate the actual embed driver (month dropdown,
   sub-area enumeration, click geometry) that became `../src/embed.ts`.
+- `32`–`33` — diagnose backfill failures: month re-selection flake, and the
+  sub-area checkbox semantics (list loads all-Checked; **Unchecking** a mark is
+  what focuses the view on that area — see the plan's Decision log).
 
 The shipped, tested code lives in `../src/vizql.ts`, `../src/embed.ts`,
 `../src/capture.ts`, and `../src/scrape.ts`.

@@ -1,6 +1,31 @@
 import { describe, expect, test } from "bun:test";
 import { monthLabelToKey, geoIdToFileStem } from "../src/capture";
+import { selectedSubArea } from "../src/embed";
 import { extractRawCapture, captureHasData, type RawCaptureFrame } from "../src/vizql";
+
+describe("selectedSubArea", () => {
+  const spa = /^(SPA \d+|Unknown)$/;
+
+  test("names the newly-unchecked (focused) area of a plain selection", () => {
+    expect(selectedSubArea('"SPA 2|Unchecked"', spa)).toBe("SPA 2");
+  });
+
+  test("names the focused area when the previous focus re-checks in the same response", () => {
+    expect(selectedSubArea('"SPA 4|Unchecked" ... "SPA 3|Checked"', spa)).toBe("SPA 4");
+  });
+
+  test("returns null for a focus release (view back to unfiltered default)", () => {
+    expect(selectedSubArea('"SPA 3|Checked"', spa)).toBeNull();
+  });
+
+  test("returns null when multiple areas of the type uncheck at once", () => {
+    expect(selectedSubArea('"SPA 1|Unchecked" "SPA 2|Unchecked"', spa)).toBeNull();
+  });
+
+  test("ignores tokens from other geo types", () => {
+    expect(selectedSubArea('"CD 23|Unchecked" "SPA 5|Unchecked"', spa)).toBe("SPA 5");
+  });
+});
 
 describe("monthLabelToKey", () => {
   test("maps a dropdown label to a report-month key", () => {

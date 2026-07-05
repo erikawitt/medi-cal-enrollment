@@ -300,19 +300,23 @@ export async function subAreaZone(embed: Embed) {
 }
 
 /**
- * Which sub-area a select response reports as newly selected.
+ * Which sub-area a select response reports as newly focused.
  *
- * Selecting a mark toggles exactly that area's checkbox, so the delta response
- * carries a single `"<name>|Checked"`/`"<name>|Unchecked"` token whose name
- * matches the geo type's convention. That token names the area we just captured
- * — robust even when a click lands a row off from where we aimed.
+ * The sub-area list loads with every member Checked (the unfiltered default).
+ * Clicking a mark UNchecks it, and that focuses the view on that area — the
+ * re-render carries the area's figures and its view title (e.g. "Service
+ * Planning Area 3"), verified against committed captures. So the newly-focused
+ * area is named by the response's single pattern-matching `"<name>|Unchecked"`
+ * token (a previously-focused area may re-Check in the same delta; a lone
+ * `Checked` token is a toggle back to the unfiltered default and names
+ * nothing). Robust even when a click lands a row off from where we aimed.
  */
 export function selectedSubArea(responseText: string, pattern: RegExp): string | null {
-  const hits = new Set<string>();
-  for (const m of responseText.matchAll(/"([^"|]+)\|(?:Checked|Unchecked)"/g)) {
-    if (pattern.test(m[1]!)) hits.add(m[1]!);
+  const unchecked = new Set<string>();
+  for (const m of responseText.matchAll(/"([^"|]+)\|(Checked|Unchecked)"/g)) {
+    if (m[2] === "Unchecked" && pattern.test(m[1]!)) unchecked.add(m[1]!);
   }
-  return hits.size === 1 ? [...hits][0]! : null;
+  return unchecked.size === 1 ? [...unchecked][0]! : null;
 }
 
 /**
@@ -358,9 +362,9 @@ export interface AreaCapture {
  * `skip` lets an idempotent re-run avoid re-capturing areas already on disk while
  * still stepping through the list to reach the uncaptured ones.
  *
- * `isValid` guards against toggle-only responses: clicking an already-selected
- * mark deselects it and returns no figures. Invalid captures are not marked as
- * seen, so a later click on the same row re-selects the area and recaptures it.
+ * `isValid` guards against partial deltas that carry checkbox state but no
+ * figures. Invalid captures are not marked as seen, so a later pass re-clicks
+ * the row and recaptures the area.
  */
 export async function* captureAllAreas(
   embed: Embed,
@@ -375,10 +379,9 @@ export async function* captureAllAreas(
   const LIST_TOP = 30; // px below the zone's painted title
   let staleScrolls = 0;
 
-  // The list loads with its first area already selected; clicking an already-
-  // selected mark yields no re-render, so that area would be missed. Prime by
-  // selecting the second row first, capturing it, so every row (incl. the first)
-  // is subsequently clickable.
+  // Prime with the second row: the first click of a session sometimes lands
+  // before the viz accepts input, and starting one row in gives the walk a
+  // known-good response to calibrate on.
   {
     const primeBodies = await clickSubAreaAt(embed, zone.x + 18, zone.y + LIST_TOP + PITCH);
     const primeName = selectedSubArea(primeBodies.join("\n"), pattern);
@@ -402,9 +405,9 @@ export async function* captureAllAreas(
         seen.add(name);
         continue;
       }
-      // A click on an already-selected mark toggles it OFF: the response carries
-      // the "<name>|Unchecked" token but no figures. Leave the area unseen so a
-      // later pass re-clicks (re-selects) it and captures real data.
+      // A delta can carry checkbox state without figures (e.g. a click on the
+      // currently-focused row releasing focus). Leave the area unseen so a
+      // later pass re-clicks it and captures real data.
       if (!isValid(bodies)) continue;
       seen.add(name);
       yield { geoId: name, responses: bodies };

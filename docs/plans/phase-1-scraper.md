@@ -151,15 +151,23 @@ schedule" risk was written down. The aging-out risk is therefore low on a months
 backfill still runs **oldest-first** within scope as cheap insurance. Scope stays ≥ 2026-01 per
 this plan's Goal; pre-2026 months exist upstream if the project ever wants them.
 
-**Capture validity (found during the 2026-05 partial):** clicking an already-selected sub-area
-mark **toggles it off** — the VizQL delta carries only the `"<name>|Unchecked"` checkbox token and
-no figures. Three of the first 32 committed area files (CD 23, SSD 25, SSD 34) were such
-toggle-only captures. The scraper now gates every capture on `captureHasData` (a non-trivial
-`real` value pool present, threshold 10 — a normal area re-render ships ~190 real values, the
-sparse "Unknown" area ~26, a toggle ~0), leaves invalid clicks unseen so a later pass re-selects
-and recaptures them, and treats only valid-on-disk files as already captured. `extractRawCapture`
-also now keeps **every** `dataSegments` occurrence in a multi-delta response (`deepFindAll`)
-instead of the first, so no served figures are dropped.
+**Selection semantics refined (spike 33, run against January 2026 SPA):** the sub-area list loads
+with **every member Checked** — that is the unfiltered default view. Clicking a mark **Unchecks**
+it, and that is what focuses the dashboard on that area: the re-render carries the area's figures
+and its view title (verified against committed captures — every data-bearing file's embedded title,
+e.g. "Service Planning Area 2", matches its `"<name>|Unchecked"` token). Clicking the
+currently-focused row re-Checks it and resets the view to the default. A subsequent focus click
+re-Checks the previously focused area in the same delta, so a selection response carries the new
+area's `Unchecked` token, optionally plus the old area's `Checked` token. The driver therefore
+names each capture by the response's **single pattern-matching `Unchecked` token** (the earlier
+"exactly one token of either kind" rule missed every second area and mis-filed focus releases —
+three early 2026-05 files, CD 23, SSD 25, SSD 34, were such figure-less focus-release captures).
+The scraper now also gates every capture on `captureHasData` (a non-trivial `real` value pool,
+threshold 10 — a normal area re-render ships ~190 real values, the sparse "Unknown" area ~26, a
+checkbox-only delta 0-1), leaves invalid clicks unseen so a later pass re-clicks and recaptures
+them, and treats only valid-on-disk files as already captured. `extractRawCapture` keeps **every**
+`dataSegments` occurrence in a multi-delta response (`deepFindAll`) instead of the first, so no
+served figures are dropped.
 
 **Watch item (from Out of scope):** no native DPSS disenrollment dashboard has appeared; the
 At-A-Glance embed remains the only source. No change to the ADR is warranted at this time.
