@@ -105,12 +105,16 @@ interface SegmentColumns {
 }
 
 /**
- * The cumulative typed value pools of one embed session.
+ * The current typed value pools of one embed session.
  *
- * Tableau streams the dictionary as numbered segments ("0", "1", ); each
- * response ships only segments the session has not seen, and index tuples in
- * any response reference the concatenation of all segments so far, in numeric
- * key order. Feed EVERY VizQL response body of a session in arrival order.
+ * Tableau streams the dictionary as numbered segments ("0", "1", ...). Each
+ * response's `dataSegments` MUTATES the session state by key: a served segment
+ * REPLACES any previous segment with that key, and an explicit `null` deletes
+ * it (observed when a view reset re-serves segment 0 and nulls segment 1 -
+ * spike 39). Index tuples in a response reference the concatenation of the
+ * segments live at that moment, in numeric key order. Feed EVERY VizQL
+ * response body of a session in arrival order, and resolve each capture
+ * against the state at capture time.
  */
 export class SessionDictionary {
   private segments = new Map<number, SegmentColumns>();
@@ -122,9 +126,14 @@ export class SessionDictionary {
         if (segs == null || typeof segs !== "object" || Array.isArray(segs)) continue;
         for (const [key, seg] of Object.entries(segs as Record<string, SegmentColumns | null>)) {
           const num = Number(key);
-          if (!Number.isFinite(num) || seg == null || this.segments.has(num)) continue;
-          if (!Array.isArray(seg.dataColumns)) continue;
-          this.segments.set(num, seg);
+          if (!Number.isFinite(num)) continue;
+          if (seg == null) {
+            this.segments.delete(num);
+          } else if (Array.isArray(seg.dataColumns)) {
+            this.segments.set(num, seg);
+          } else {
+            continue;
+          }
           this.cache = null;
         }
       }

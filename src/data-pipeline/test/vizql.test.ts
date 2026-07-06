@@ -147,16 +147,24 @@ describe("SPA 2 capture (session-cumulative select delta)", () => {
 });
 
 describe("SessionDictionary + extraction", () => {
-  test("accumulates segments across bodies and ignores re-served segments", () => {
-    const seg = (key: string, values: number[]) =>
+  test("segments mutate by key: re-served keys replace, null deletes (spike 39)", () => {
+    const seg = (key: string, values: number[] | null) =>
       JSON.stringify({
-        dataDictionary: { dataSegments: { [key]: { dataColumns: [{ dataType: "real", dataValues: values }] } } },
+        dataDictionary: {
+          dataSegments: {
+            [key]: values === null ? null : { dataColumns: [{ dataType: "real", dataValues: values }] },
+          },
+        },
       });
     const d = new SessionDictionary();
     d.addBody(seg("0", [1, 2]));
     d.addBody(seg("1", [3]));
-    d.addBody(seg("0", [99, 99])); // duplicate key: first occurrence wins
     expect(d.pools().real).toEqual([1, 2, 3]);
+    d.addBody(seg("0", [7, 8, 9])); // view reset: segment 0 re-served with new content
+    d.addBody(seg("1", null)); // and segment 1 deleted
+    expect(d.pools().real).toEqual([7, 8, 9]);
+    d.addBody(seg("1", [4])); // later delta reuses the freed key
+    expect(d.pools().real).toEqual([7, 8, 9, 4]);
   });
 
   test("buildAreaCapture keeps only referenced dictionary entries, at original indices", () => {

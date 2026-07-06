@@ -21,19 +21,25 @@ const stream: { phase: string; url: string; body: string }[] = JSON.parse(
   readFileSync(streamPath, "utf8"),
 );
 
+// Segments mutate by key as the session progresses (see SessionDictionary), so
+// each capture is resolved against the session state at its capture time.
 const session = new SessionDictionary();
-for (const e of stream) session.addBody(e.body);
 
 const bootstrapBodies = stream.filter((e) => e.phase === "load").map((e) => e.body);
+for (const b of bootstrapBodies) session.addBody(b);
 const countywide = buildAreaCapture(extractWorksheets(bootstrapBodies), session);
 writeFileSync(
   join(import.meta.dir, "countywide-2026-05.capture.json"),
   JSON.stringify(countywide),
 );
 
-const spa2Bodies = stream
-  .filter((e) => e.phase === "select-spa2" && e.url.includes("tabdoc/select"))
-  .map((e) => e.body);
+const spa2Bodies: string[] = [];
+for (const e of stream) {
+  if (e.phase === "load") continue;
+  session.addBody(e.body);
+  if (e.phase === "select-spa2" && e.url.includes("tabdoc/select")) spa2Bodies.push(e.body);
+  if (spa2Bodies.length) break; // state at SPA 2 capture time
+}
 const spa2 = buildAreaCapture(extractWorksheets(spa2Bodies), session);
 writeFileSync(join(import.meta.dir, "spa2-2026-05.capture.json"), JSON.stringify(spa2));
 
