@@ -106,7 +106,7 @@ Monthly data updates are intended to land via reviewed PRs that add raw captures
 
 ## License
 
-MIT — see `[LICENSE](./LICENSE)`.
+MIT — see `[LICENSE](https://github.com/erikawitt/medi-cal-disenrollment/blob/main/LICENSE)`.
 
 ## Acknowledgments
 
