@@ -535,11 +535,15 @@ button {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 12px;
+  padding: 12px;
 }
 
 .bottom-strip .segmented {
   margin-top: 0;
+}
+
+.bottom-strip .segmented button {
+  padding: 12px;
 }
 
 .time-control {
