@@ -9,6 +9,9 @@
 
 import { clampChroma, formatHex } from "culori";
 
+/** Design-brief default hue (warm amber); matches :root --hue in styles.css. */
+export const DEFAULT_HUE = 32;
+
 /** The brief's 6 sequential stops: [lightness, chroma] at constant hue. */
 const RAMP_STOPS: readonly [number, number][] = [
   [0.97, 0.015],
