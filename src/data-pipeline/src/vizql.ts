@@ -1,38 +1,56 @@
 /**
- * Parsing of Tableau VizQL responses from the DPSS At-A-Glance embed.
+ * Parsing of Tableau VizQL responses from the DPSS At-A-Glance embed, and the
+ * raw-capture format built from them.
  *
  * The anonymous embed exposes no data API (see docs/adr/0002). Instead we read
  * the `bootstrapSession` / `tabdoc/select` command responses the embed exchanges
  * with Tableau Cloud. Each response carries:
- *   - a `dataDictionary` of typed value pools (cstring / integer / real / datetime), and
- *   - per-worksheet `paneColumnsData` describing how dictionary entries index into rows.
+ *   - `dataSegments`: typed value pools (cstring / integer / real / datetime),
+ *     delivered incrementally per session -- later responses only ship values not
+ *     already in the session dictionary; and
+ *   - per-worksheet `paneColumnsData` (under `secondaryInfo.presModelMap` in a
+ *     bootstrap, under `zones.<id>.presModelHolder.visual.vizData` in a select
+ *     response): raw Tableau field captions plus index tuples that map
+ *     dictionary entries into rows.
  *
- * This module turns those raw responses into a compact, faithful `PresModel` (the
- * committed raw capture) and reconstructs individual worksheets on demand. It does
- * NOT rename fields, select programs, or parse numbers — that is phase 3's job.
+ * A raw capture (format v2, docs/adr/0003) is SELF-CONTAINED per area: each
+ * data-bearing worksheet's raw captions and index tuples plus a sparse data
+ * dictionary holding exactly the session-dictionary entries those tuples
+ * reference, at their original indices. This module does NOT rename fields,
+ * select programs, or parse numbers -- that is phase 3's job (normalize.ts).
  */
 
-/** A worksheet's data, reduced to raw captions + dictionary index tuples. */
-export interface WorksheetModel {
-  columns: {
-    /** Raw Tableau field caption, e.g. "PROGRAM_CODE", "SUM(TNUM1)". Null for the tuple-id column. */
-    caption: string | null;
-    /** Dictionary pool this column reads from. Null for the tuple-id column. */
-    dataType: string | null;
-    paneIndices: number[];
-    columnIndices: number[];
+/**
+ * A worksheet's compact extract: Tableau's own field captions and index tuples,
+ * kept value-for-value as served (paneColumnsData minus rendering geometry).
+ */
+export interface PaneColumnsData {
+  vizDataColumns: {
+    fieldCaption?: string;
+    userFriendlyFieldCaption?: string;
+    dataType?: string;
+    paneIndices?: number[];
+    columnIndices?: number[];
   }[];
-  panes: {
-    vizPaneColumns: { valueIndices: number[]; aliasIndices: number[] }[];
+  paneColumnsList: {
+    vizPaneColumns: { valueIndices?: number[]; aliasIndices?: number[] }[];
   }[];
 }
 
-/** A compact, faithful extract of a VizQL presModel — this is the raw capture shape. */
-export interface PresModel {
-  /** Typed value pools, keyed by Tableau dataType (cstring | integer | real | datetime). */
-  dataDictionary: Record<string, (string | number)[]>;
-  /** Data-bearing worksheets, keyed by their Tableau worksheet name. */
-  worksheets: Record<string, WorksheetModel>;
+/**
+ * A self-contained raw capture for one (report month, geography) -- format v2.
+ *
+ * `dataDictionary` maps dataType -> (session dictionary index -> value), sparse:
+ * it holds exactly the entries referenced by `worksheets`' index tuples, at the
+ * indices Tableau served. Values are verbatim (formatted strings and raw
+ * numbers alike).
+ */
+export interface AreaCapture {
+  formatVersion: 2;
+  /** Data-bearing worksheets, keyed by Tableau worksheet name, verbatim. */
+  worksheets: Record<string, PaneColumnsData>;
+  /** Sparse typed value pools: dataType -> { index -> value }. */
+  dataDictionary: Record<string, Record<string, string | number>>;
 }
 
 /**
@@ -68,20 +86,12 @@ export function parseVizqlBody(body: string): unknown[] {
   return objs;
 }
 
-function deepFind(obj: unknown, key: string, depth = 0): unknown {
-  if (obj == null || typeof obj !== "object" || depth > 60) return undefined;
-  const rec = obj as Record<string, unknown>;
-  if (Object.prototype.hasOwnProperty.call(rec, key)) return rec[key];
-  for (const k of Object.keys(rec)) {
-    const found = deepFind(rec[k], key, depth + 1);
-    if (found !== undefined) return found;
-  }
-  return undefined;
-}
-
-/** All occurrences of `key` anywhere in `obj` (document order). */
 function deepFindAll(obj: unknown, key: string, out: unknown[] = [], depth = 0): unknown[] {
   if (obj == null || typeof obj !== "object" || depth > 60) return out;
+  if (Array.isArray(obj)) {
+    for (const v of obj) deepFindAll(v, key, out, depth + 1);
+    return out;
+  }
   const rec = obj as Record<string, unknown>;
   for (const k of Object.keys(rec)) {
     if (k === key) out.push(rec[k]);
@@ -90,83 +100,167 @@ function deepFindAll(obj: unknown, key: string, out: unknown[] = [], depth = 0):
   return out;
 }
 
+interface SegmentColumns {
+  dataColumns?: { dataType: string; dataValues: (string | number)[] }[];
+}
+
 /**
- * Extract a compact `PresModel` from one or more VizQL response bodies.
+ * The cumulative typed value pools of one embed session.
  *
- * Tableau delivers the data dictionary once per session and then references it
- * from later responses, so callers pass the ordered set of bodies exchanged
- * while a given geography was displayed; later dictionary/worksheet data
- * supersedes earlier data of the same name.
+ * Tableau streams the dictionary as numbered segments ("0", "1", ); each
+ * response ships only segments the session has not seen, and index tuples in
+ * any response reference the concatenation of all segments so far, in numeric
+ * key order. Feed EVERY VizQL response body of a session in arrival order.
  */
-export function extractPresModel(bodies: string[]): PresModel {
-  let dataDictionary: Record<string, (string | number)[]> = {};
-  const worksheets: Record<string, WorksheetModel> = {};
+export class SessionDictionary {
+  private segments = new Map<number, SegmentColumns>();
+  private cache: Record<string, (string | number)[]> | null = null;
 
-  for (const body of bodies) {
+  addBody(body: string): void {
     for (const chunk of parseVizqlBody(body)) {
-      const presModelMap = deepFind(chunk, "presModelMap") as Record<string, unknown> | undefined;
-      if (!presModelMap) continue;
-
-      const segments = deepFind(presModelMap.dataDictionary ?? {}, "dataSegments") as
-        | Record<string, { dataColumns?: { dataType: string; dataValues: (string | number)[] }[] }>
-        | undefined;
-      if (segments) {
-        // Tableau streams the dictionary as numbered segments ("0", "1", …);
-        // the value pools are the segments concatenated in key order, and
-        // aliasIndices/valueIndices reference that concatenated pool.
-        const next: Record<string, (string | number)[]> = {};
-        const keys = Object.keys(segments).sort((a, b) => Number(a) - Number(b));
-        for (const key of keys) {
-          for (const dc of segments[key]?.dataColumns ?? []) {
-            (next[dc.dataType] ??= []).push(...dc.dataValues);
-          }
-        }
-        if (keys.length) dataDictionary = next;
-      }
-
-      const vizPresModelMap = deepFind(presModelMap.vizData ?? {}, "presModelMap") as
-        | Record<string, unknown>
-        | undefined;
-      if (vizPresModelMap) {
-        for (const [name, node] of Object.entries(vizPresModelMap)) {
-          const gen = deepFind(node, "genVizDataPresModel") as
-            | { paneColumnsData?: PaneColumnsData }
-            | undefined;
-          const pcd = gen?.paneColumnsData;
-          if (!pcd) continue;
-          worksheets[name] = {
-            columns: pcd.vizDataColumns.map((c) => ({
-              caption: c.fieldCaption ?? c.userFriendlyFieldCaption ?? null,
-              dataType: c.dataType ?? null,
-              paneIndices: c.paneIndices ?? [],
-              columnIndices: c.columnIndices ?? [],
-            })),
-            panes: pcd.paneColumnsList.map((p) => ({
-              vizPaneColumns: p.vizPaneColumns.map((vp) => ({
-                valueIndices: vp.valueIndices ?? [],
-                aliasIndices: vp.aliasIndices ?? [],
-              })),
-            })),
-          };
+      for (const segs of deepFindAll(chunk, "dataSegments")) {
+        if (segs == null || typeof segs !== "object" || Array.isArray(segs)) continue;
+        for (const [key, seg] of Object.entries(segs as Record<string, SegmentColumns | null>)) {
+          const num = Number(key);
+          if (!Number.isFinite(num) || seg == null || this.segments.has(num)) continue;
+          if (!Array.isArray(seg.dataColumns)) continue;
+          this.segments.set(num, seg);
+          this.cache = null;
         }
       }
     }
   }
 
-  return { dataDictionary, worksheets };
+  /** Concatenated pools by dataType, in numeric segment-key order. */
+  pools(): Record<string, (string | number)[]> {
+    if (this.cache) return this.cache;
+    const pools: Record<string, (string | number)[]> = {};
+    for (const key of [...this.segments.keys()].sort((a, b) => a - b)) {
+      for (const col of this.segments.get(key)!.dataColumns ?? []) {
+        (pools[col.dataType] ??= []).push(...col.dataValues);
+      }
+    }
+    this.cache = pools;
+    return pools;
+  }
 }
 
-interface PaneColumnsData {
-  vizDataColumns: {
-    fieldCaption?: string;
-    userFriendlyFieldCaption?: string;
-    dataType?: string;
-    paneIndices?: number[];
-    columnIndices?: number[];
-  }[];
-  paneColumnsList: {
-    vizPaneColumns: { valueIndices?: number[]; aliasIndices?: number[] }[];
-  }[];
+/** Keep only the caption/tuple fields of a served paneColumnsData (drop geometry). */
+function compactPaneColumnsData(pcd: PaneColumnsData): PaneColumnsData {
+  return {
+    vizDataColumns: (pcd.vizDataColumns ?? []).map((c) => {
+      const col: PaneColumnsData["vizDataColumns"][number] = {};
+      if (c.fieldCaption != null) col.fieldCaption = c.fieldCaption;
+      if (c.userFriendlyFieldCaption != null) col.userFriendlyFieldCaption = c.userFriendlyFieldCaption;
+      if (c.dataType != null) col.dataType = c.dataType;
+      if (c.paneIndices != null) col.paneIndices = c.paneIndices;
+      if (c.columnIndices != null) col.columnIndices = c.columnIndices;
+      return col;
+    }),
+    paneColumnsList: (pcd.paneColumnsList ?? []).map((p) => ({
+      vizPaneColumns: (p.vizPaneColumns ?? []).map((vp) => {
+        const out: { valueIndices?: number[]; aliasIndices?: number[] } = {};
+        if (vp.valueIndices != null) out.valueIndices = vp.valueIndices;
+        if (vp.aliasIndices != null) out.aliasIndices = vp.aliasIndices;
+        return out;
+      }),
+    })),
+  };
+}
+
+/**
+ * Extract every data-bearing worksheet's captions + index tuples from VizQL
+ * response bodies. Handles both response shapes:
+ *  - bootstrap: `secondaryInfo.presModelMap.vizData.presModelHolder
+ *      .genPresModelMapPresModel.presModelMap.<name>.presModelHolder
+ *      .genVizDataPresModel.paneColumnsData`
+ *  - select:    `...dashboardPresModel.zones.<id>.presModelHolder.visual
+ *      .vizData.paneColumnsData` (worksheet name on the zone)
+ * When a worksheet appears in several bodies, the later occurrence wins.
+ */
+export function extractWorksheets(bodies: string[]): Record<string, PaneColumnsData> {
+  const out: Record<string, PaneColumnsData> = {};
+  for (const body of bodies) {
+    for (const chunk of parseVizqlBody(body)) {
+      // Bootstrap shape: presModelMap keyed by worksheet name; each entry is
+      // { presModelHolder: { genVizDataPresModel: { paneColumnsData } } }.
+      for (const pmm of deepFindAll(chunk, "presModelMap")) {
+        if (pmm == null || typeof pmm !== "object") continue;
+        for (const [name, node] of Object.entries(pmm as Record<string, unknown>)) {
+          const gen = (node as { presModelHolder?: { genVizDataPresModel?: { paneColumnsData?: PaneColumnsData } } })
+            ?.presModelHolder?.genVizDataPresModel;
+          if (gen?.paneColumnsData) out[name] = compactPaneColumnsData(gen.paneColumnsData);
+        }
+      }
+      // Select shape: zones keyed by zone id, worksheet name on the zone.
+      for (const zones of deepFindAll(chunk, "zones")) {
+        if (zones == null || typeof zones !== "object" || Array.isArray(zones)) continue;
+        for (const zone of Object.values(zones as Record<string, unknown>)) {
+          if (zone == null || typeof zone !== "object") continue;
+          const z = zone as {
+            worksheet?: string;
+            presModelHolder?: { visual?: { vizData?: { paneColumnsData?: PaneColumnsData } } };
+          };
+          const pcd = z.presModelHolder?.visual?.vizData?.paneColumnsData;
+          if (z.worksheet && pcd) out[z.worksheet] = compactPaneColumnsData(pcd);
+        }
+      }
+    }
+  }
+  return out;
+}
+
+/** All dictionary indices a worksheet's tuples may reference, by dataType. */
+function referencedIndices(ws: PaneColumnsData): Map<string, Set<number>> {
+  const refs = new Map<string, Set<number>>();
+  for (const col of ws.vizDataColumns) {
+    const dt = col.dataType;
+    if (dt == null) continue;
+    const set = refs.get(dt) ?? new Set<number>();
+    refs.set(dt, set);
+    const paneIndices = col.paneIndices ?? [];
+    const columnIndices = col.columnIndices ?? [];
+    for (let i = 0; i < Math.max(paneIndices.length, 1); i++) {
+      const pane = ws.paneColumnsList[paneIndices[i] ?? 0];
+      const vpc = pane?.vizPaneColumns[columnIndices[i] ?? 0];
+      if (!vpc) continue;
+      for (const idx of vpc.valueIndices ?? []) {
+        if (idx >= 0) set.add(idx);
+      }
+      for (const idx of vpc.aliasIndices ?? []) {
+        if (idx >= 0) set.add(idx);
+      }
+    }
+  }
+  return refs;
+}
+
+/**
+ * Build a self-contained area capture: the given worksheets verbatim plus the
+ * session-dictionary entries they reference (sparse, original indices).
+ */
+export function buildAreaCapture(
+  worksheets: Record<string, PaneColumnsData>,
+  session: SessionDictionary,
+): AreaCapture {
+  const pools = session.pools();
+  const dict: Record<string, Record<string, string | number>> = {};
+  for (const ws of Object.values(worksheets)) {
+    for (const [dataType, indices] of referencedIndices(ws)) {
+      const pool = pools[dataType];
+      if (!pool) continue;
+      const sparse = (dict[dataType] ??= {});
+      for (const idx of indices) {
+        if (idx < pool.length) sparse[String(idx)] = pool[idx]!;
+      }
+    }
+  }
+  return { formatVersion: 2, worksheets, dataDictionary: dict };
+}
+
+/** Convenience: extract worksheets from bodies and build the capture. */
+export function extractAreaCapture(bodies: string[], session: SessionDictionary): AreaCapture {
+  return buildAreaCapture(extractWorksheets(bodies), session);
 }
 
 /** A reconstructed worksheet: raw column captions plus one array per row. */
@@ -176,37 +270,37 @@ export interface Worksheet {
 }
 
 /**
- * Reconstruct a worksheet's rows from a `PresModel`.
+ * Reconstruct a worksheet's rows from a self-contained capture.
  *
- * For each column, `aliasIndices` (falling back to `valueIndices`) index into the
- * dictionary pool for the column's dataType. A negative alias index `-i` is
- * Tableau's indirection: it means "take `valueIndices[-i - 1]` then look that up
- * in the dictionary". Values are returned exactly as they sit in the dictionary
- * (formatted strings and raw numbers alike) — no parsing or renaming.
+ * For each column, `aliasIndices` (falling back to `valueIndices`) index into
+ * the sparse dictionary for the column's dataType. A negative alias index `-i`
+ * is Tableau's indirection: "take `valueIndices[-i - 1]`, then look that up in
+ * the dictionary". Values are returned exactly as they sit in the dictionary --
+ * no parsing or renaming.
  */
-export function reconstructWorksheet(model: PresModel, worksheetName: string): Worksheet | null {
-  const ws = model.worksheets[worksheetName];
+export function reconstructWorksheet(capture: AreaCapture, worksheetName: string): Worksheet | null {
+  const ws = capture.worksheets[worksheetName];
   if (!ws) return null;
 
-  const columnValues: (string | number | null)[][] = [];
   const captions: (string | null)[] = [];
-
-  for (const col of ws.columns) {
-    captions.push(col.caption);
-    const paneIndex = col.paneIndices[0] ?? 0;
-    const colIndex = col.columnIndices[0] ?? 0;
-    const vpc = ws.panes[paneIndex]?.vizPaneColumns[colIndex];
-    if (!vpc || col.dataType == null) {
+  const columnValues: (string | number | null)[][] = [];
+  for (const col of ws.vizDataColumns) {
+    captions.push(col.fieldCaption ?? col.userFriendlyFieldCaption ?? null);
+    const dt = col.dataType;
+    const pane = ws.paneColumnsList[col.paneIndices?.[0] ?? 0];
+    const vpc = pane?.vizPaneColumns[col.columnIndices?.[0] ?? 0];
+    if (dt == null || !vpc) {
       columnValues.push([]);
       continue;
     }
-    const pool = model.dataDictionary[col.dataType] ?? [];
-    const indices = vpc.aliasIndices.length ? vpc.aliasIndices : vpc.valueIndices;
+    const sparse = capture.dataDictionary[dt] ?? {};
+    const valueIndices = vpc.valueIndices ?? [];
+    const aliasIndices = vpc.aliasIndices ?? [];
+    const indices = aliasIndices.length ? aliasIndices : valueIndices;
     columnValues.push(
       indices.map((idx) => {
-        if (idx >= 0) return pool[idx] ?? null;
-        const viaValue = vpc.valueIndices[-idx - 1];
-        return viaValue == null ? null : pool[viaValue] ?? null;
+        const ref = idx >= 0 ? idx : valueIndices[-idx - 1];
+        return ref == null ? null : sparse[String(ref)] ?? null;
       }),
     );
   }
@@ -219,71 +313,28 @@ export function reconstructWorksheet(model: PresModel, worksheetName: string): W
   return { captions, rows };
 }
 
-/** List the data-bearing worksheet names present in a `PresModel`. */
-export function worksheetNames(model: PresModel): string[] {
-  return Object.keys(model.worksheets);
-}
-
 /**
- * The data-bearing subtree of one VizQL response, kept verbatim.
- *
- * The embed re-renders per geography via session-cumulative deltas (a fresh
- * `bootstrapSession` only reflects the geography selected at page load), so a
- * faithful capture keeps the ordered stream of these subtrees. We preserve
- * exactly what Tableau served — dictionary segments (typed value pools) and any
- * `presModelMap` (worksheet layouts) — and drop only rendering geometry / image
- * tiles that carry no published value. Reconstruction of a specific geography
- * from the delta stream is phase 3's job.
+ * Whether a capture actually carries a geography's published figures: the
+ * headline "Persons by <program>" single-value worksheets must resolve to a
+ * number. Focus-release clicks and checkbox-only deltas produce captures
+ * without resolvable worksheets; those are invalid and get re-captured.
  */
-export interface RawCaptureFrame {
-  /** dataDictionary.dataSegments as served (segment key -> dataColumns). */
-  dataSegments?: unknown;
-  /** presModelMap as served (worksheet layouts + base dictionary), when present. */
-  presModelMap?: unknown;
-}
-
-/**
- * Extract the verbatim data-bearing subtree(s) from raw VizQL response bodies.
- * Accepts the ordered list of response bodies captured for one selection (a
- * mark selection produces several responses); each is parsed independently.
- */
-export function extractRawCapture(bodies: string[]): RawCaptureFrame[] {
-  const frames: RawCaptureFrame[] = [];
-  for (const body of bodies) {
-    for (const chunk of parseVizqlBody(body)) {
-      const presModelMaps = deepFindAll(chunk, "presModelMap");
-      const allSegments = deepFindAll(chunk, "dataSegments");
-      // presModelMap subtrees carry their own dataSegments; keep top-level
-      // occurrences distinct so nothing is dropped or double-nested.
-      for (const presModelMap of presModelMaps) frames.push({ presModelMap });
-      for (const dataSegments of allSegments) {
-        const insidePresModel = presModelMaps.some((p) =>
-          deepFindAll(p, "dataSegments").includes(dataSegments),
-        );
-        if (!insidePresModel) frames.push({ dataSegments });
-      }
-    }
-  }
-  return frames;
-}
-
-/**
- * Whether captured frames actually carry a geography's published figures — a
- * numeric value pool of non-trivial size. Selection clicks that only toggled a
- * checkbox (or missed) produce frames without one; those captures are invalid.
- *
- * The threshold is deliberately low: a normal area re-render ships ~190 real
- * values, sparse areas ("Unknown") still ship ~25, and a checkbox-only toggle
- * ships 0-1.
- */
-export function captureHasData(frames: RawCaptureFrame[], minRealValues = 10): boolean {
-  for (const frame of frames) {
-    for (const cols of deepFindAll(frame, "dataColumns")) {
-      if (!Array.isArray(cols)) continue;
-      for (const col of cols as { dataType?: string; dataValues?: unknown[] }[]) {
-        if (col?.dataType === "real" && (col.dataValues?.length ?? 0) >= minRealValues) return true;
-      }
-    }
+export function captureHasData(capture: AreaCapture): boolean {
+  for (const name of ["Persons by Med-Cal", "Persons by CaFresh"]) {
+    const ws = reconstructWorksheet(capture, name);
+    const v = ws?.rows[0]?.find((x) => typeof x === "number");
+    if (typeof v === "number") return true;
   }
   return false;
+}
+
+/** Parse a committed capture file's contents; null if not a v2 capture. */
+export function parseAreaCapture(json: string): AreaCapture | null {
+  try {
+    const obj = JSON.parse(json) as AreaCapture;
+    if (obj?.formatVersion !== 2 || typeof obj.worksheets !== "object") return null;
+    return obj;
+  } catch {
+    return null;
+  }
 }

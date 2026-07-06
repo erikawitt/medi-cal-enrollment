@@ -1,24 +1,22 @@
 /**
- * Filesystem layout + manifest for phase-1 raw captures.
+ * Filesystem layout + manifest for raw captures.
  *
- * Per docs/plans/phase-1-scraper.md and docs/adr/0002, raw captures are the
- * faithful VizQL bytes for one report month × geography, written under:
+ * Per docs/plans/phase-1-scraper.md and docs/adr/0002 + 0003, a raw capture is
+ * a SELF-CONTAINED extract of the VizQL presModel for one report month ×
+ * geography (worksheet captions + index tuples + the referenced dictionary
+ * entries — see src/vizql.ts `AreaCapture`), written under:
  *
- *   data/raw/{YYYY-MM}/{geo_type}/_base.json   # shared layouts + sub-area domain
  *   data/raw/{YYYY-MM}/{geo_type}/{geo_id}.json # one file per geography value
  *   data/raw/{YYYY-MM}/manifest.json            # method, timestamps, geo counts
  *
- * The embed re-renders per geography via session-cumulative deltas, so each
- * `{geo_id}.json` holds that area's served delta frames and the manifest records
- * the capture order; `_base.json` holds the once-per-(month,geo_type) worksheet
- * layouts. Phase 3 reconstructs values from these faithful bytes.
+ * Phase 3 reconstructs worksheet rows from each file in isolation.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import type { RawCaptureFrame } from "./vizql";
+import { parseAreaCapture, type AreaCapture } from "./vizql";
 
-export const SCRAPER_VERSION = "phase1-0.1.0";
-export const EXTRACTION_METHOD = "vizql-presmodel-json";
+export const SCRAPER_VERSION = "phase1-0.2.0";
+export const EXTRACTION_METHOD = "vizql-presmodel-selfcontained-v2";
 
 /** Repo-root data directory. This module lives at src/data-pipeline/src/. */
 export const DATA_RAW_DIR = join(import.meta.dir, "..", "..", "..", "data", "raw");
@@ -67,23 +65,17 @@ export interface Manifest {
   geoTypes: GeoTypeManifest[];
 }
 
-export function writeBase(reportMonth: string, geoType: string, frames: RawCaptureFrame[]): void {
-  const dir = geoTypeDir(reportMonth, geoType);
-  mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, "_base.json"), JSON.stringify(frames));
-}
-
-/** Write one area's capture; returns the relative file name. */
+/** Write one area's self-contained capture; returns the relative file name. */
 export function writeArea(
   reportMonth: string,
   geoType: string,
   geoId: string,
-  frames: RawCaptureFrame[],
+  capture: AreaCapture,
 ): string {
   const dir = geoTypeDir(reportMonth, geoType);
   mkdirSync(dir, { recursive: true });
   const file = `${geoIdToFileStem(geoId)}.json`;
-  writeFileSync(join(dir, file), JSON.stringify(frames));
+  writeFileSync(join(dir, file), JSON.stringify(capture));
   return file;
 }
 
@@ -91,26 +83,19 @@ export function areaAlreadyCaptured(reportMonth: string, geoType: string, geoId:
   return existsSync(join(geoTypeDir(reportMonth, geoType), `${geoIdToFileStem(geoId)}.json`));
 }
 
-/** Read an area's committed capture frames, or null when absent/unreadable. */
+/**
+ * Read an area's committed capture, or null when absent, unreadable, or in a
+ * superseded format (pre-v2 files parse to null, so they read as not-captured
+ * and the idempotent scraper recaptures them).
+ */
 export function readAreaCapture(
   reportMonth: string,
   geoType: string,
   geoId: string,
-): RawCaptureFrame[] | null {
+): AreaCapture | null {
   const p = join(geoTypeDir(reportMonth, geoType), `${geoIdToFileStem(geoId)}.json`);
   if (!existsSync(p)) return null;
-  try {
-    return JSON.parse(readFileSync(p, "utf8")) as RawCaptureFrame[];
-  } catch {
-    return null;
-  }
-}
-
-/** A (month, geo_type) is done when its manifest entry lists every domain area. */
-export function geoTypeComplete(reportMonth: string, geoType: string, expectedCount: number): boolean {
-  const m = readManifest(reportMonth);
-  const entry = m?.geoTypes.find((g) => g.geoType === geoType);
-  return !!entry && expectedCount > 0 && entry.areaCount >= expectedCount;
+  return parseAreaCapture(readFileSync(p, "utf8"));
 }
 
 export function readManifest(reportMonth: string): Manifest | null {

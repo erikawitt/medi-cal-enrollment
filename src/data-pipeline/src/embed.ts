@@ -13,6 +13,7 @@
  * pace interactions with `POLITE_DELAY_MS` between them.
  */
 import { chromium, type Browser, type Frame, type Page } from "playwright";
+import { SessionDictionary } from "./vizql";
 
 export const APEX_URL = "https://myappse.dpss.lacounty.gov/pls/apexprod/f?p=AAGT:AAGT";
 export const USER_AGENT =
@@ -60,6 +61,13 @@ export interface Embed {
   page: Page;
   frame: Frame;
   browser: Browser;
+  /**
+   * This session's cumulative typed value pools. Tableau ships dictionary
+   * segments incrementally per session; index tuples in any response reference
+   * the concatenation, so captures must resolve against this dictionary. Fed
+   * from every VizQL response automatically, independent of drains.
+   */
+  session: SessionDictionary;
   /** Capture every VizQL command/bootstrap response body since the last drain. */
   drainResponses(): string[];
   close(): Promise<void>;
@@ -96,12 +104,17 @@ export async function launchEmbed(opts: { headless?: boolean } = {}): Promise<Em
   const page = await context.newPage();
 
   let buffer: string[] = [];
+  const session = new SessionDictionary();
   page.on("response", async (r) => {
     const u = r.url();
     if (!/\/commands\/|bootstrapSession/i.test(u)) return;
     try {
       const body = await r.body();
-      if (body.length > 400) buffer.push(body.toString("utf8"));
+      if (body.length > 400) {
+        const text = body.toString("utf8");
+        session.addBody(text);
+        buffer.push(text);
+      }
     } catch {
       // Ignore bodies we cannot read.
     }
@@ -141,6 +154,7 @@ export async function launchEmbed(opts: { headless?: boolean } = {}): Promise<Em
     page,
     frame,
     browser,
+    session,
     drainResponses() {
       const out = buffer;
       buffer = [];

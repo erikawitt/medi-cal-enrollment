@@ -172,6 +172,20 @@ served figures are dropped.
 **Watch item (from Out of scope):** no native DPSS disenrollment dashboard has appeared; the
 At-A-Glance embed remains the only source. No change to the ADR is warranted at this time.
 
+**Raw capture format v2 (recorded by the phase-3 agent, 2026-07-06, per ADR 0003):** the
+first-generation extractor dropped the per-worksheet index tuples (they live under
+`zones.<id>.presModelHolder.visual.vizData.paneColumnsData` in select responses, which
+`extractRawCapture` did not search), committing only session-cumulative value pools — files that
+cannot be faithfully reconstructed area-by-area. The extraction was rewritten to emit
+self-contained captures (worksheet captions + tuples + the referenced dictionary entries;
+`formatVersion: 2`), `captureHasData` now checks that the headline Persons worksheets actually
+reconstruct, `_base.json` is retired, and all v1 captures were invalidated and deleted (git
+history preserves them). 2026-01 was recaptured in v2 immediately; **2026-02 … 2026-05 recapture
+is deferred to post-phase-5** — one idempotent `bun run scrape` re-runs it (v1 files read as
+not-captured). The in-flight 2026-05 zip walk (~250/300, v1 format) was stopped for the same
+reason. The sparse-zip straggler hypothesis (spike 38) is superseded by the new validity check but
+unverified against the stragglers themselves — revisit during the deferred backfill.
+
 ## Acceptance criteria
 
 - `bun run scrape` (in `src/data-pipeline/`) captures all available report months ≥ 2026-01 for all five geography levels into `data/raw/`, then exits 0.

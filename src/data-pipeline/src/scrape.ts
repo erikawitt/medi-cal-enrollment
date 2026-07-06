@@ -27,12 +27,11 @@ import {
   GEO_TYPES,
   type GeoType,
 } from "./embed";
-import { extractRawCapture, captureHasData } from "./vizql";
+import { extractAreaCapture, captureHasData } from "./vizql";
 import { statSync } from "node:fs";
 import { join } from "node:path";
 import {
   monthLabelToKey,
-  writeBase,
   writeArea,
   readAreaCapture,
   geoIdToFileStem,
@@ -117,10 +116,14 @@ async function main() {
   process.exit(exitCode);
 }
 
-/** An area counts as captured only when its on-disk frames carry real figures. */
+/**
+ * An area counts as captured only when its on-disk capture parses as the
+ * current format AND carries the area's figures. Pre-v2 files and figure-less
+ * focus-release captures both fail this and get recaptured.
+ */
 function areaValidOnDisk(monthKey: string, geoType: string, geoId: string): boolean {
-  const frames = readAreaCapture(monthKey, geoType, geoId);
-  return frames !== null && captureHasData(frames);
+  const capture = readAreaCapture(monthKey, geoType, geoId);
+  return capture !== null && captureHasData(capture);
 }
 
 /** Capture one (report month, geo type) in a fresh embed session. Returns true when complete. */
@@ -164,14 +167,13 @@ async function captureMonthGeoType(
       upsertManifest(monthKey, buildGeoManifest(monthKey, geo.geoType, domain, prior));
       return true;
     }
-    writeBase(monthKey, geo.geoType, extractRawCapture(baseResp));
 
     // The geo-type selection itself renders the type's default (first) area —
     // capture it from the base response; its list row never needs a click.
-    const baseFrames = extractRawCapture(baseResp);
+    const baseCapture = extractAreaCapture(baseResp, embed.session);
     const defaultArea = areaFromResponse(baseResp.join("\n"), geo);
-    if (defaultArea && !validOnDisk(defaultArea) && captureHasData(baseFrames)) {
-      writeArea(monthKey, geo.geoType, defaultArea, baseFrames);
+    if (defaultArea && !validOnDisk(defaultArea) && captureHasData(baseCapture)) {
+      writeArea(monthKey, geo.geoType, defaultArea, baseCapture);
       log(`${monthKey}/${geo.geoType}: captured default area ${defaultArea}`);
     }
 
@@ -183,9 +185,9 @@ async function captureMonthGeoType(
       domain,
       expected,
       domain.filter(validOnDisk),
-      (responses) => captureHasData(extractRawCapture(responses)),
+      (responses) => captureHasData(extractAreaCapture(responses, embed.session)),
     )) {
-      writeArea(monthKey, geo.geoType, cap.geoId, extractRawCapture(cap.responses));
+      writeArea(monthKey, geo.geoType, cap.geoId, extractAreaCapture(cap.responses, embed.session));
       captured++;
       if (captured % 25 === 0) log(`${monthKey}/${geo.geoType}: captured ${captured}/${expected}`);
       if (args.maxAreas && captured >= args.maxAreas) break;
