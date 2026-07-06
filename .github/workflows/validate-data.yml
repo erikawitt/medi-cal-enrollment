@@ -1,0 +1,31 @@
+# Required status check on PRs that touch data/. Mark "Validate data" as required
+# under Settings → Branches → branch protection on main.
+name: Validate data
+
+on:
+  pull_request:
+    paths:
+      - "data/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Parse derived map files
+        run: bun run .github/scripts/check-derived-files.ts
+
+      - name: Validate data
+        working-directory: src/data-pipeline
+        run: bun run validate

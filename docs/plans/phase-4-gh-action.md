@@ -4,19 +4,19 @@ overview: Wire the phase 1 scraper and phase 3 normalize/derive/validate scripts
 todos:
   - id: cron-workflow
     content: "Build .github/workflows/data-update.yml: cron + workflow_dispatch, scrape -> normalize -> derive -> open PR"
-    status: pending
+    status: completed
   - id: pr-summary
     content: Generate PR description from the validation report (totals, deltas, CHHS check, row counts)
-    status: pending
+    status: completed
   - id: validate-ci
     content: "Build .github/workflows/validate-data.yml: required check on PRs touching data/"
-    status: pending
+    status: completed
   - id: no-op-path
     content: Ensure no-new-month runs exit cleanly without commits, PRs, or failures
-    status: pending
+    status: completed
   - id: docs
     content: Document required repo settings (branch protection, Actions PR permission) in the workflow file header
-    status: pending
+    status: completed
 ---
 
 # Phase 4: Monthly cron GitHub Action
@@ -79,8 +79,8 @@ Alerting: rely on GitHub's failed-workflow notifications; no external alerting s
 
 ### Decision log (fill in — part of the deliverable)
 
-- Gate A: _unresolved_
-- Gate B: _unresolved_
+- **Gate A:** `gh pr create` / `gh pr edit` with the built-in `GITHUB_TOKEN`. Requires repo setting **Settings → Actions → General → Workflow permissions → "Allow GitHub Actions to create and approve pull requests"**. Documented in `.github/workflows/data-update.yml` header.
+- **Gate B:** `timeout-minutes: 120` on the scrape job; `concurrency: data-update` with `cancel-in-progress: false` so overlapping scheduled runs don't clobber an in-flight scrape. If a scheduled run fails or times out, re-run manually via **workflow_dispatch** (documented in workflow header). Zip-level scrape may take 30–90+ min; 120 min is a hard ceiling with manual retry as the mitigation.
 
 ## Acceptance criteria
 

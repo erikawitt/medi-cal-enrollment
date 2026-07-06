@@ -1,0 +1,129 @@
+# Monthly DPSS scrape → normalize → derive → data PR (never pushes to main).
+#
+# Required repo settings (Settings → Actions → General):
+#   - "Allow GitHub Actions to create and approve pull requests" (Workflow permissions)
+# Required branch protection on main (Settings → Branches):
+#   - Require status check "Validate data" (.github/workflows/validate-data.yml)
+#
+# Gate A: `gh pr create` / `gh pr edit` with the built-in GITHUB_TOKEN (not
+#   peter-evans/create-pull-request).
+# Gate B: job timeout 120 min; concurrency guard (no cancel-in-progress); if a
+#   scheduled run fails or times out during scrape, re-run manually via
+#   workflow_dispatch (Actions → Data update → Run workflow).
+#
+# Schedule: 07:00 Pacific (14:00 UTC during PDT) on the 1st, 5th, and 10th.
+name: Data update
+
+on:
+  schedule:
+    - cron: "0 14 1,5,10 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: data-update
+  cancel-in-progress: false
+
+jobs:
+  scrape-and-pr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        working-directory: src/data-pipeline
+        run: bunx playwright install --with-deps chromium
+
+      - name: Scrape DPSS for new report months
+        working-directory: src/data-pipeline
+        run: bun run scrape
+
+      - name: Detect new raw captures
+        id: changes
+        run: |
+          if [ -z "$(git status --porcelain data/raw/)" ]; then
+            echo "new_raw=false" >> "$GITHUB_OUTPUT"
+            echo "No new report months captured under data/raw/ — exiting cleanly."
+          else
+            echo "new_raw=true" >> "$GITHUB_OUTPUT"
+            months=$(
+              {
+                git status --porcelain data/raw/ | awk '{print $2}' | cut -d/ -f3
+                git diff --name-only HEAD -- data/raw/ 2>/dev/null | cut -d/ -f3
+              } | sort -u | grep -E '^[0-9]{4}-[0-9]{2}$' | paste -sd, -
+            )
+            echo "new_months=${months}" >> "$GITHUB_OUTPUT"
+            echo "New report month(s): ${months}"
+          fi
+
+      - name: Normalize and derive
+        if: steps.changes.outputs.new_raw == 'true'
+        working-directory: src/data-pipeline
+        run: bun run normalize && bun run derive
+
+      - name: Validate
+        if: steps.changes.outputs.new_raw == 'true'
+        working-directory: src/data-pipeline
+        run: |
+          set -o pipefail
+          bun run validate | tee ../../validation-report.json
+
+      - name: Open or update data PR
+        if: steps.changes.outputs.new_raw == 'true'
+        env:
+          NEW_MONTHS: ${{ steps.changes.outputs.new_months }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          latest="$(echo "$NEW_MONTHS" | tr ',' '\n' | sort | tail -1)"
+          branch="data/${latest}"
+          title="Data: $(date -d "${latest}-01" +"%B %Y") report month"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/
+          git stash push --quiet -m "data-update" -- data/
+
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+            git checkout "$branch"
+            git merge origin/main --no-edit
+          else
+            git checkout -b "$branch"
+          fi
+
+          git stash pop
+          git add data/
+
+          if git diff --staged --quiet; then
+            echo "No staged data changes after branch checkout — nothing to commit."
+            exit 0
+          fi
+
+          git commit -m "${title}" -m "Automated capture of report month(s): ${NEW_MONTHS}."
+
+          git push -u origin "$branch"
+
+          body="$(bun run .github/scripts/generate-data-pr-body.ts validation-report.json "$NEW_MONTHS")"
+
+          existing="$(gh pr list --head "$branch" --base main --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh pr edit "$existing" --title "$title" --body "$body"
+            echo "Updated PR #${existing} on ${branch}"
+          else
+            gh pr create --base main --head "$branch" --title "$title" --body "$body"
+          fi
