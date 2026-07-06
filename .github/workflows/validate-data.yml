@@ -1,31 +1,46 @@
-# Required status check on PRs that touch data/. Mark "Validate data" as required
-# under Settings → Branches → branch protection on main.
+# Required status check on all PRs to main. Runs full validation only when
+# data/ changes; otherwise reports success so branch protection is satisfied.
+# Mark "Validate data" as required under Settings → Branches on main.
 name: Validate data
 
 on:
   pull_request:
-    paths:
-      - "data/**"
 
 permissions:
   contents: read
 
 jobs:
   validate:
+    name: Validate data
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            data:
+              - "data/**"
+
+      - name: No data changes
+        if: steps.filter.outputs.data != 'true'
+        run: echo "No data/ changes in this PR — skipping validation."
+
       - uses: oven-sh/setup-bun@v2
+        if: steps.filter.outputs.data == 'true'
         with:
           bun-version: latest
 
       - name: Install dependencies
+        if: steps.filter.outputs.data == 'true'
         run: bun install --frozen-lockfile
 
       - name: Parse derived map files
+        if: steps.filter.outputs.data == 'true'
         run: bun run .github/scripts/check-derived-files.ts
 
       - name: Validate data
+        if: steps.filter.outputs.data == 'true'
         working-directory: src/data-pipeline
         run: bun run validate
