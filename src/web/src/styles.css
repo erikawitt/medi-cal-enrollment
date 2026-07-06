@@ -75,8 +75,8 @@ button {
 .panel {
   position: absolute;
   background: var(--surface);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   border: 1px solid var(--hairline-strong);
   box-shadow: 0 1px 0 var(--hairline);
 }
@@ -239,7 +239,7 @@ button {
   max-height: 80vh;
   overflow-y: auto;
   background: var(--surface);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(4px);
   border: 1px solid var(--hairline-strong);
   padding: 16px;
 }
@@ -292,7 +292,7 @@ button {
   z-index: 30;
   pointer-events: none;
   background: var(--surface);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(4px);
   border: 1px solid var(--hairline-strong);
   padding: 8px;
   min-width: 148px;
