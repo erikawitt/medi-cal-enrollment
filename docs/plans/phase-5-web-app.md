@@ -102,8 +102,8 @@ data/boundaries/assembly_districts.geojson
 
 ### Decision log (fill in — part of the deliverable)
 
-- Gate A: _unresolved_
-- Gate B: _unresolved_
+- Gate A: **Census cartographic boundary files (GENZ2024, 1:500k) for all three legislative layers** — `cb_2024_us_cd119_500k` (119th Congress) filtered to California, `cb_2024_06_sldu_500k` (senate), `cb_2024_06_sldl_500k` (assembly). Chosen over LA County eGIS because the cb files carry clean zero-padded district-number fields (`CD119FP`, `SLDUST`, `SLDLST`) that map directly to `geo_id`s, cover the full district extents beyond the county line (districts are not county artifacts), and are already generalized to 1:500k so no simplification was needed. Each file is filtered to exactly the district set present in the derived data; `geo_id`/`name` added via mapshaper `-each`. SPAs come from the LA County eGIS Administrative Boundaries layer 23 as planned.
+- Gate B: **Only SPAs needed simplification.** The raw eGIS SPA download was 4.4 MB; `mapshaper -simplify 10% keep-shapes -clean` plus 5-decimal coordinate precision brings `spas.geojson` to ~0.3 MB and it remains visually clean at county scale. The three Census 1:500k files are 0.18-0.22 MB as converted (5-decimal precision) — no simplification needed. All four committed files are well under the 2 MB gate.
 
 ## Acceptance criteria
 
