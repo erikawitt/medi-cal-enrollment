@@ -4,26 +4,42 @@ overview: Build the Bun + Vite + React + MapLibre static web app — six togglea
 todos:
   - id: scaffold
     content: Scaffold src/web/ workspace package (Vite + React, Bun runtime, imports src/shared types)
-    status: pending
+    status: completed
   - id: boundaries
     content: Fetch and commit SPA, congressional-, senate-, and assembly-district boundary GeoJSONs to data/boundaries/
-    status: pending
+    status: completed
   - id: map
     content: "MapLibre map: OpenFreeMap basemap (pinned style), six boundary layers with layer switcher"
-    status: pending
+    status: completed
   - id: choropleth
     content: "Choropleth views: age 0-5 enrollment and MoM change (disenrollment trend), with legend"
-    status: pending
+    status: completed
   - id: slider
     content: Report-month time slider driven by the months array in the derived files
-    status: pending
+    status: completed
   - id: panel
     content: Detail panel with ethnicity/citizenship marginals and required data-limitation notes
-    status: pending
+    status: completed
   - id: deploy
     content: GitHub Pages deploy workflow on merge to main; data copied into build output
-    status: pending
+    status: completed
 ---
+
+> **Scope amendments (2026-07-06, per user decisions during implementation;
+> design authority in `docs/plans/phase-5-design-brief.md`):**
+>
+> - **Five layers exposed, not six**: the zip layer is deliberately unexposed
+>   in the UI (zip data remains in derived files; zip-level files are excluded
+>   from the build output to keep the bundle small).
+> - **Program toggle added**: a Medi-Cal / CalFresh segmented control exists
+>   in the UI with CalFresh disabled — derived map files are Medi-Cal only.
+>   Exposing CalFresh is **flagged against phase 3** (extend the derive step
+>   to emit CalFresh map files) rather than computed client-side.
+> - **Selection model**: hover previews the tooltip + details pane; click pins
+>   the details pane (unpin via re-click, Esc, pane ✕, or empty-map click).
+> - **Temporary dev tool**: a floating PALETTE hue slider (bottom right)
+>   drives the monochromatic OKLCH palette for exploration; delete the
+>   isolated `HueSlider` component once a final hue is chosen.
 
 # Phase 5: Interactive map web app
 

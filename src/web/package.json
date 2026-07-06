@@ -1,0 +1,29 @@
+{
+  "name": "@medi-cal-disenrollment/web",
+  "private": true,
+  "type": "module",
+  "description": "Phase 5 web app: fullscreen MapLibre choropleth of Medi-Cal enrollment for ages 0-5 across LA County geography levels, with disenrollment-trend view and marginal breakdowns.",
+  "scripts": {
+    "dev": "bunx --bun vite",
+    "build": "bunx --bun tsc --noEmit && bunx --bun vite build",
+    "preview": "bunx --bun vite preview"
+  },
+  "dependencies": {
+    "@fontsource/space-mono": "^5.2.9",
+    "@medi-cal-disenrollment/shared": "workspace:*",
+    "culori": "^4.0.2",
+    "maplibre-gl": "^5.24.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@types/culori": "^4.0.1",
+    "@types/geojson": "^7946.0.16",
+    "@types/node": "^26.1.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.3"
+  }
+}
