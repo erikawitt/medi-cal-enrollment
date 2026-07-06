@@ -82,6 +82,21 @@ describe("collectScraped + buildMapGeoFile", () => {
   });
 });
 
+describe("acceptance: countywide May 2026 age_0_5", () => {
+  test("rolls the three pinned young-child buckets up to 227543", () => {
+    // Bucket values are the DPSS dashboard reference figures (also asserted
+    // from the raw fixture in normalize.test.ts); 227543 is the pinned
+    // acceptance value from docs/plans/phase-3-normalize.md.
+    const rows = monthMap([
+      row({ month: "2026-05", geo_type: "spa", geo_id: "countywide", metric: "age_under_1", value: 35_222 }),
+      row({ month: "2026-05", geo_type: "spa", geo_id: "countywide", metric: "age_1_2", value: 72_285 }),
+      row({ month: "2026-05", geo_type: "spa", geo_id: "countywide", metric: "age_3_5", value: 120_036 }),
+    ]);
+    const file = buildMapGeoFile("spa", ["2026-05"], collectScraped(rows, "spa"), "t");
+    expect(file.features["countywide"]!["2026-05"]!.age_0_5).toBe(227_543);
+  });
+});
+
 describe("month-over-month deltas (the disenrollment trend)", () => {
   const twoMonths = monthMap([
     row({ month: "2026-01", metric: "age_under_1", value: 100 }),

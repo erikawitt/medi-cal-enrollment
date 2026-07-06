@@ -48,3 +48,6 @@ One of LA County's eight health-service planning regions, published directly by 
 **Community**:
 One of the 270 features in the [la-geography](https://github.com/stiles/la-geography) comprehensive neighborhoods layer: LA City sub-neighborhoods, standalone cities, and unincorporated communities. Never present in DPSS source data; community figures are always apportioned estimates derived via the crosswalk. The UI's definition of "Communities" must cite the la-geography source.
 _Avoid_: neighborhood (inaccurate for the 87 standalone cities in the layer)
+
+**Unknown area**:
+DPSS's residual bucket at every geography level for persons who could not be geocoded to an area, kept in data files as `geo_id: "unknown"`. It carries real published counts that countywide reconciliation needs; it has no geometry, is skipped by map rendering, and is exempt from crosswalk coverage.
