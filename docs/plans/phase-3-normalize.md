@@ -161,6 +161,12 @@ The DPSS table publishes, per report month × geography × program, these row gr
 - **Deterministic tidy serialization** (sorted rows, one JSON object per line) makes normalize
   byte-idempotent; derived map files carry `generated_at` and are rewritten wholesale by design,
   so idempotency there means content-identical modulo that timestamp.
+- **Tracer-bullet outcome on 2026-01 (v2 recapture, 299/300 zips - only 91330/CSU Northridge
+  failed capture):** normalize produced 19,609 tidy rows from 365 areas, byte-identical across
+  runs; derive produced all six map files (267 communities); validate passed every check - CHHS
+  ratio 0.829 (in band), zip/district persons_total sums reconcile with the SPA countywide sum
+  exactly (0.000 rel diff), community collation 0.1% off countywide, full crosswalk coverage of
+  the 298 real tidy zips, no swings (single month: all deltas null by contract).
 
 ## Out of scope
 

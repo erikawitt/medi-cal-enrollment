@@ -183,8 +183,19 @@ reconstruct, `_base.json` is retired, and all v1 captures were invalidated and d
 history preserves them). 2026-01 was recaptured in v2 immediately; **2026-02 … 2026-05 recapture
 is deferred to post-phase-5** — one idempotent `bun run scrape` re-runs it (v1 files read as
 not-captured). The in-flight 2026-05 zip walk (~250/300, v1 format) was stopped for the same
-reason. The sparse-zip straggler hypothesis (spike 38) is superseded by the new validity check but
-unverified against the stragglers themselves — revisit during the deferred backfill.
+reason. The sparse-zip straggler hypothesis (spike 38) is CONFIRMED FIXED by the new validity
+check (`captureHasData` now asks "do the headline Persons worksheets reconstruct?" instead of
+"are there ≥10 real values?"): the v2 recapture of 2026-01 landed **299/300 zips**, recovering
+all 12 institutional/tiny-population zips the v1 run had stranded (90071, 90095, 90506, 90623,
+90630, 90639, 90846, 91125, 91126, 91210, 91759, 93523). The one remaining miss is **91330**
+(CSU Northridge) — its list row never produced a valid focus render in two attempts; retry it
+during the deferred backfill.
+
+**Session-dictionary semantics (spike 39):** Tableau's `dataSegments` MUTATE the session state
+by key — a re-served key replaces the previous segment and an explicit `null` deletes it (a
+geo-type selection resets the view this way). The first v2 recapture attempt resolved January
+captures against a stale bootstrap pool and produced garbage; `SessionDictionary` now applies
+replace/delete semantics and captures resolve against the state at capture time.
 
 ## Acceptance criteria
 
