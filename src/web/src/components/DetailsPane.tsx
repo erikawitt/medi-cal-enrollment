@@ -4,7 +4,6 @@ import {
   formatMonth,
   formatSignedCount,
   formatSignedPct,
-  humanizeSlug,
 } from "../data/format";
 import { CITIZENSHIP_LABELS, ETHNICITY_LABELS } from "../data/metricLabels";
 import { useAppDispatch, useAppState } from "../state/store";
@@ -42,12 +41,6 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
   const months = derived?.months ?? [];
   const isCommunity = layerId === "community";
 
-  const communityType = typeof feature.props.type === "string" ? feature.props.type : null;
-  const communityRegion = typeof feature.props.region === "string" ? feature.props.region : null;
-  // The type already renders in the title ("Long Beach — standalone city");
-  // the subtitle carries the region alone.
-  const subtitle = isCommunity && communityRegion ? humanizeSlug(communityRegion) : null;
-
   const trendValues = months.map((m) => byMonth?.[m]?.age_0_5 ?? null);
   const trendMax = Math.max(1, ...trendValues.filter((v): v is number => v !== null));
 
@@ -55,11 +48,7 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
     <div className="panel details-pane">
       <div className="pane-header">
         <div>
-          <h1 className="pane-title">
-            {feature.name}
-            {isCommunity && communityType ? ` — ${communityType.replaceAll("-", " ")}` : ""}
-          </h1>
-          {subtitle && <div className="pane-subtitle">{subtitle}</div>}
+          <h1 className="pane-title">{feature.name}</h1>
         </div>
         {pinned ? (
           <span className="pinned-chip">
