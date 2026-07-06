@@ -19,9 +19,7 @@ export function ControlsCluster() {
         <div className="controls-group">
           <div className="wordmark-row">
             <div className="wordmark">
-              <span className="crosshair-glyph">+</span> Medi-Cal
-              <br />
-              0–5 Tracker
+              <span className="crosshair-glyph">+</span> Medi-Cal Enrollment
             </div>
             <button type="button" className="about-trigger" onClick={() => setAboutOpen(true)}>
               About
