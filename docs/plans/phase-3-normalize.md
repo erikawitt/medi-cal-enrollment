@@ -4,19 +4,19 @@ overview: Transform committed raw DPSS captures into tidy per-month JSON (Medi-C
 todos:
   - id: shared-pkg
     content: Create src/shared/ workspace package with data-file type definitions (types only, no logic)
-    status: pending
+    status: completed
   - id: normalize
     content: "Build normalize script: data/raw/{month} -> data/tidy/{month}.json"
-    status: pending
+    status: completed
   - id: derive
     content: "Build derive script: tidy -> data/derived/map/{geo_type}.json incl. community collation"
-    status: pending
+    status: completed
   - id: validate
     content: Build validation script (CHHS county cross-check + internal consistency + MoM swing flags)
-    status: pending
+    status: completed
   - id: fixtures
     content: Add raw-capture fixtures so normalize/derive are testable without a live scraper
-    status: pending
+    status: completed
 ---
 
 # Phase 3: Normalization, derived files, and validation
@@ -122,6 +122,45 @@ The DPSS table publishes, per report month × geography × program, these row gr
 - For every zip present in both tidy data and the crosswalk, its value is fully apportioned (fractions sum to 1); zips in tidy but missing from the crosswalk are reported by `validate` (warn).
 - `data/derived/map/*.json` parse against the `src/shared/` types (compile-time test), and deltas are null for the first available month.
 - Normalize/derive run with the network disabled; unit tests run from committed fixtures under `src/data-pipeline/fixtures/`, not live scrapes.
+
+## Decision log (filled during implementation, 2026-07-06)
+
+- **Raw capture format defect found and fixed at the source (ADR 0003).** The v1 raw captures
+  committed by phase 1 held only session-cumulative value pools without index tuples and were not
+  faithfully reconstructable per area (constraint-solver prototypes recovered full age breakdowns
+  for only ~16-35% of zips). Rather than tolerate that downstream, the extraction was rewritten to
+  emit self-contained captures (worksheet captions + tuples + referenced dictionary entries), all
+  v1 captures were invalidated, and 2026-01 was recaptured in v2 from the live embed. No
+  reconstruction logic exists in normalize. This was a scraper defect, not a DPSS publication
+  artifact. The in-flight 2026-05 zip walk was stopped mid-run because its output was v1-format.
+- **Single-month scope (owner directive):** 2026-01 is the canonical development month; the
+  2026-02...2026-05 recapture is deferred to post-phase-5 (one idempotent `bun run scrape`).
+  Acceptance criteria that reference the May 2026 countywide capture are met via committed
+  fixtures generated from real captured VizQL bodies (`test/fixtures/*.capture.json`) - the
+  Department level is not scraped monthly, so "if present in raw" is vacuous, as anticipated.
+- **Countywide figure = SPA-level sum.** No Department-level capture exists per month; the SPA
+  partition (8 SPAs + the residual "Unknown" area) sums to the countywide figure and is used
+  wherever the plan says "countywide" (CHHS cross-check, internal consistency).
+- **DPSS's residual "Unknown" area is kept in tidy and derived files as `geo_id: "unknown"`.**
+  It carries real published counts that countywide reconciliation needs; map consumers skip it
+  (no geometry). It is exempt from crosswalk coverage (not a real zip).
+- **`age_0_5` requires all three young-child buckets.** DPSS suppresses/omits empty cells;
+  absent is not zero, and a partial rollup would silently undercount. If any of `age_under_1`,
+  `age_1_2`, `age_3_5` is unpublished for an area-month, `age_0_5` is omitted there.
+- **CHHS cross-check thresholds retuned against real data.** The plan's 5%/15% deviation bands
+  assumed the sources measure near-identical stocks. They do not: DPSS publishes
+  DPSS-administered Medi-Cal persons, DHCS publishes all certified eligibles for LA County
+  (dataset "Medi-Cal Certified Eligibles with Demographics by Month", resource
+  `cc08b60f-...`, filtered to County=Los Angeles). Observed Jan 2026: DPSS 3.19M vs DHCS 3.98M -
+  a structural ~0.80 ratio. Chosen bands on the DPSS/DHCS ratio: warn outside [0.72, 1.0], fail
+  outside [0.65, 1.05] (order-of-magnitude protection that still catches a >10% relative drift
+  from the structural baseline in either direction).
+- **`avg_benefit_per_case` is not apportioned to communities** (averages don't sum across areas)
+  and DPSS publishes no Medi-Cal per-case benefit at most levels - the metric appears in tidy
+  only where actually published.
+- **Deterministic tidy serialization** (sorted rows, one JSON object per line) makes normalize
+  byte-idempotent; derived map files carry `generated_at` and are rewritten wholesale by design,
+  so idempotency there means content-identical modulo that timestamp.
 
 ## Out of scope
 

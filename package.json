@@ -3,6 +3,10 @@
   "private": true,
   "workspaces": ["src/*"],
   "scripts": {
-    "crosswalk": "bun run --filter @medi-cal-disenrollment/data-pipeline crosswalk"
+    "crosswalk": "bun run --filter @medi-cal-disenrollment/data-pipeline crosswalk",
+    "scrape": "bun run --filter @medi-cal-disenrollment/data-pipeline scrape",
+    "normalize": "bun run --filter @medi-cal-disenrollment/data-pipeline normalize",
+    "derive": "bun run --filter @medi-cal-disenrollment/data-pipeline derive",
+    "validate": "bun run --filter @medi-cal-disenrollment/data-pipeline validate"
   }
 }

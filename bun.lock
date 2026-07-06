@@ -8,6 +8,7 @@
     "src/data-pipeline": {
       "name": "@medi-cal-disenrollment/data-pipeline",
       "dependencies": {
+        "@medi-cal-disenrollment/shared": "workspace:*",
         "@turf/turf": "^7.3.5",
         "playwright": "^1.61.1",
         "proj4": "^2.20.9",
@@ -17,9 +18,14 @@
         "@types/proj4": "^2.19.0",
       },
     },
+    "src/shared": {
+      "name": "@medi-cal-disenrollment/shared",
+    },
   },
   "packages": {
     "@medi-cal-disenrollment/data-pipeline": ["@medi-cal-disenrollment/data-pipeline@workspace:src/data-pipeline"],
+
+    "@medi-cal-disenrollment/shared": ["@medi-cal-disenrollment/shared@workspace:src/shared"],
 
     "@turf/along": ["@turf/along@7.3.5", "", { "dependencies": { "@turf/bearing": "7.3.5", "@turf/destination": "7.3.5", "@turf/distance": "7.3.5", "@turf/helpers": "7.3.5", "@turf/invariant": "7.3.5", "@types/geojson": "^7946.0.10", "tslib": "^2.8.1" } }, "sha512-Ee4AHV9j2Bnlm/5nm4ChY7nkwpaaMffSez9nsJ9HcMbzG+GgTkt0F5pn9d02U7YvuWqckM5lfr3kBI+w2uTz+g=="],
 

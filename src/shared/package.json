@@ -1,0 +1,9 @@
+{
+  "name": "@medi-cal-disenrollment/shared",
+  "private": true,
+  "type": "module",
+  "description": "Schema authority for the project's data files: types only, no logic. The data pipeline (phase 3+) and the web app (phase 5) both compile against this package.",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

@@ -5,9 +5,13 @@
   "scripts": {
     "crosswalk": "bun run crosswalk/generate-crosswalk.ts",
     "scrape": "bun run src/scrape.ts",
+    "normalize": "bun run src/normalize.ts",
+    "derive": "bun run src/derive.ts",
+    "validate": "bun run src/validate.ts",
     "test": "bun test"
   },
   "dependencies": {
+    "@medi-cal-disenrollment/shared": "workspace:*",
     "@turf/turf": "^7.3.5",
     "playwright": "^1.61.1",
     "proj4": "^2.20.9"
