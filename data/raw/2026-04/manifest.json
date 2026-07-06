@@ -1,0 +1,367 @@
+{
+  "reportMonth": "2026-04",
+  "extractionMethod": "vizql-presmodel-json",
+  "scraperVersion": "phase1-0.1.0",
+  "capturedAt": "2026-07-06T05:48:14.440Z",
+  "source": "https://myappse.dpss.lacounty.gov/pls/apexprod/f?p=AAGT:AAGT",
+  "geoTypes": [
+    {
+      "geoType": "assembly_district",
+      "areaCount": 25,
+      "domainCount": 25,
+      "areas": [
+        {
+          "geoId": "SAD 34",
+          "file": "SAD_34.json",
+          "order": 0
+        },
+        {
+          "geoId": "SAD 39",
+          "file": "SAD_39.json",
+          "order": 1
+        },
+        {
+          "geoId": "SAD 40",
+          "file": "SAD_40.json",
+          "order": 2
+        },
+        {
+          "geoId": "SAD 41",
+          "file": "SAD_41.json",
+          "order": 3
+        },
+        {
+          "geoId": "SAD 42",
+          "file": "SAD_42.json",
+          "order": 4
+        },
+        {
+          "geoId": "SAD 43",
+          "file": "SAD_43.json",
+          "order": 5
+        },
+        {
+          "geoId": "SAD 44",
+          "file": "SAD_44.json",
+          "order": 6
+        },
+        {
+          "geoId": "SAD 46",
+          "file": "SAD_46.json",
+          "order": 7
+        },
+        {
+          "geoId": "SAD 48",
+          "file": "SAD_48.json",
+          "order": 8
+        },
+        {
+          "geoId": "SAD 49",
+          "file": "SAD_49.json",
+          "order": 9
+        },
+        {
+          "geoId": "SAD 51",
+          "file": "SAD_51.json",
+          "order": 10
+        },
+        {
+          "geoId": "SAD 52",
+          "file": "SAD_52.json",
+          "order": 11
+        },
+        {
+          "geoId": "SAD 53",
+          "file": "SAD_53.json",
+          "order": 12
+        },
+        {
+          "geoId": "SAD 54",
+          "file": "SAD_54.json",
+          "order": 13
+        },
+        {
+          "geoId": "SAD 55",
+          "file": "SAD_55.json",
+          "order": 14
+        },
+        {
+          "geoId": "SAD 56",
+          "file": "SAD_56.json",
+          "order": 15
+        },
+        {
+          "geoId": "SAD 57",
+          "file": "SAD_57.json",
+          "order": 16
+        },
+        {
+          "geoId": "SAD 61",
+          "file": "SAD_61.json",
+          "order": 17
+        },
+        {
+          "geoId": "SAD 62",
+          "file": "SAD_62.json",
+          "order": 18
+        },
+        {
+          "geoId": "SAD 64",
+          "file": "SAD_64.json",
+          "order": 19
+        },
+        {
+          "geoId": "SAD 65",
+          "file": "SAD_65.json",
+          "order": 20
+        },
+        {
+          "geoId": "SAD 66",
+          "file": "SAD_66.json",
+          "order": 21
+        },
+        {
+          "geoId": "SAD 67",
+          "file": "SAD_67.json",
+          "order": 22
+        },
+        {
+          "geoId": "SAD 69",
+          "file": "SAD_69.json",
+          "order": 23
+        },
+        {
+          "geoId": "Unknown",
+          "file": "Unknown.json",
+          "order": 24
+        }
+      ]
+    },
+    {
+      "geoType": "congressional_district",
+      "areaCount": 18,
+      "domainCount": 18,
+      "areas": [
+        {
+          "geoId": "CD 23",
+          "file": "CD_23.json",
+          "order": 0
+        },
+        {
+          "geoId": "CD 26",
+          "file": "CD_26.json",
+          "order": 1
+        },
+        {
+          "geoId": "CD 27",
+          "file": "CD_27.json",
+          "order": 2
+        },
+        {
+          "geoId": "CD 28",
+          "file": "CD_28.json",
+          "order": 3
+        },
+        {
+          "geoId": "CD 29",
+          "file": "CD_29.json",
+          "order": 4
+        },
+        {
+          "geoId": "CD 30",
+          "file": "CD_30.json",
+          "order": 5
+        },
+        {
+          "geoId": "CD 31",
+          "file": "CD_31.json",
+          "order": 6
+        },
+        {
+          "geoId": "CD 32",
+          "file": "CD_32.json",
+          "order": 7
+        },
+        {
+          "geoId": "CD 34",
+          "file": "CD_34.json",
+          "order": 8
+        },
+        {
+          "geoId": "CD 35",
+          "file": "CD_35.json",
+          "order": 9
+        },
+        {
+          "geoId": "CD 36",
+          "file": "CD_36.json",
+          "order": 10
+        },
+        {
+          "geoId": "CD 37",
+          "file": "CD_37.json",
+          "order": 11
+        },
+        {
+          "geoId": "CD 38",
+          "file": "CD_38.json",
+          "order": 12
+        },
+        {
+          "geoId": "CD 42",
+          "file": "CD_42.json",
+          "order": 13
+        },
+        {
+          "geoId": "CD 43",
+          "file": "CD_43.json",
+          "order": 14
+        },
+        {
+          "geoId": "CD 44",
+          "file": "CD_44.json",
+          "order": 15
+        },
+        {
+          "geoId": "CD 45",
+          "file": "CD_45.json",
+          "order": 16
+        },
+        {
+          "geoId": "Unknown",
+          "file": "Unknown.json",
+          "order": 17
+        }
+      ]
+    },
+    {
+      "geoType": "senate_district",
+      "areaCount": 14,
+      "domainCount": 14,
+      "areas": [
+        {
+          "geoId": "SSD 20",
+          "file": "SSD_20.json",
+          "order": 0
+        },
+        {
+          "geoId": "SSD 22",
+          "file": "SSD_22.json",
+          "order": 1
+        },
+        {
+          "geoId": "SSD 23",
+          "file": "SSD_23.json",
+          "order": 2
+        },
+        {
+          "geoId": "SSD 24",
+          "file": "SSD_24.json",
+          "order": 3
+        },
+        {
+          "geoId": "SSD 25",
+          "file": "SSD_25.json",
+          "order": 4
+        },
+        {
+          "geoId": "SSD 26",
+          "file": "SSD_26.json",
+          "order": 5
+        },
+        {
+          "geoId": "SSD 27",
+          "file": "SSD_27.json",
+          "order": 6
+        },
+        {
+          "geoId": "SSD 28",
+          "file": "SSD_28.json",
+          "order": 7
+        },
+        {
+          "geoId": "SSD 30",
+          "file": "SSD_30.json",
+          "order": 8
+        },
+        {
+          "geoId": "SSD 33",
+          "file": "SSD_33.json",
+          "order": 9
+        },
+        {
+          "geoId": "SSD 34",
+          "file": "SSD_34.json",
+          "order": 10
+        },
+        {
+          "geoId": "SSD 35",
+          "file": "SSD_35.json",
+          "order": 11
+        },
+        {
+          "geoId": "SSD 36",
+          "file": "SSD_36.json",
+          "order": 12
+        },
+        {
+          "geoId": "Unknown",
+          "file": "Unknown.json",
+          "order": 13
+        }
+      ]
+    },
+    {
+      "geoType": "spa",
+      "areaCount": 9,
+      "domainCount": 9,
+      "areas": [
+        {
+          "geoId": "SPA 1",
+          "file": "SPA_1.json",
+          "order": 0
+        },
+        {
+          "geoId": "SPA 2",
+          "file": "SPA_2.json",
+          "order": 1
+        },
+        {
+          "geoId": "SPA 3",
+          "file": "SPA_3.json",
+          "order": 2
+        },
+        {
+          "geoId": "SPA 4",
+          "file": "SPA_4.json",
+          "order": 3
+        },
+        {
+          "geoId": "SPA 5",
+          "file": "SPA_5.json",
+          "order": 4
+        },
+        {
+          "geoId": "SPA 6",
+          "file": "SPA_6.json",
+          "order": 5
+        },
+        {
+          "geoId": "SPA 7",
+          "file": "SPA_7.json",
+          "order": 6
+        },
+        {
+          "geoId": "SPA 8",
+          "file": "SPA_8.json",
+          "order": 7
+        },
+        {
+          "geoId": "Unknown",
+          "file": "Unknown.json",
+          "order": 8
+        }
+      ]
+    }
+  ]
+}
