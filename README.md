@@ -2,7 +2,7 @@
 
 Mirrors LA County DPSS Medi-Cal enrollment data for young children (ages 0–5) into static, versioned JSON, and presents it as an interactive layered map focused on **enrollment trends**.
 
-**Live site:** [https://erikawitt.github.io/medi-cal-disenrollment/](https://erikawitt.github.io/medi-cal-disenrollment/)
+**Live site:** [https://erikawitt.github.io/medi-cal-enrollment/](https://erikawitt.github.io/medi-cal-enrollment/)
 
 ## Intent
 
