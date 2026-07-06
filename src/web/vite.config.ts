@@ -66,6 +66,6 @@ function copyRepoData(): Plugin {
 
 export default defineConfig(({ command }) => ({
   // GitHub Pages serves the project site under /<repo-name>/.
-  base: command === "build" ? "/medi-cal-disenrollment/" : "/",
+  base: command === "build" ? "/medi-cal-enrollment/" : "/",
   plugins: [react(), serveRepoData(), copyRepoData()],
 }));
