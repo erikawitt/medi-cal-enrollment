@@ -7,9 +7,9 @@ interface AboutModalProps {
 }
 
 /**
- * Placeholder about/methodology modal: final copy comes later; the section
- * skeleton shows what it will hold. Focus-trapped; restores focus to the
- * trigger on close (the trigger is document.activeElement at mount).
+ * About/methodology modal: data provenance, update cadence, boundary sources,
+ * and dataset limitations. Focus-trapped; restores focus to the trigger on
+ * close (the trigger is document.activeElement at mount).
  */
 export function AboutModal({ onClose }: AboutModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
@@ -60,24 +60,40 @@ export function AboutModal({ onClose }: AboutModalProps) {
             ✕
           </button>
         </div>
-        <p>About content forthcoming.</p>
         <h3>Data source</h3>
-        <div className="skeleton-line" style={{ width: "82%" }} />
-        <div className="skeleton-line" style={{ width: "64%" }} />
+        <p>
+          The{" "}
+          <a
+            href="https://myappse.dpss.lacounty.gov/pls/apexprod/f?p=AAGT:AAGT"
+            target="_blank"
+            rel="noreferrer"
+          >
+            data
+          </a>{" "}
+          for this project is derived from the County of Los Angeles&apos; Department of Public
+          Social Services (DPSS) beginning in January 2026.
+        </p>
         <h3>Update cadence</h3>
-        <div className="skeleton-line" style={{ width: "58%" }} />
+        <p>
+          LA County enrollment data is reported on a monthly basis. This site will automatically
+          update bi-monthly.
+        </p>
         <h3>Community boundaries</h3>
-        <p className="honesty-note">
-          Community boundaries from the{" "}
+        <p>
+          Sourced from the{" "}
           <a href="https://github.com/stiles/la-geography" target="_blank" rel="noreferrer">
             la-geography
           </a>{" "}
           project, a countywide extension of the LA Times Mapping LA neighborhoods.
         </p>
-        <h3>Data-honesty notes</h3>
-        <div className="skeleton-line" style={{ width: "90%" }} />
-        <div className="skeleton-line" style={{ width: "86%" }} />
-        <div className="skeleton-line" style={{ width: "71%" }} />
+        <h3>A Note on the Dataset</h3>
+        <p className="honesty-note">
+          This map groups ages under 1, 1-2, 3-5 into a single category for the purposes of
+          understanding disenrollment trends among early childhood beneficiaries. Currently, the
+          DPSS data does not disaggregate age by ethnicity nor citizenship status. The Ethnicity
+          and Citizenship breakdown by region includes all persons enrolled in Medi-Cal and is
+          intended to be corollary and to help assess potential disparities.
+        </p>
       </div>
     </div>
   );
