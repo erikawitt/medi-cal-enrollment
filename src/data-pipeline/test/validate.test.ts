@@ -134,7 +134,19 @@ describe("swingChecks", () => {
 
   test("ignores swings within the band and null deltas (single month)", () => {
     expect(swingChecks([file(-29.9)])[0]!.level).toBe("pass");
-    expect(swingChecks([file(null)])[0]!.level).toBe("pass");
+    const single: MapGeoFile = {
+      ...file(null),
+      features: {
+        "90001": {
+          "2026-02": { age_0_5: 100, age_0_5_mom_delta: null, age_0_5_mom_pct: null, persons_mom_delta: null, persons_mom_pct: null, ethnicity: {}, citizenship: {} },
+        },
+      },
+    };
+    expect(swingChecks([single])[0]!.level).toBe("pass");
+  });
+
+  test("flags a move from a prior value of 0 (null pct, non-null delta)", () => {
+    expect(swingChecks([file(null)])[0]!.level).toBe("warn"); // delta -50 from zero baseline
   });
 });
 

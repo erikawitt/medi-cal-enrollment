@@ -212,14 +212,20 @@ export function crosswalkCoverageChecks(
   ];
 }
 
-/** Flag geographies whose age_0_5 swings more than +/-30% month-over-month. */
+/**
+ * Flag geographies whose age_0_5 swings more than +/-30% month-over-month.
+ * A move from a prior value of 0 has no percentage (derive emits a null pct
+ * with a non-null delta) but is an extreme swing by definition - flagged too.
+ */
 export function swingChecks(mapFiles: MapGeoFile[], thresholdPct = 30): Check[] {
-  const flagged: { geo_type: string; geo_id: string; month: string; pct: number }[] = [];
+  const flagged: { geo_type: string; geo_id: string; month: string; pct: number | null; delta?: number }[] = [];
   for (const file of mapFiles) {
     for (const [geoId, byMonth] of Object.entries(file.features)) {
       for (const [month, fm] of Object.entries(byMonth)) {
         if (fm.age_0_5_mom_pct !== null && Math.abs(fm.age_0_5_mom_pct) > thresholdPct) {
           flagged.push({ geo_type: file.geo_type, geo_id: geoId, month, pct: fm.age_0_5_mom_pct });
+        } else if (fm.age_0_5_mom_pct === null && fm.age_0_5_mom_delta !== null && fm.age_0_5_mom_delta !== 0) {
+          flagged.push({ geo_type: file.geo_type, geo_id: geoId, month, pct: null, delta: fm.age_0_5_mom_delta });
         }
       }
     }

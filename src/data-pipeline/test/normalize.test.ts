@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import type { AreaCapture } from "../src/vizql";
-import { captureMetrics, toGeoId, serializeTidy } from "../src/normalize";
+import { captureMetrics, normalizeMonth, toGeoId, serializeTidy } from "../src/normalize";
 import type { TidyRow } from "@medi-cal-disenrollment/shared";
 
 const countywide: AreaCapture = JSON.parse(
@@ -100,6 +100,16 @@ describe("toGeoId", () => {
     expect(toGeoId("senate_district", "SSD 20")).toBe("sd-20");
     expect(toGeoId("assembly_district", "SAD 34")).toBe("ad-34");
     expect(toGeoId("spa", "Unknown")).toBe("unknown");
+  });
+});
+
+describe("acceptance: normalize is byte-idempotent over committed raw", () => {
+  const rawMonthDir = new URL("../../../data/raw/2026-01/", import.meta.url).pathname;
+  test.skipIf(!existsSync(rawMonthDir))("normalizing 2026-01 twice yields identical bytes", () => {
+    const a = normalizeMonth("2026-01", rawMonthDir);
+    const b = normalizeMonth("2026-01", rawMonthDir);
+    expect(serializeTidy(a.rows)).toBe(serializeTidy(b.rows));
+    expect(a.report.skipped).toEqual(b.report.skipped);
   });
 });
 

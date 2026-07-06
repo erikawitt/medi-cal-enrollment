@@ -90,6 +90,20 @@ describe("v2 capture shape", () => {
     expect(captureHasData(spa2)).toBe(true);
     expect(captureHasData({ formatVersion: 2, worksheets: {}, dataDictionary: {} })).toBe(false);
   });
+
+  test("captureHasData requires the Medi-Cal headline specifically (CalFresh alone is not enough)", () => {
+    const calfreshOnly: AreaCapture = {
+      formatVersion: 2,
+      worksheets: {
+        "Persons by CaFresh": {
+          vizDataColumns: [{ fieldCaption: "SUM(TNUM1)", dataType: "real", paneIndices: [0], columnIndices: [0] }],
+          paneColumnsList: [{ vizPaneColumns: [{ valueIndices: [0] }] }],
+        },
+      },
+      dataDictionary: { real: { "0": 123 } },
+    };
+    expect(captureHasData(calfreshOnly)).toBe(false);
+  });
 });
 
 describe("May 2026 countywide Medi-Cal reference values (DPSS dashboard)", () => {

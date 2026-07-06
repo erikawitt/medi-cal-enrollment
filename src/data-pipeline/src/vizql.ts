@@ -324,17 +324,19 @@ export function reconstructWorksheet(capture: AreaCapture, worksheetName: string
 
 /**
  * Whether a capture actually carries a geography's published figures: the
- * headline "Persons by <program>" single-value worksheets must resolve to a
+ * headline "Persons by Med-Cal" single-value worksheet must resolve to a
  * number. Focus-release clicks and checkbox-only deltas produce captures
  * without resolvable worksheets; those are invalid and get re-captured.
+ *
+ * Medi-Cal is the required signal: every area DPSS publishes carries it
+ * (observed 365/365 for 2026-01), while CalFresh is legitimately unpublished
+ * for a handful of sparse institutional areas - requiring it would reject
+ * valid captures, and accepting a capture on CalFresh alone would let a
+ * broken Medi-Cal worksheet slip through as silently-omitted rows.
  */
 export function captureHasData(capture: AreaCapture): boolean {
-  for (const name of ["Persons by Med-Cal", "Persons by CaFresh"]) {
-    const ws = reconstructWorksheet(capture, name);
-    const v = ws?.rows[0]?.find((x) => typeof x === "number");
-    if (typeof v === "number") return true;
-  }
-  return false;
+  const ws = reconstructWorksheet(capture, "Persons by Med-Cal");
+  return typeof ws?.rows[0]?.find((x) => typeof x === "number") === "number";
 }
 
 /** Parse a committed capture file's contents; null if not a v2 capture. */
