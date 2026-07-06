@@ -1,5 +1,6 @@
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-csp-worker.js?url";
 import { useEffect, useRef, useState } from "react";
 import {
   FILL_OPACITY,
@@ -16,6 +17,15 @@ import {
   useAppState,
   type FeatureRef,
 } from "../state/store";
+
+// MapLibre normally spins up its worker by serializing internal functions
+// via .toString() into a blob. Vite's production bundler (rolldown) can
+// tree-shake or rename a helper those functions rely on, so the worker
+// throws a silent "<x> is not defined" (visible only via the map's "error"
+// event) and GeoJSON sources never render — reproduces in prod builds only,
+// not `vite dev`. Pointing at the package's prebuilt CSP worker sidesteps
+// the string-eval path entirely. See maplibre-gl-js issue #7339.
+maplibregl.setWorkerUrl(maplibreWorkerUrl);
 
 const LA_COUNTY_BOUNDS: [[number, number], [number, number]] = [
   [-118.95, 33.6],
