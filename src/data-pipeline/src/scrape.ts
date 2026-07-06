@@ -148,6 +148,14 @@ async function captureMonthGeoType(
     const baseResp = await selectGeoType(embed, geo);
     const domain = parseSubAreaDomain(baseResp.join("\n"), geo.pattern);
     if (domain.length === 0) throw new Error("empty sub-area domain");
+    // A domain smaller than previously observed means the token pool hadn't
+    // finished streaming — treating it as authoritative would mark the geo
+    // type complete after a handful of areas. Fail the attempt instead.
+    if (prior?.domainCount && domain.length < prior.domainCount) {
+      throw new Error(
+        `sub-area domain shrank: got ${domain.length}, manifest says ${prior.domainCount}`,
+      );
+    }
 
     const validOnDisk = (id: string) => areaValidOnDisk(monthKey, geo.geoType, id);
     if (domain.every(validOnDisk)) {
@@ -172,6 +180,7 @@ async function captureMonthGeoType(
     for await (const cap of captureAllAreas(
       embed,
       geo,
+      domain,
       expected,
       domain.filter(validOnDisk),
       (responses) => captureHasData(extractRawCapture(responses)),

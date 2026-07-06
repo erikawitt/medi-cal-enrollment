@@ -286,17 +286,23 @@ export async function selectGeoType(
   await embed.page.mouse.click(pt.x, pt.y);
   await sleep(POLITE_DELAY_MS);
 
+  // Poll until the sub-area token pool stabilizes: the pool streams in over
+  // several responses, and an early response can carry just the default
+  // area's own token — breaking on first sight would report a domain of 1.
   let collected: string[] = [];
+  let lastSize = 0;
+  let stablePolls = 0;
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     collected = collected.concat(embed.drainResponses());
-    if (parseSubAreaDomain(collected.join("\n"), geo.pattern).length > 0) {
-      // Domain seen; let trailing frames (rest of the streamed render) settle.
-      await sleep(1500);
-      collected = collected.concat(embed.drainResponses());
-      break;
+    const size = parseSubAreaDomain(collected.join("\n"), geo.pattern).length;
+    if (size > 0 && size === lastSize) {
+      if (++stablePolls >= 2) break;
+    } else {
+      stablePolls = 0;
     }
-    await sleep(500);
+    lastSize = size;
+    await sleep(1000);
   }
   return collected;
 }
@@ -391,23 +397,35 @@ export interface AreaCapture {
  * wheel-scroll and continue. Passes restart from the top of the list until
  * `alreadyDone` + captures cover `expectedCount` areas or progress stalls.
  *
+ * Two phases:
+ *  1. **Linear sweep** — click down the list at ~half-row pitch, scrolling
+ *     viewport by viewport. Makes no assumption about list order; captures the
+ *     bulk of the domain but can miss scattered rows (click landed on a row
+ *     boundary, or on the currently-focused row, which releases focus).
+ *  2. **Targeted recovery** — for each still-missing area, aim a click at its
+ *     predicted row using its index in `domainOrdered` (the token order of the
+ *     geo-type-select response, which matches the rendered list order). Every
+ *     hit names the row we actually reached, which recalibrates the scroll
+ *     offset and row height, so aim errors self-correct within a few clicks.
+ *
  * `doneNames` seeds the walk with areas already captured on disk — they count
- * toward `expectedCount` without needing a click, so a resumed run stops as
- * soon as the missing areas are found. `isValid` guards against re-renders
- * that carry a title but no figures — those stay unseen, so a later pass
- * re-clicks and recaptures them.
+ * as seen without needing a click, so a resumed run stops as soon as the
+ * missing areas are found. `isValid` guards against re-renders that carry a
+ * title but no figures — those stay unseen and get re-clicked later.
  */
 export async function* captureAllAreas(
   embed: Embed,
   geo: Pick<GeoTypeSpec, "titlePrefix" | "idPrefix" | "pattern">,
+  domainOrdered: string[],
   expectedCount: number,
   doneNames: Iterable<string> = [],
   isValid: (responses: string[]) => boolean = () => true,
 ): AsyncGenerator<AreaCapture> {
   const zone = await subAreaZone(embed);
   const seen = new Set<string>(doneNames);
-  const PITCH = 16; // frame px ≈ half a list row (rows paint ~32px tall)
+  const PITCH = 16; // frame px ≈ half a list row
   const LIST_TOP = 30; // px below the zone's painted title
+  const viewport = zone.h - LIST_TOP;
 
   const wheelInList = async (dy: number) => {
     const center = await framePoint(embed, zone.x + zone.w / 2, zone.y + zone.h / 2);
@@ -415,25 +433,66 @@ export async function* captureAllAreas(
     await embed.page.mouse.wheel(0, dy);
     await sleep(700);
   };
+  const clickAndName = async (fy: number) => {
+    const bodies = await clickSubAreaAt(embed, zone.x + 18, fy);
+    return { bodies, name: areaFromResponse(bodies.join("\n"), geo) };
+  };
 
-  let stalePasses = 0;
-  while (seen.size < expectedCount && stalePasses < 3) {
-    const before = seen.size;
-    // Rows are ~2×PITCH tall; sweep enough viewports to cover the domain.
-    const viewport = zone.h - LIST_TOP;
-    const maxScrolls = Math.ceil((expectedCount * 2 * PITCH * 2) / viewport) + 2;
-    for (let s = 0; s <= maxScrolls && seen.size < expectedCount; s++) {
-      for (let dy = LIST_TOP; dy <= zone.h - 6 && seen.size < expectedCount; dy += PITCH) {
-        const bodies = await clickSubAreaAt(embed, zone.x + 18, zone.y + dy);
-        const name = areaFromResponse(bodies.join("\n"), geo);
-        if (!name || seen.has(name) || !isValid(bodies)) continue;
-        seen.add(name);
-        yield { geoId: name, responses: bodies };
-      }
-      if (seen.size >= expectedCount) break;
-      await wheelInList(viewport - PITCH);
+  // Phase 1: linear sweep (no list-order assumption).
+  const maxScrolls = Math.ceil((expectedCount * 2 * PITCH) / viewport) + 2;
+  for (let s = 0; s <= maxScrolls && seen.size < expectedCount; s++) {
+    for (let dy = LIST_TOP; dy <= zone.h - 6 && seen.size < expectedCount; dy += PITCH) {
+      const { bodies, name } = await clickAndName(zone.y + dy);
+      if (!name || seen.has(name) || !isValid(bodies)) continue;
+      seen.add(name);
+      yield { geoId: name, responses: bodies };
     }
-    if (seen.size < expectedCount) await wheelInList(-viewport * (maxScrolls + 2)); // back to the top
-    stalePasses = seen.size === before ? stalePasses + 1 : 0;
+    if (seen.size >= expectedCount) return;
+    await wheelInList(viewport - PITCH);
+  }
+
+  // Phase 2: targeted recovery, assuming list order == domainOrdered.
+  const indexOf = new Map(domainOrdered.map((n, i) => [n, i]));
+  await wheelInList(-(domainOrdered.length + 10) * 40); // clamp to the top
+  let scroll = 0; // estimated px of list hidden above the viewport
+  let rowH = 30; // estimated row height; recalibrated from hit pairs below
+  let lastHit: { index: number; fy: number; scroll: number } | null = null;
+
+  for (let round = 0; round < 3 && seen.size < expectedCount; round++) {
+    const before = seen.size;
+    for (const target of domainOrdered) {
+      if (seen.size >= expectedCount) break;
+      if (seen.has(target)) continue;
+      const ti = indexOf.get(target)!;
+      for (let tries = 0; tries < 5; tries++) {
+        // Predicted center of the target row, in zone coordinates.
+        const yInZone = LIST_TOP + ti * rowH + rowH / 2 - scroll;
+        if (yInZone < LIST_TOP + 2 || yInZone > zone.h - 6) {
+          const delta = yInZone - (LIST_TOP + viewport / 2);
+          await wheelInList(delta);
+          scroll = Math.max(0, scroll + delta);
+          lastHit = null; // scroll moved; old anchor no longer comparable
+          continue;
+        }
+        const { bodies, name } = await clickAndName(zone.y + yInZone);
+        if (!name) continue; // focus release or dead click — try again
+        const hi = indexOf.get(name);
+        if (hi !== undefined) {
+          // Recalibrate from what we actually hit.
+          if (lastHit && lastHit.scroll === scroll && hi !== lastHit.index) {
+            const est = (yInZone - lastHit.fy) / (hi - lastHit.index);
+            if (est > 10 && est < 60) rowH = est;
+          }
+          lastHit = { index: hi, fy: yInZone, scroll };
+          scroll = LIST_TOP + hi * rowH + rowH / 2 - yInZone;
+        }
+        if (!seen.has(name) && isValid(bodies)) {
+          seen.add(name);
+          yield { geoId: name, responses: bodies };
+        }
+        if (name === target) break;
+      }
+    }
+    if (seen.size === before) break; // no progress; stop rather than loop
   }
 }
