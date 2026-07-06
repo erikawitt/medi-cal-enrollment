@@ -1,7 +1,7 @@
 import type { MapGeoFile } from "@medi-cal-disenrollment/shared";
 import { useMemo } from "react";
 import type { MetricId } from "../state/store";
-import { changeScale, enrollmentScale, type ColorScale } from "./ramp";
+import { changeScale, DEFAULT_HUE, enrollmentScale, type ColorScale } from "./ramp";
 
 const EMPTY_SCALE: ColorScale = {
   colorByGeoId: new Map(),
@@ -11,15 +11,14 @@ const EMPTY_SCALE: ColorScale = {
 };
 
 /**
- * The active choropleth scale for (derived file, metric, month, hue).
- * Pure recomputation — no fetching, so metric/month/hue changes are cheap.
+ * The active choropleth scale for (derived file, metric, month).
+ * Pure recomputation — no fetching, so metric/month changes are cheap.
  * The "unknown" geo_id (no geometry) is skipped.
  */
 export function useColorScale(
   derived: MapGeoFile | null,
   metric: MetricId,
   month: string | null,
-  hue: number,
 ): ColorScale {
   return useMemo(() => {
     if (!derived || !month) return EMPTY_SCALE;
@@ -31,6 +30,8 @@ export function useColorScale(
       const value = metric === "age_0_5" ? cell.age_0_5 : cell.age_0_5_mom_pct;
       if (value !== undefined && value !== null) values.set(geoId, value);
     }
-    return metric === "age_0_5" ? enrollmentScale(values, hue) : changeScale(values, hue);
-  }, [derived, metric, month, hue]);
+    return metric === "age_0_5"
+      ? enrollmentScale(values, DEFAULT_HUE)
+      : changeScale(values, DEFAULT_HUE);
+  }, [derived, metric, month]);
 }

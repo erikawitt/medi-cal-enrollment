@@ -3,6 +3,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-csp-worker.js?url";
 import { useEffect, useRef, useState } from "react";
 import {
+  DEFAULT_HUE,
   FILL_OPACITY,
   MISSING_HEX,
   MISSING_OPACITY,
@@ -39,15 +40,15 @@ const LINE_LAYER_ID = "choropleth-line";
 /**
  * Feature border / hover / pinned outline colors. The WebGL canvas can't
  * read CSS custom properties, so --ink and --accent are re-derived from the
- * hue here (same OKLCH definitions as the brief's :root block).
+ * default hue here (same OKLCH definitions as the brief's :root block).
  */
-function lineColorExpression(hue: number): unknown {
+function lineColorExpression(): unknown {
   return [
     "case",
     ["boolean", ["feature-state", "pinned"], false],
-    oklchToHex(0.62, 0.24, hue), // --accent
+    oklchToHex(0.62, 0.24, DEFAULT_HUE), // --accent
     ["boolean", ["feature-state", "hover"], false],
-    oklchToHex(0.24, 0.02, hue), // --ink
+    oklchToHex(0.24, 0.02, DEFAULT_HUE), // --ink
     "rgba(255,255,255,0.5)",
   ];
 }
@@ -78,10 +79,9 @@ interface MapViewProps {
   layerData: LayerData | null;
   scale: ColorScale;
   isChangeView: boolean;
-  hue: number;
 }
 
-export function MapView({ layerData, scale, isChangeView, hue }: MapViewProps) {
+export function MapView({ layerData, scale, isChangeView }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const [mapReady, setMapReady] = useState(false);
@@ -178,26 +178,17 @@ export function MapView({ layerData, scale, isChangeView, hue }: MapViewProps) {
         type: "line",
         source: SOURCE_ID,
         paint: {
-          "line-color": lineColorExpression(hue) as string,
+          "line-color": lineColorExpression() as string,
           "line-width": LINE_WIDTH_EXPRESSION,
         },
       },
       beforeId,
     );
-    // hue intentionally omitted: hue-only changes are handled by the paint
-    // effects below without rebuilding the source.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapReady, layerData, layerId]);
 
-  // Outline colors follow the hue live.
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !mapReady || !map.getLayer(LINE_LAYER_ID)) return;
-    map.setPaintProperty(LINE_LAYER_ID, "line-color", lineColorExpression(hue));
-  }, [mapReady, layerData, hue]);
-
   // Choropleth paint: recomputed colors pushed as a match expression —
-  // no refetch on metric/month/hue changes.
+  // no refetch on metric/month changes.
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !mapReady || !layerData || !map.getLayer(FILL_LAYER_ID)) return;

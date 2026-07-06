@@ -581,52 +581,6 @@ button {
   max-width: 320px;
 }
 
-/* ---- hue slider (dev tool, bottom-right) ---- */
-
-.hue-slider {
-  bottom: 12px;
-  right: 12px;
-  padding: 8px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 200px;
-  /* Never overflow the viewport, whatever the rendering environment. */
-  max-width: calc(100% - 24px);
-}
-
-.hue-slider input[type="range"] {
-  width: 100%;
-  accent-color: var(--accent);
-}
-
-.hue-readout {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 8px;
-  font-size: 10px;
-}
-
-.hue-readout code {
-  font-family: inherit;
-  color: var(--ink-2);
-}
-
-.hue-copy {
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.hue-copy:hover {
-  color: var(--ink);
-  background: var(--hover-bg);
-}
-
 @keyframes fade-in {
   from {
     opacity: 0;

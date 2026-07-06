@@ -35,19 +35,15 @@ export interface AppState {
   metric: MetricId;
   /** Index into the active derived file's months array; −1 = latest. */
   monthIndex: number;
-  hue: number;
   hovered: FeatureRef | null;
   pinned: FeatureRef | null;
 }
-
-export const DEFAULT_HUE = 32;
 
 const initialState: AppState = {
   layerId: "community",
   program: "medi-cal",
   metric: "age_0_5",
   monthIndex: -1,
-  hue: DEFAULT_HUE,
   hovered: null,
   pinned: null,
 };
@@ -57,7 +53,6 @@ export type AppAction =
   | { type: "setProgram"; program: Program }
   | { type: "setMetric"; metric: MetricId }
   | { type: "setMonthIndex"; monthIndex: number }
-  | { type: "setHue"; hue: number }
   | { type: "setHovered"; feature: FeatureRef | null }
   | { type: "togglePinned"; feature: FeatureRef }
   | { type: "clearPinned" };
@@ -74,8 +69,6 @@ function reducer(state: AppState, action: AppAction): AppState {
       return { ...state, metric: action.metric };
     case "setMonthIndex":
       return { ...state, monthIndex: action.monthIndex };
-    case "setHue":
-      return { ...state, hue: action.hue };
     case "setHovered": {
       const prev = state.hovered;
       if (prev === action.feature || (prev && action.feature && prev.geoId === action.feature.geoId))
