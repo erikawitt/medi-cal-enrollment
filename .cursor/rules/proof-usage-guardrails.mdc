@@ -1,0 +1,20 @@
+---
+description: Proof DAG guardrails for one-shot verification commands
+alwaysApply: true
+---
+
+# Proof Usage Guardrails
+
+When using the `proof` skill or authoring a DAG for `@flatbread/proof` in this repo:
+
+- Write verifier/test-task prompts so they require **one-shot commands only**. Say this explicitly in the prompt.
+- Before using a package `test` or `dev` script in a verifier task, check whether it is watch mode in that package's `package.json`.
+- Never use bare watch-mode commands in Proof verification tasks. Prefer explicit one-shot variants.
+- Repo-specific safe examples:
+  - `bun run validate`
+  - `bun run --filter @medi-cal-disenrollment/web build`
+  - `bun run --filter @medi-cal-disenrollment/data-pipeline validate`
+  - `bun run proof:build`
+- In verification/review rungs, prefer naming the exact commands to run instead of saying "run relevant tests".
+- If a Proof verification task accidentally starts a watcher or other non-terminating process, stop it, treat that as a prompt bug, and rerun with an explicit one-shot command.
+- Cloud agents need `CURSOR_API_KEY` set in the environment secrets before `bun run proof` can launch subagents. `--init-only` canvas generation does not require it.

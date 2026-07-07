@@ -1,0 +1,3 @@
+{
+  "install": "bash .cursor/scripts/install-proof.sh"
+}

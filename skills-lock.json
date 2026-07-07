@@ -73,6 +73,12 @@
       "skillPath": "skills/engineering/prototype/SKILL.md",
       "computedHash": "e70c8933d30153a4da47865829d356824b2a830367275e3b00c7b431a1544a79"
     },
+    "proof": {
+      "source": "FlatbreadLabs/flatbread",
+      "sourceType": "github",
+      "skillPath": ".cursor/skills/proof/SKILL.md",
+      "computedHash": "397229b5a41685e9ee955d7a4eef66c1e69294eadba6eea6c23f62dfcc3cd598"
+    },
     "research": {
       "source": "mattpocock/skills",
       "sourceType": "github",

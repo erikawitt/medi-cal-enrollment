@@ -1,4 +1,9 @@
 node_modules/
-.cursor/
+.cursor/*
+!.cursor/environment.json
+!.cursor/scripts/
+!.cursor/skills/
+!.cursor/rules/
+.flatbread/
 *.log
 dist/
