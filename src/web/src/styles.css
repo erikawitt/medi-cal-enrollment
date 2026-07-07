@@ -205,6 +205,72 @@ button {
   margin: 0;
 }
 
+.section-disclosure {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+  gap: 8px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.section-disclosure:hover {
+  background: var(--hover-bg);
+}
+
+.section-disclosure-icon {
+  font-size: 14px;
+  line-height: 1;
+  color: var(--ink-2);
+}
+
+.top-decrease-list {
+  margin-top: 8px;
+  list-style: none;
+  padding: 0;
+}
+
+.top-decrease-list > li {
+  margin: 0;
+  padding: 0;
+}
+
+.top-decrease-row {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  justify-content: space-between;
+}
+
+.top-decrease-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.top-decrease-pct {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+
+.top-decrease-empty {
+  padding: 4px 8px;
+  color: var(--ink-2);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
 .layer-footnote {
   font-size: 10px;
   color: var(--ink-2);

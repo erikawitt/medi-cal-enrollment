@@ -2,6 +2,7 @@ import { useState } from "react";
 import { LAYERS } from "../data/layers";
 import { useAppDispatch, useAppState } from "../state/store";
 import { AboutModal } from "./AboutModal";
+import { TopDecreaseList } from "./TopDecreaseList";
 
 /**
  * Top-right cluster: wordmark + ABOUT trigger, program segmented control
@@ -80,6 +81,8 @@ export function ControlsCluster() {
             ))}
           </div>
         </div>
+
+        <TopDecreaseList />
       </div>
       {aboutOpen && <AboutModal onClose={() => setAboutOpen(false)} />}
     </>
