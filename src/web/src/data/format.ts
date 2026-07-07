@@ -41,3 +41,11 @@ export function humanizeSlug(slug: string): string {
     .map((word) => (word === "la" ? "LA" : word.charAt(0).toUpperCase() + word.slice(1)))
     .join(" ");
 }
+
+/** Compact boundary label for the top-decreases sidebar list only. */
+export function abbreviateListBoundaryName(name: string): string {
+  const match = name.match(/^(Congressional|Senate|Assembly) District (\d+)$/);
+  if (!match) return name;
+  const prefix = { Congressional: "CD", Senate: "SD", Assembly: "AD" }[match[1]!];
+  return `${prefix} ${match[2]}`;
+}

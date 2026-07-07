@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import type { FeatureRef } from "../state/store";
+import { abbreviateListBoundaryName } from "./format";
 import { layerById, type LayerId } from "./layers";
 import type { LayerData } from "./loadLayerData";
 
@@ -59,13 +60,14 @@ export function useTopDecreases(
       const delta = cell?.[field];
       if (delta === null || delta === undefined || delta >= 0) continue;
 
+      const fullName = names.get(geoId) ?? geoId;
       ranked.push({
         geoId,
-        name: names.get(geoId) ?? geoId,
+        name: abbreviateListBoundaryName(fullName),
         delta,
         featureRef: {
           geoId,
-          name: names.get(geoId) ?? geoId,
+          name: fullName,
           props: propsById.get(geoId) ?? {},
         },
       });
