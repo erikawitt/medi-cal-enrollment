@@ -1,11 +1,12 @@
 {
  "geo_type": "assembly_district",
- "generated_at": "2026-07-07T06:46:17.539Z",
+ "generated_at": "2026-07-07T06:46:21.714Z",
  "months": [
   "2026-01",
   "2026-02",
   "2026-03",
-  "2026-04"
+  "2026-04",
+  "2026-05"
  ],
  "features": {
   "ad-34": {
@@ -104,6 +105,30 @@
     },
     "age_0_5": 3098,
     "persons_total": 35184
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -13,
+    "age_0_5_mom_pct": -0.4,
+    "persons_mom_delta": -308,
+    "persons_mom_pct": -0.9,
+    "ethnicity": {
+     "eth_aian": 61,
+     "eth_asian": 1606,
+     "eth_black_african_american": 4510,
+     "eth_hispanic_latino": 14710,
+     "eth_nhpi": 43,
+     "eth_white": 7339,
+     "eth_two_or_more": 3800,
+     "eth_other": 2807
+    },
+    "citizenship": {
+     "cit_citizen": 29962,
+     "cit_documented": 2473,
+     "cit_undocumented": 2314,
+     "cit_other": 127
+    },
+    "age_0_5": 3085,
+    "persons_total": 34876
    }
   },
   "ad-39": {
@@ -202,6 +227,30 @@
     },
     "age_0_5": 11254,
     "persons_total": 135247
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": 0,
+    "age_0_5_mom_pct": 0,
+    "persons_mom_delta": -1608,
+    "persons_mom_pct": -1.2,
+    "ethnicity": {
+     "eth_aian": 215,
+     "eth_asian": 2232,
+     "eth_black_african_american": 22949,
+     "eth_hispanic_latino": 74165,
+     "eth_nhpi": 131,
+     "eth_white": 13648,
+     "eth_two_or_more": 14020,
+     "eth_other": 6279
+    },
+    "citizenship": {
+     "cit_citizen": 109826,
+     "cit_documented": 9815,
+     "cit_undocumented": 13571,
+     "cit_other": 427
+    },
+    "age_0_5": 11254,
+    "persons_total": 133639
    }
   },
   "ad-40": {
@@ -300,6 +349,30 @@
     },
     "age_0_5": 9331,
     "persons_total": 119969
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -81,
+    "age_0_5_mom_pct": -0.9,
+    "persons_mom_delta": -1339,
+    "persons_mom_pct": -1.1,
+    "ethnicity": {
+     "eth_aian": 151,
+     "eth_asian": 12473,
+     "eth_black_african_american": 5537,
+     "eth_hispanic_latino": 46265,
+     "eth_nhpi": 115,
+     "eth_white": 32724,
+     "eth_two_or_more": 11311,
+     "eth_other": 10054
+    },
+    "citizenship": {
+     "cit_citizen": 88242,
+     "cit_documented": 14141,
+     "cit_undocumented": 15362,
+     "cit_other": 885
+    },
+    "age_0_5": 9250,
+    "persons_total": 118630
    }
   },
   "ad-41": {
@@ -398,6 +471,30 @@
     },
     "age_0_5": 4251,
     "persons_total": 65489
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": 3,
+    "age_0_5_mom_pct": 0.1,
+    "persons_mom_delta": 67,
+    "persons_mom_pct": 0.1,
+    "ethnicity": {
+     "eth_aian": 100,
+     "eth_asian": 7075,
+     "eth_black_african_american": 6193,
+     "eth_hispanic_latino": 24680,
+     "eth_nhpi": 77,
+     "eth_white": 13707,
+     "eth_two_or_more": 7689,
+     "eth_other": 6035
+    },
+    "citizenship": {
+     "cit_citizen": 52600,
+     "cit_documented": 6334,
+     "cit_undocumented": 6148,
+     "cit_other": 474
+    },
+    "age_0_5": 4254,
+    "persons_total": 65556
    }
   },
   "ad-42": {
@@ -496,6 +593,30 @@
     },
     "age_0_5": 551,
     "persons_total": 11083
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -10,
+    "age_0_5_mom_pct": -1.8,
+    "persons_mom_delta": -22,
+    "persons_mom_pct": -0.2,
+    "ethnicity": {
+     "eth_aian": 19,
+     "eth_asian": 815,
+     "eth_black_african_american": 373,
+     "eth_hispanic_latino": 1172,
+     "eth_nhpi": 11,
+     "eth_white": 6057,
+     "eth_two_or_more": 812,
+     "eth_other": 1802
+    },
+    "citizenship": {
+     "cit_citizen": 9116,
+     "cit_documented": 1258,
+     "cit_undocumented": 571,
+     "cit_other": 116
+    },
+    "age_0_5": 541,
+    "persons_total": 11061
    }
   },
   "ad-43": {
@@ -594,6 +715,30 @@
     },
     "age_0_5": 16657,
     "persons_total": 220218
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -130,
+    "age_0_5_mom_pct": -0.8,
+    "persons_mom_delta": -2684,
+    "persons_mom_pct": -1.2,
+    "ethnicity": {
+     "eth_aian": 207,
+     "eth_asian": 8729,
+     "eth_black_african_american": 5480,
+     "eth_hispanic_latino": 140411,
+     "eth_nhpi": 118,
+     "eth_white": 31870,
+     "eth_two_or_more": 22322,
+     "eth_other": 8397
+    },
+    "citizenship": {
+     "cit_citizen": 143759,
+     "cit_documented": 28825,
+     "cit_undocumented": 43790,
+     "cit_other": 1160
+    },
+    "age_0_5": 16527,
+    "persons_total": 217534
    }
   },
   "ad-44": {
@@ -692,6 +837,30 @@
     },
     "age_0_5": 7569,
     "persons_total": 117487
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -7,
+    "age_0_5_mom_pct": -0.1,
+    "persons_mom_delta": -588,
+    "persons_mom_pct": -0.5,
+    "ethnicity": {
+     "eth_aian": 113,
+     "eth_asian": 7674,
+     "eth_black_african_american": 4261,
+     "eth_hispanic_latino": 25524,
+     "eth_nhpi": 60,
+     "eth_white": 59715,
+     "eth_two_or_more": 9059,
+     "eth_other": 10493
+    },
+    "citizenship": {
+     "cit_citizen": 81827,
+     "cit_documented": 20555,
+     "cit_undocumented": 12954,
+     "cit_other": 1563
+    },
+    "age_0_5": 7562,
+    "persons_total": 116899
    }
   },
   "ad-46": {
@@ -790,6 +959,30 @@
     },
     "age_0_5": 12742,
     "persons_total": 165758
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -146,
+    "age_0_5_mom_pct": -1.1,
+    "persons_mom_delta": -2024,
+    "persons_mom_pct": -1.2,
+    "ethnicity": {
+     "eth_aian": 143,
+     "eth_asian": 11485,
+     "eth_black_african_american": 6649,
+     "eth_hispanic_latino": 82316,
+     "eth_nhpi": 118,
+     "eth_white": 40328,
+     "eth_two_or_more": 12456,
+     "eth_other": 10239
+    },
+    "citizenship": {
+     "cit_citizen": 107840,
+     "cit_documented": 23403,
+     "cit_undocumented": 31462,
+     "cit_other": 1029
+    },
+    "age_0_5": 12596,
+    "persons_total": 163734
    }
   },
   "ad-48": {
@@ -888,6 +1081,30 @@
     },
     "age_0_5": 11553,
     "persons_total": 136371
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -69,
+    "age_0_5_mom_pct": -0.6,
+    "persons_mom_delta": -1312,
+    "persons_mom_pct": -1,
+    "ethnicity": {
+     "eth_aian": 154,
+     "eth_asian": 22466,
+     "eth_black_african_american": 2395,
+     "eth_hispanic_latino": 74396,
+     "eth_nhpi": 105,
+     "eth_white": 10266,
+     "eth_two_or_more": 17417,
+     "eth_other": 7860
+    },
+    "citizenship": {
+     "cit_citizen": 102390,
+     "cit_documented": 16418,
+     "cit_undocumented": 15471,
+     "cit_other": 780
+    },
+    "age_0_5": 11484,
+    "persons_total": 135059
    }
   },
   "ad-49": {
@@ -986,6 +1203,30 @@
     },
     "age_0_5": 8261,
     "persons_total": 126394
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -29,
+    "age_0_5_mom_pct": -0.4,
+    "persons_mom_delta": -1026,
+    "persons_mom_pct": -0.8,
+    "ethnicity": {
+     "eth_aian": 92,
+     "eth_asian": 63804,
+     "eth_black_african_american": 1181,
+     "eth_hispanic_latino": 37096,
+     "eth_nhpi": 43,
+     "eth_white": 6068,
+     "eth_two_or_more": 10544,
+     "eth_other": 6540
+    },
+    "citizenship": {
+     "cit_citizen": 84351,
+     "cit_documented": 27381,
+     "cit_undocumented": 12385,
+     "cit_other": 1251
+    },
+    "age_0_5": 8232,
+    "persons_total": 125368
    }
   },
   "ad-51": {
@@ -1084,6 +1325,30 @@
     },
     "age_0_5": 4246,
     "persons_total": 99901
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -19,
+    "age_0_5_mom_pct": -0.4,
+    "persons_mom_delta": -1231,
+    "persons_mom_pct": -1.2,
+    "ethnicity": {
+     "eth_aian": 346,
+     "eth_asian": 8516,
+     "eth_black_african_american": 11085,
+     "eth_hispanic_latino": 24238,
+     "eth_nhpi": 107,
+     "eth_white": 34780,
+     "eth_two_or_more": 7815,
+     "eth_other": 11783
+    },
+    "citizenship": {
+     "cit_citizen": 74766,
+     "cit_documented": 12500,
+     "cit_undocumented": 10294,
+     "cit_other": 1110
+    },
+    "age_0_5": 4227,
+    "persons_total": 98670
    }
   },
   "ad-52": {
@@ -1182,6 +1447,30 @@
     },
     "age_0_5": 11075,
     "persons_total": 177123
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -10,
+    "age_0_5_mom_pct": -0.1,
+    "persons_mom_delta": -1725,
+    "persons_mom_pct": -1,
+    "ethnicity": {
+     "eth_aian": 192,
+     "eth_asian": 12255,
+     "eth_black_african_american": 3629,
+     "eth_hispanic_latino": 95825,
+     "eth_nhpi": 79,
+     "eth_white": 33520,
+     "eth_two_or_more": 21062,
+     "eth_other": 8836
+    },
+    "citizenship": {
+     "cit_citizen": 119669,
+     "cit_documented": 24193,
+     "cit_undocumented": 30190,
+     "cit_other": 1346
+    },
+    "age_0_5": 11065,
+    "persons_total": 175398
    }
   },
   "ad-53": {
@@ -1280,6 +1569,30 @@
     },
     "age_0_5": 5727,
     "persons_total": 74092
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": 33,
+    "age_0_5_mom_pct": 0.6,
+    "persons_mom_delta": -763,
+    "persons_mom_pct": -1,
+    "ethnicity": {
+     "eth_aian": 104,
+     "eth_asian": 5450,
+     "eth_black_african_american": 4699,
+     "eth_hispanic_latino": 42205,
+     "eth_nhpi": 101,
+     "eth_white": 6214,
+     "eth_two_or_more": 9856,
+     "eth_other": 4700
+    },
+    "citizenship": {
+     "cit_citizen": 57110,
+     "cit_documented": 6626,
+     "cit_undocumented": 9275,
+     "cit_other": 318
+    },
+    "age_0_5": 5760,
+    "persons_total": 73329
    }
   },
   "ad-54": {
@@ -1378,6 +1691,30 @@
     },
     "age_0_5": 15049,
     "persons_total": 248626
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -69,
+    "age_0_5_mom_pct": -0.5,
+    "persons_mom_delta": -3168,
+    "persons_mom_pct": -1.3,
+    "ethnicity": {
+     "eth_aian": 534,
+     "eth_asian": 26230,
+     "eth_black_african_american": 15998,
+     "eth_hispanic_latino": 148008,
+     "eth_nhpi": 173,
+     "eth_white": 15556,
+     "eth_two_or_more": 26931,
+     "eth_other": 12028
+    },
+    "citizenship": {
+     "cit_citizen": 156714,
+     "cit_documented": 28435,
+     "cit_undocumented": 58519,
+     "cit_other": 1790
+    },
+    "age_0_5": 14980,
+    "persons_total": 245458
    }
   },
   "ad-55": {
@@ -1476,6 +1813,30 @@
     },
     "age_0_5": 7341,
     "persons_total": 116044
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -48,
+    "age_0_5_mom_pct": -0.7,
+    "persons_mom_delta": -1291,
+    "persons_mom_pct": -1.1,
+    "ethnicity": {
+     "eth_aian": 785,
+     "eth_asian": 6124,
+     "eth_black_african_american": 20180,
+     "eth_hispanic_latino": 54213,
+     "eth_nhpi": 76,
+     "eth_white": 13590,
+     "eth_two_or_more": 10015,
+     "eth_other": 9770
+    },
+    "citizenship": {
+     "cit_citizen": 83354,
+     "cit_documented": 11601,
+     "cit_undocumented": 19001,
+     "cit_other": 797
+    },
+    "age_0_5": 7293,
+    "persons_total": 114753
    }
   },
   "ad-56": {
@@ -1574,6 +1935,30 @@
     },
     "age_0_5": 11544,
     "persons_total": 153850
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -55,
+    "age_0_5_mom_pct": -0.5,
+    "persons_mom_delta": -1609,
+    "persons_mom_pct": -1,
+    "ethnicity": {
+     "eth_aian": 171,
+     "eth_asian": 33265,
+     "eth_black_african_american": 2046,
+     "eth_hispanic_latino": 80248,
+     "eth_nhpi": 146,
+     "eth_white": 8704,
+     "eth_two_or_more": 19670,
+     "eth_other": 7991
+    },
+    "citizenship": {
+     "cit_citizen": 112625,
+     "cit_documented": 20241,
+     "cit_undocumented": 18455,
+     "cit_other": 920
+    },
+    "age_0_5": 11489,
+    "persons_total": 152241
    }
   },
   "ad-57": {
@@ -1672,6 +2057,30 @@
     },
     "age_0_5": 18923,
     "persons_total": 262699
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -191,
+    "age_0_5_mom_pct": -1,
+    "persons_mom_delta": -3828,
+    "persons_mom_pct": -1.5,
+    "ethnicity": {
+     "eth_aian": 420,
+     "eth_asian": 2933,
+     "eth_black_african_american": 35262,
+     "eth_hispanic_latino": 181868,
+     "eth_nhpi": 132,
+     "eth_white": 6826,
+     "eth_two_or_more": 22240,
+     "eth_other": 9190
+    },
+    "citizenship": {
+     "cit_citizen": 166582,
+     "cit_documented": 25292,
+     "cit_undocumented": 65876,
+     "cit_other": 1121
+    },
+    "age_0_5": 18732,
+    "persons_total": 258871
    }
   },
   "ad-61": {
@@ -1770,6 +2179,30 @@
     },
     "age_0_5": 11367,
     "persons_total": 163814
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -137,
+    "age_0_5_mom_pct": -1.2,
+    "persons_mom_delta": -2429,
+    "persons_mom_pct": -1.5,
+    "ethnicity": {
+     "eth_aian": 433,
+     "eth_asian": 4966,
+     "eth_black_african_american": 37512,
+     "eth_hispanic_latino": 82551,
+     "eth_nhpi": 358,
+     "eth_white": 10394,
+     "eth_two_or_more": 14619,
+     "eth_other": 10552
+    },
+    "citizenship": {
+     "cit_citizen": 119719,
+     "cit_documented": 14996,
+     "cit_undocumented": 25881,
+     "cit_other": 789
+    },
+    "age_0_5": 11230,
+    "persons_total": 161385
    }
   },
   "ad-62": {
@@ -1868,6 +2301,30 @@
     },
     "age_0_5": 13983,
     "persons_total": 164658
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -147,
+    "age_0_5_mom_pct": -1.1,
+    "persons_mom_delta": -1930,
+    "persons_mom_pct": -1.2,
+    "ethnicity": {
+     "eth_aian": 165,
+     "eth_asian": 5515,
+     "eth_black_african_american": 5565,
+     "eth_hispanic_latino": 116615,
+     "eth_nhpi": 432,
+     "eth_white": 7065,
+     "eth_two_or_more": 19575,
+     "eth_other": 7796
+    },
+    "citizenship": {
+     "cit_citizen": 115881,
+     "cit_documented": 17311,
+     "cit_undocumented": 28835,
+     "cit_other": 701
+    },
+    "age_0_5": 13836,
+    "persons_total": 162728
    }
   },
   "ad-64": {
@@ -1966,6 +2423,30 @@
     },
     "age_0_5": 11854,
     "persons_total": 144090
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": 41,
+    "age_0_5_mom_pct": 0.3,
+    "persons_mom_delta": -1410,
+    "persons_mom_pct": -1,
+    "ethnicity": {
+     "eth_aian": 155,
+     "eth_asian": 7562,
+     "eth_black_african_american": 2939,
+     "eth_hispanic_latino": 94029,
+     "eth_nhpi": 243,
+     "eth_white": 9136,
+     "eth_two_or_more": 20573,
+     "eth_other": 8043
+    },
+    "citizenship": {
+     "cit_citizen": 107713,
+     "cit_documented": 14469,
+     "cit_undocumented": 19898,
+     "cit_other": 600
+    },
+    "age_0_5": 11895,
+    "persons_total": 142680
    }
   },
   "ad-65": {
@@ -2064,6 +2545,30 @@
     },
     "age_0_5": 16758,
     "persons_total": 215751
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -71,
+    "age_0_5_mom_pct": -0.4,
+    "persons_mom_delta": -2753,
+    "persons_mom_pct": -1.3,
+    "ethnicity": {
+     "eth_aian": 296,
+     "eth_asian": 7930,
+     "eth_black_african_american": 32345,
+     "eth_hispanic_latino": 129355,
+     "eth_nhpi": 1027,
+     "eth_white": 8526,
+     "eth_two_or_more": 21391,
+     "eth_other": 12128
+    },
+    "citizenship": {
+     "cit_citizen": 158402,
+     "cit_documented": 19372,
+     "cit_undocumented": 34315,
+     "cit_other": 909
+    },
+    "age_0_5": 16687,
+    "persons_total": 212998
    }
   },
   "ad-66": {
@@ -2162,6 +2667,30 @@
     },
     "age_0_5": 4350,
     "persons_total": 64129
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -34,
+    "age_0_5_mom_pct": -0.8,
+    "persons_mom_delta": -452,
+    "persons_mom_pct": -0.7,
+    "ethnicity": {
+     "eth_aian": 100,
+     "eth_asian": 11839,
+     "eth_black_african_american": 4510,
+     "eth_hispanic_latino": 19864,
+     "eth_nhpi": 224,
+     "eth_white": 12886,
+     "eth_two_or_more": 6296,
+     "eth_other": 7958
+    },
+    "citizenship": {
+     "cit_citizen": 50181,
+     "cit_documented": 7259,
+     "cit_undocumented": 5617,
+     "cit_other": 620
+    },
+    "age_0_5": 4316,
+    "persons_total": 63677
    }
   },
   "ad-67": {
@@ -2260,6 +2789,30 @@
     },
     "age_0_5": 1201,
     "persons_total": 17928
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -1,
+    "age_0_5_mom_pct": -0.1,
+    "persons_mom_delta": -172,
+    "persons_mom_pct": -1,
+    "ethnicity": {
+     "eth_aian": 19,
+     "eth_asian": 5930,
+     "eth_black_african_american": 738,
+     "eth_hispanic_latino": 6413,
+     "eth_nhpi": 62,
+     "eth_white": 997,
+     "eth_two_or_more": 1721,
+     "eth_other": 1876
+    },
+    "citizenship": {
+     "cit_citizen": 12908,
+     "cit_documented": 2629,
+     "cit_undocumented": 2060,
+     "cit_other": 159
+    },
+    "age_0_5": 1200,
+    "persons_total": 17756
    }
   },
   "ad-69": {
@@ -2358,6 +2911,30 @@
     },
     "age_0_5": 10013,
     "persons_total": 150404
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -27,
+    "age_0_5_mom_pct": -0.3,
+    "persons_mom_delta": -744,
+    "persons_mom_pct": -0.5,
+    "ethnicity": {
+     "eth_aian": 304,
+     "eth_asian": 16630,
+     "eth_black_african_american": 21341,
+     "eth_hispanic_latino": 65281,
+     "eth_nhpi": 1241,
+     "eth_white": 16341,
+     "eth_two_or_more": 16385,
+     "eth_other": 12137
+    },
+    "citizenship": {
+     "cit_citizen": 120302,
+     "cit_documented": 12657,
+     "cit_undocumented": 15955,
+     "cit_other": 746
+    },
+    "age_0_5": 9986,
+    "persons_total": 149660
    }
   },
   "unknown": {
@@ -2456,6 +3033,30 @@
     },
     "age_0_5": 66,
     "persons_total": 1719
+   },
+   "2026-05": {
+    "age_0_5_mom_delta": -4,
+    "age_0_5_mom_pct": -6.1,
+    "persons_mom_delta": -7,
+    "persons_mom_pct": -0.4,
+    "ethnicity": {
+     "eth_aian": 2,
+     "eth_asian": 271,
+     "eth_black_african_american": 222,
+     "eth_hispanic_latino": 489,
+     "eth_nhpi": 4,
+     "eth_white": 376,
+     "eth_two_or_more": 110,
+     "eth_other": 238
+    },
+    "citizenship": {
+     "cit_citizen": 1477,
+     "cit_documented": 136,
+     "cit_undocumented": 84,
+     "cit_other": 15
+    },
+    "age_0_5": 62,
+    "persons_total": 1712
    }
   }
  }
