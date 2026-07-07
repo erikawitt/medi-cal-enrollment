@@ -55,9 +55,11 @@ function Shell() {
           Change requires two report months — one is published so far.
         </div>
       )}
-      <DetailsPane derived={derived} month={month} />
+      <div className="left-stack">
+        <DetailsPane derived={derived} month={month} />
+        <Legend scale={scale} loading={layerData === null} />
+      </div>
       <ControlsCluster />
-      <Legend scale={scale} loading={layerData === null} />
       <BottomStrip months={months} />
       {state.hovered && <Tooltip hovered={state.hovered} cell={hoveredCell} month={month} />}
     </div>
