@@ -286,7 +286,7 @@ export async function selectReportMonth(embed: Embed, monthLabel: string, attemp
 export async function selectGeoType(
   embed: Embed,
   geo: Pick<GeoTypeSpec, "label" | "pattern">,
-  timeoutMs = 25_000,
+  timeoutMs = 60_000,
 ): Promise<string[]> {
   const idx = ADMIN_AREA_ITEMS.indexOf(geo.label);
   if (idx < 0) throw new Error(`unknown Administrative Area label: ${geo.label}`);
@@ -310,7 +310,12 @@ export async function selectGeoType(
   while (Date.now() < deadline) {
     collected = collected.concat(embed.drainResponses());
     const size = parseSubAreaDomain(collected.join("\n"), geo.pattern).length;
-    if (size > 0 && size === lastSize) {
+    // A stable size of 1 is just the type's own default-area token — the domain
+    // pool (for large types like zip, a multi-MB stream that lands well after the
+    // click) hasn't arrived yet. Only a size > 1 counts as a settled domain;
+    // otherwise keep polling until the pool streams or the deadline passes, so a
+    // slow/late pool isn't mistaken for a domain of one.
+    if (size > 1 && size === lastSize) {
       if (++stablePolls >= 2) break;
     } else {
       stablePolls = 0;
@@ -452,9 +457,15 @@ export async function* captureAllAreas(
     return { bodies, name: areaFromResponse(bodies.join("\n"), geo) };
   };
 
-  // Phase 1: linear sweep (no list-order assumption).
+  // Phase 1: linear sweep (no list-order assumption). Skip it when resuming a
+  // mostly-captured domain: the sweep re-clicks every already-seen row (each
+  // click is a full select round-trip, and toggles the row's checkbox, which
+  // degrades later renders), so on a resume it crawls — the pathology that
+  // stalls large (zip) captures. Targeted recovery below aims straight at the
+  // still-missing rows instead, which is both faster and non-destructive.
+  const resuming = seen.size >= Math.min(expectedCount, domainOrdered.length) * 0.5;
   const maxScrolls = Math.ceil((expectedCount * 2 * PITCH) / viewport) + 2;
-  for (let s = 0; s <= maxScrolls && seen.size < expectedCount; s++) {
+  for (let s = 0; !resuming && s <= maxScrolls && seen.size < expectedCount; s++) {
     for (let dy = LIST_TOP; dy <= zone.h - 6 && seen.size < expectedCount; dy += PITCH) {
       const { bodies, name } = await clickAndName(zone.y + dy);
       if (!name || seen.has(name) || !isValid(bodies)) continue;
