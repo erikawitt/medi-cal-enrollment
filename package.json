@@ -1,13 +1,16 @@
 {
   "name": "medi-cal-disenrollment",
   "private": true,
-  "workspaces": ["src/*"],
+  "workspaces": ["src/*", "packages/proof"],
   "scripts": {
     "crosswalk": "bun run --filter @medi-cal-disenrollment/data-pipeline crosswalk",
     "scrape": "bun run --filter @medi-cal-disenrollment/data-pipeline scrape",
     "normalize": "bun run --filter @medi-cal-disenrollment/data-pipeline normalize",
     "derive": "bun run --filter @medi-cal-disenrollment/data-pipeline derive",
     "validate": "bun run --filter @medi-cal-disenrollment/data-pipeline validate",
-    "web": "bun run --filter @medi-cal-disenrollment/web dev"
+    "web": "bun run --filter @medi-cal-disenrollment/web dev",
+    "proof:build": "bun run --filter @flatbread/proof build",
+    "proof": "node packages/proof/bin/proof.js",
+    "proof-supervisor": "node packages/proof/bin/proof-supervisor.js"
   }
 }
