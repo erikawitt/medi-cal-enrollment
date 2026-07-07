@@ -258,7 +258,7 @@ button {
   min-width: 0;
 }
 
-.top-decrease-pct {
+.top-decrease-value {
   flex-shrink: 0;
   font-variant-numeric: tabular-nums;
   color: var(--ink-2);
