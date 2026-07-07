@@ -81,13 +81,13 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
         </div>
         {cell && cell.age_0_5_mom_delta !== null && (
           <div className="pane-stat">
-            <span className="micro-label">MoM change 0–5</span>
+            <span className="micro-label">Month-Over-Month change</span>
             <b>{formatSignedCount(cell.age_0_5_mom_delta)}</b>
           </div>
         )}
         {cell && cell.age_0_5_mom_pct !== null && (
           <div className="pane-stat">
-            <span className="micro-label">MoM change 0–5 %</span>
+            <span className="micro-label">Month-Over-Month change %</span>
             <b>{formatSignedPct(cell.age_0_5_mom_pct)}</b>
           </div>
         )}

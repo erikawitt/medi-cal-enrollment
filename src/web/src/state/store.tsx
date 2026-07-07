@@ -18,7 +18,7 @@ export type MetricId = "age_0_5" | "age_0_5_mom_pct";
 
 export const METRIC_LABELS: Record<MetricId, string> = {
   age_0_5: "Medi-Cal Enrollment Ages 0-5",
-  age_0_5_mom_pct: "Month-to-Month Change",
+  age_0_5_mom_pct: "Month-Over-Month change",
 };
 
 /** A feature the cursor is over (hovered) or that a click locked (pinned). */
