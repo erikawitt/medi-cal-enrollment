@@ -1,4 +1,5 @@
 import type { MapGeoFile } from "@medi-cal-disenrollment/shared";
+import { DEFAULT_HUE, rampHex } from "../color/ramp";
 import {
   formatCount,
   formatMonth,
@@ -7,6 +8,26 @@ import {
 } from "../data/format";
 import { CITIZENSHIP_LABELS, ETHNICITY_LABELS } from "../data/metricLabels";
 import { useAppDispatch, useAppState } from "../state/store";
+
+const DECLINE_STOPS = rampHex(DEFAULT_HUE).slice(1);
+
+function declineBarColor(absDelta: number, maxDecline: number): string {
+  if (maxDecline <= 0) return DECLINE_STOPS[0] as string;
+  const t = absDelta / maxDecline;
+  const idx = Math.min(DECLINE_STOPS.length - 1, Math.floor(t * DECLINE_STOPS.length));
+  return DECLINE_STOPS[idx] as string;
+}
+
+function trendTickTitle(
+  monthLabel: string,
+  delta: number | null,
+  pct: number | null,
+): string {
+  if (delta === null) return `${monthLabel} · no prior month`;
+  const parts = [monthLabel, formatSignedCount(delta)];
+  if (pct !== null) parts.push(formatSignedPct(pct));
+  return parts.join(" · ");
+}
 
 const MARGINAL_NOTE =
   "Ethnicity and citizenship describe this geography's entire Medi-Cal population, not ages 0\u20135.";
@@ -41,8 +62,20 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
   const months = derived?.months ?? [];
   const isCommunity = layerId === "community";
 
-  const trendValues = months.map((m) => byMonth?.[m]?.age_0_5 ?? null);
-  const trendMax = Math.max(1, ...trendValues.filter((v): v is number => v !== null));
+  const trendMonths = months.map((m) => ({
+    month: m,
+    delta: byMonth?.[m]?.age_0_5_mom_delta ?? null,
+    pct: byMonth?.[m]?.age_0_5_mom_pct ?? null,
+  }));
+  const trendMagnitudes = trendMonths
+    .map(({ delta }) => (delta === null ? null : Math.abs(delta)))
+    .filter((v): v is number => v !== null);
+  const trendMax = Math.max(1, ...trendMagnitudes);
+  const maxDecline = Math.max(0, ...trendMonths.map(({ delta }) => (delta !== null && delta < 0 ? -delta : 0)));
+  const trendSummary = trendMonths
+    .filter(({ delta }) => delta !== null)
+    .map(({ month, delta, pct }) => trendTickTitle(formatMonth(month), delta, pct))
+    .join("; ");
 
   return (
     <div className="panel details-pane">
@@ -95,22 +128,69 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
 
       <div className="pane-section">
         <div className="trend-header">
-          <span className="micro-label">Trend · Ages 0–5</span>
+          <span className="micro-label">MoM change · Ages 0–5</span>
           <span className="micro-label">
             {months.length === 1 ? "1 month" : `${months.length} months`}
           </span>
         </div>
-        <div className="trend-strip" aria-hidden="true">
-          {trendValues.map((v, i) => (
-            <div
-              key={months[i]}
-              className="trend-tick"
-              data-active={month === months[i]}
-              data-null={v === null}
-              style={{ height: v !== null ? `${Math.max(6, (v / trendMax) * 100)}%` : "2px" }}
-              title={months[i] ? formatMonth(months[i] as string) : undefined}
-            />
-          ))}
+        <div
+          className="trend-strip"
+          role="img"
+          aria-label={trendSummary || "No month-over-month change data yet"}
+        >
+          {trendMonths.map(({ month: m, delta, pct }) => {
+            const monthLabel = formatMonth(m);
+            const title = trendTickTitle(monthLabel, delta, pct);
+            const barHeight =
+              delta !== null && delta !== 0
+                ? `${Math.max(6, (Math.abs(delta) / trendMax) * 100)}%`
+                : "2px";
+
+            return (
+              <div
+                key={m}
+                className="trend-col"
+                data-active={month === m}
+                data-null={delta === null}
+              >
+                <div className="trend-half trend-half--up">
+                  {delta !== null && delta > 0 && (
+                    <div
+                      className="trend-tick trend-tick--growth"
+                      style={{ height: barHeight }}
+                      title={title}
+                    />
+                  )}
+                  {(delta === null || delta === 0) && (
+                    <div
+                      className="trend-tick trend-tick--flat"
+                      style={{ height: "1px" }}
+                      title={title}
+                    />
+                  )}
+                </div>
+                <div className="trend-half trend-half--down">
+                  {(delta === null || delta === 0) && (
+                    <div
+                      className="trend-tick trend-tick--flat"
+                      style={{ height: "1px" }}
+                      title={title}
+                    />
+                  )}
+                  {delta !== null && delta < 0 && (
+                    <div
+                      className="trend-tick trend-tick--decline"
+                      style={{
+                        height: barHeight,
+                        background: declineBarColor(-delta, maxDecline),
+                      }}
+                      title={title}
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
