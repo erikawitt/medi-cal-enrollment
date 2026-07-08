@@ -522,28 +522,70 @@ button {
 
 .trend-strip {
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
   gap: 2px;
   height: 36px;
   margin-top: 8px;
-  border-bottom: 1px solid var(--hairline);
+  position: relative;
 }
 
-/* Slim bars: a single month reads as one tick, not a full-width slab. */
-.trend-tick {
+.trend-strip::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1px solid var(--hairline);
+  pointer-events: none;
+}
+
+/* Slim columns: one month reads as one tick, not a full-width slab. */
+.trend-col {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   max-width: 6px;
-  background: var(--accent);
+  min-width: 2px;
   opacity: 0.35;
-  min-height: 2px;
 }
 
-.trend-tick[data-active="true"] {
+.trend-col[data-active="true"] {
   opacity: 1;
 }
 
-.trend-tick[data-null="true"] {
+.trend-col[data-null="true"] {
   opacity: 0.15;
+}
+
+.trend-half {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.trend-half--up {
+  align-items: flex-end;
+}
+
+.trend-half--down {
+  align-items: flex-start;
+}
+
+.trend-tick {
+  width: 100%;
+  min-height: 2px;
+}
+
+.trend-tick--growth {
+  background: var(--ink-2);
+}
+
+.trend-tick--decline {
+  background: var(--accent);
+}
+
+.trend-tick--flat {
+  background: var(--ink-2);
 }
 
 .bar-list {
