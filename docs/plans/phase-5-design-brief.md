@@ -145,7 +145,9 @@ in one component so it can be deleted cleanly later.
   final copy later. Focus-trapped; restores focus to trigger on close.
 - **Tooltip**: anchored to cursor (offset 12,12; flips near right/bottom
   edges), pointer-events none. Contents: name (bold), `AGES 0–5 · <n>`,
-  `ALL AGES · <n>`, month micro-label.
+  `ALL AGES · <n>`, `MoM CHANGE · <signed count> (<signed %>)` (or
+  "no prior month"), month micro-label. Spell the abbreviation **MoM**
+  (never all-caps "MOM") even inside uppercase micro-label chrome.
 - **Details pane (inset left)**: floating panel. States: empty (hint text
   "Hover a region — click to pin"), hover-tracking, pinned (shows a `PINNED`
   chip + ✕). Contents top to bottom:
@@ -153,8 +155,14 @@ in one component so it can be deleted cleanly later.
      ("Long Beach — standalone city") plus `region`.
   2. Big number: ages 0–5 enrolled for the active month; beneath it total
      enrolled, and MoM delta/pct when non-null.
-  3. Trend strip: tiny bar/line of `age_0_5` across all months (renders as
-     a single tick with one month).
+  3. Trend strip: diverging month-over-month delta ticks for
+     `age_0_5_mom_delta` across the latest 12 report months (or fewer if
+     less data), centered on a zero baseline
+     (growth up in muted ink, decline down colored with ramp stops 1→5 by
+     local-max magnitude — not the map's layer-wide quantile breaks;
+     flat/null on the baseline). Label: "MoM change · Ages 0–5".
+     Hovering a column shows the same cursor-anchored map tooltip (name,
+     ages 0–5, all ages, MoM change, that column's report month).
   4. Ethnicity marginal breakdown — horizontal bars in `--accent`, counts
      right-aligned.
   5. Citizenship marginal breakdown — same treatment.

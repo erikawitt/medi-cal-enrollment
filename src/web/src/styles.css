@@ -86,6 +86,11 @@ button {
   color: var(--ink-2);
 }
 
+/* Keep MoM's vowel lowercase inside uppercase UI chrome. */
+.mom-o {
+  text-transform: none;
+}
+
 .crosshair-glyph {
   color: var(--accent);
   font-weight: 700;
@@ -522,28 +527,78 @@ button {
 
 .trend-strip {
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
   gap: 2px;
   height: 36px;
   margin-top: 8px;
-  border-bottom: 1px solid var(--hairline);
+  position: relative;
 }
 
-/* Slim bars: a single month reads as one tick, not a full-width slab. */
-.trend-tick {
-  flex: 1;
-  max-width: 6px;
-  background: var(--accent);
+.trend-strip::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1px solid var(--hairline);
+  pointer-events: none;
+}
+
+/* Equal-flex columns: up to 12 months share the strip width. */
+.trend-col {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
   opacity: 0.35;
-  min-height: 2px;
+  position: relative;
+  cursor: default;
 }
 
-.trend-tick[data-active="true"] {
+.trend-col[data-active="true"] {
   opacity: 1;
 }
 
-.trend-tick[data-null="true"] {
+.trend-col[data-null="true"] {
   opacity: 0.15;
+}
+
+.trend-half {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.trend-half--up {
+  align-items: flex-end;
+}
+
+.trend-half--down {
+  align-items: flex-start;
+}
+
+.trend-tick {
+  width: 100%;
+  min-height: 2px;
+}
+
+.trend-tick--growth {
+  background: var(--ink-2);
+}
+
+.trend-tick--decline {
+  /* color set inline via declineColorByLocalMax / ramp stops 1→5 */
+}
+
+.trend-tick--flat {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--ink-2);
+  min-height: 0;
 }
 
 .bar-list {

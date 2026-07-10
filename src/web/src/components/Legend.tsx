@@ -1,5 +1,6 @@
 import type { ColorScale } from "../color/ramp";
 import { METRIC_LABELS, useAppState } from "../state/store";
+import { MoM } from "./MoM";
 
 interface LegendProps {
   scale: ColorScale;
@@ -10,10 +11,18 @@ interface LegendProps {
 /** Bottom-left legend: swatches + break labels from the color engine. */
 export function Legend({ scale, loading }: LegendProps) {
   const { metric } = useAppState();
+  const title =
+    metric === "age_0_5_mom_pct" ? (
+      <>
+        <MoM /> change
+      </>
+    ) : (
+      METRIC_LABELS[metric]
+    );
 
   return (
     <div className="panel legend">
-      <div className="micro-label legend-title">{METRIC_LABELS[metric]}</div>
+      <div className="micro-label legend-title">{title}</div>
       {loading ? (
         <div className="legend-empty">Loading…</div>
       ) : scale.legend.length === 0 ? (

@@ -38,6 +38,21 @@ export function rampHex(hue: number): string[] {
   return RAMP_STOPS.map(([l, c]) => oklchToHex(l, c, hue));
 }
 
+/** Decline severity stops (ramp stops 1→5; deeper = steeper decline). */
+export function declineStops(hue: number): string[] {
+  return rampHex(hue).slice(1);
+}
+
+/** Color a decline magnitude by linear position in [0, maxDecline] onto stops 1→5.
+ *  For details-pane MoM strips (local series max). Map choropleth uses changeScale quantiles. */
+export function declineColorByLocalMax(absDelta: number, maxDecline: number, hue: number): string {
+  const stops = declineStops(hue);
+  if (maxDecline <= 0) return stops[0] as string;
+  const t = absDelta / maxDecline;
+  const idx = Math.min(stops.length - 1, Math.floor(t * stops.length));
+  return stops[idx] as string;
+}
+
 export interface LegendEntry {
   colorHex: string;
   label: string;
@@ -110,8 +125,7 @@ export function enrollmentScale(valuesByGeoId: Map<string, number>, hue: number)
  * empty-state note and features render neutral.
  */
 export function changeScale(pctByGeoId: Map<string, number>, hue: number): ColorScale {
-  const ramp = rampHex(hue);
-  const declineStops = ramp.slice(1); // stops 1..5
+  const stops = declineStops(hue);
   const declines = [...pctByGeoId.values()].filter((v) => v < 0);
   const colorByGeoId = new Map<string, string>();
 
@@ -120,13 +134,13 @@ export function changeScale(pctByGeoId: Map<string, number>, hue: number): Color
   }
 
   const magnitudes = declines.map((v) => Math.abs(v)).sort((a, b) => a - b);
-  const breaks = magnitudes.length > 0 ? quantileBreaks(magnitudes, declineStops.length) : [];
+  const breaks = magnitudes.length > 0 ? quantileBreaks(magnitudes, stops.length) : [];
 
   for (const [geoId, pct] of pctByGeoId) {
     if (pct >= 0) {
       colorByGeoId.set(geoId, NEUTRAL_HEX);
     } else {
-      colorByGeoId.set(geoId, declineStops[classify(Math.abs(pct), breaks)] as string);
+      colorByGeoId.set(geoId, stops[classify(Math.abs(pct), breaks)] as string);
     }
   }
 
@@ -135,7 +149,7 @@ export function changeScale(pctByGeoId: Map<string, number>, hue: number): Color
     const min = magnitudes[0] as number;
     const max = magnitudes[magnitudes.length - 1] as number;
     const bounds = [min, ...breaks, max];
-    declineStops.forEach((colorHex, i) => {
+    stops.forEach((colorHex, i) => {
       legend.push({
         colorHex,
         label: `\u2212${(bounds[i] as number).toFixed(1)}% to \u2212${(bounds[i + 1] as number).toFixed(1)}%`,

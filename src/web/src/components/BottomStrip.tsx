@@ -7,8 +7,19 @@ import {
   useAppState,
   type MetricId,
 } from "../state/store";
+import { MoM } from "./MoM";
 
 const METRICS: readonly MetricId[] = ["age_0_5", "age_0_5_mom_pct"];
+
+function metricLabel(m: MetricId) {
+  if (m === "age_0_5_mom_pct")
+    return (
+      <>
+        <MoM /> change
+      </>
+    );
+  return METRIC_LABELS[m];
+}
 
 interface BottomStripProps {
   months: readonly ReportMonth[];
@@ -36,7 +47,7 @@ export function BottomStrip({ months }: BottomStripProps) {
             aria-pressed={metric === m}
             onClick={() => dispatch({ type: "setMetric", metric: m })}
           >
-            {METRIC_LABELS[m]}
+            {metricLabel(m)}
           </button>
         ))}
       </div>
