@@ -135,9 +135,33 @@ export function MapView({
       fitBoundsOptions: {
         padding: effectivePadding(chromeInsetsRef.current, sheetBottomObstructionRef.current),
       },
-      attributionControl: { compact: true },
+      attributionControl: false,
     });
     mapRef.current = map;
+
+    // Compact attribution lives in the bottom dock's right-hand slot (not the
+    // map corner). Force closed after MapLibre's initial compact-show pass.
+    const attribution = new maplibregl.AttributionControl({ compact: true });
+    map.addControl(attribution, "bottom-right");
+    let attributionClosed = false;
+    const placeAttribution = () => {
+      const host = document.querySelector("[data-attribution-host]");
+      const el =
+        map.getContainer().querySelector(".maplibregl-ctrl-attrib") ??
+        document.querySelector("[data-attribution-host] .maplibregl-ctrl-attrib");
+      if (!(host instanceof HTMLElement) || !(el instanceof HTMLElement)) return;
+      if (el.parentElement !== host) host.appendChild(el);
+      // MapLibre's compact init adds compact-show (open); close once, then
+      // leave toggle state alone so styledata doesn't fight the user.
+      if (!attributionClosed && el.classList.contains("maplibregl-compact")) {
+        el.classList.remove("maplibregl-compact-show");
+        attributionClosed = true;
+      }
+    };
+    placeAttribution();
+    map.on("load", placeAttribution);
+    map.on("styledata", placeAttribution);
+
     map.on("load", () => setMapReady(true));
 
     let rafId = 0;
@@ -214,6 +238,8 @@ export function MapView({
       mql.removeEventListener("change", applyPadding);
       resizeObserver?.disconnect();
       container.removeEventListener("mouseleave", onMouseLeave);
+      map.off("load", placeAttribution);
+      map.off("styledata", placeAttribution);
       map.remove();
       mapRef.current = null;
       setMapReady(false);

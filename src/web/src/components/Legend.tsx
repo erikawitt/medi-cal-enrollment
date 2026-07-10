@@ -7,7 +7,7 @@ interface LegendProps {
   loading: boolean;
 }
 
-/** Bottom-left legend: swatches + break labels from the color engine. */
+/** Legend swatches + break labels (desktop dock left; mobile legend sheet). */
 export function Legend({ scale, loading }: LegendProps) {
   const { metric } = useAppState();
 
