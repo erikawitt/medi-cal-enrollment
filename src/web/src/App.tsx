@@ -56,7 +56,9 @@ function Shell() {
         </div>
       )}
       <div className="left-stack">
-        <DetailsPane derived={derived} month={month} />
+        <div className="details-slot">
+          <DetailsPane derived={derived} month={month} />
+        </div>
         <Legend scale={scale} loading={layerData === null} />
       </div>
       <ControlsCluster />
