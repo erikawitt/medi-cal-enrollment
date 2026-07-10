@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useColorScale } from "./color/useColorScale";
+import { BottomDock } from "./components/BottomDock";
 import { BottomSheet } from "./components/BottomSheet";
-import { BottomStrip } from "./components/BottomStrip";
 import { ControlsCluster, ControlsPanel } from "./components/ControlsCluster";
 import { DetailsPane } from "./components/DetailsPane";
 import { Legend } from "./components/Legend";
@@ -147,10 +147,14 @@ function Shell() {
 
         <div className="left-stack">
           <DetailsPane derived={derived} month={month} />
-          <Legend scale={scale} loading={layerData === null} />
         </div>
         <ControlsCluster />
-        <BottomStrip ref={dockRef} months={months} />
+        <BottomDock
+          ref={dockRef}
+          months={months}
+          scale={scale}
+          loading={layerData === null}
+        />
 
         {!isMobile && state.hovered && (
           <Tooltip hovered={state.hovered} cell={hoveredCell} month={month} />

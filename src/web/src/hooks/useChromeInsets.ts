@@ -25,7 +25,7 @@ function setChromeCssVars(top: number, bottom: number) {
 
 /**
  * Measured map padding insets from chrome + dock. Desktop returns fixed
- * constants; mobile observes `.mobile-chrome` and `.bottom-strip` heights.
+ * constants; mobile observes `.mobile-chrome` and `.bottom-dock` heights.
  */
 export function useChromeInsets(
   chromeRef: RefObject<HTMLElement | null>,
