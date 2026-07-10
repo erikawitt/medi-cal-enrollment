@@ -1,8 +1,9 @@
 import type { MapFeatureMonth } from "@medi-cal-disenrollment/shared";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { formatCount, formatMonth } from "../data/format";
+import { formatCount, formatMonth, formatSignedCount, formatSignedPct } from "../data/format";
 import type { FeatureRef } from "../state/store";
+import { MoM } from "./MoM";
 
 const OFFSET = 12;
 
@@ -21,6 +22,13 @@ interface TooltipProps {
   hovered: FeatureRef;
   cell: MapFeatureMonth | undefined;
   month: string | null;
+}
+
+function momChangeValue(cell: MapFeatureMonth): string {
+  const delta = cell.age_0_5_mom_delta;
+  const pct = cell.age_0_5_mom_pct;
+  if (delta === null || pct === null) return "no prior month";
+  return `${formatSignedCount(delta)} (${formatSignedPct(pct)})`;
 }
 
 /**
@@ -70,6 +78,12 @@ export function Tooltip({ hovered, cell, month }: TooltipProps) {
                 ? formatCount(cell.persons_total)
                 : "not published"}
             </b>
+          </div>
+          <div className="tooltip-row">
+            <span>
+              <MoM /> change
+            </span>
+            <b>{momChangeValue(cell)}</b>
           </div>
         </>
       ) : (

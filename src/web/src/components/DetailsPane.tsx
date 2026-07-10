@@ -9,6 +9,7 @@ import {
 } from "../data/format";
 import { CITIZENSHIP_LABELS, ETHNICITY_LABELS } from "../data/metricLabels";
 import { useAppDispatch, useAppState } from "../state/store";
+import { MoM } from "./MoM";
 import { Tooltip } from "./Tooltip";
 
 /** Accessible summary mirroring the map tooltip rows for one month. */
@@ -117,13 +118,17 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
         </div>
         {cell && cell.age_0_5_mom_delta !== null && (
           <div className="pane-stat">
-            <span className="micro-label">Month-Over-Month change</span>
+            <span className="micro-label">
+              <MoM /> change
+            </span>
             <b>{formatSignedCount(cell.age_0_5_mom_delta)}</b>
           </div>
         )}
         {cell && cell.age_0_5_mom_pct !== null && (
           <div className="pane-stat">
-            <span className="micro-label">Month-Over-Month change %</span>
+            <span className="micro-label">
+              <MoM /> change %
+            </span>
             <b>{formatSignedPct(cell.age_0_5_mom_pct)}</b>
           </div>
         )}
@@ -131,7 +136,9 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
 
       <div className="pane-section">
         <div className="trend-header">
-          <span className="micro-label">MoM change · Ages 0–5</span>
+          <span className="micro-label">
+            <MoM /> change · Ages 0–5
+          </span>
           <span className="micro-label">
             {months.length === 1 ? "1 month" : `${months.length} months`}
           </span>
