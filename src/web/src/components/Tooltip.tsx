@@ -1,5 +1,6 @@
 import type { MapFeatureMonth } from "@medi-cal-disenrollment/shared";
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { formatCount, formatMonth } from "../data/format";
 import type { FeatureRef } from "../state/store";
 
@@ -25,7 +26,9 @@ interface TooltipProps {
 /**
  * Cursor-anchored tooltip (offset 12/12; flips near the right/bottom
  * viewport edges). Positioned imperatively from window mousemove so it never
- * re-renders per pixel.
+ * re-renders per pixel. Portaled to document.body so `position: fixed` is
+ * always viewport-relative — panel ancestors use `backdrop-filter`, which
+ * would otherwise become the fixed containing block and skew the offset.
  */
 export function Tooltip({ hovered, cell, month }: TooltipProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -51,7 +54,7 @@ export function Tooltip({ hovered, cell, month }: TooltipProps) {
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
-  return (
+  return createPortal(
     <div className="tooltip" ref={ref} style={{ left: -9999, top: -9999 }}>
       <div className="tooltip-name">{hovered.name}</div>
       {cell ? (
@@ -75,6 +78,7 @@ export function Tooltip({ hovered, cell, month }: TooltipProps) {
         </div>
       )}
       {month && <div className="tooltip-row tooltip-month">{formatMonth(month)}</div>}
-    </div>
+    </div>,
+    document.body,
   );
 }
