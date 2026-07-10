@@ -153,8 +153,12 @@ in one component so it can be deleted cleanly later.
      ("Long Beach — standalone city") plus `region`.
   2. Big number: ages 0–5 enrolled for the active month; beneath it total
      enrolled, and MoM delta/pct when non-null.
-  3. Trend strip: tiny bar/line of `age_0_5` across all months (renders as
-     a single tick with one month).
+  3. Trend strip: diverging month-over-month delta ticks for
+     `age_0_5_mom_delta` across all months, centered on a zero baseline
+     (growth up in muted ink, decline down colored with ramp stops 1→5 by
+     local-max magnitude — not the map's layer-wide quantile breaks;
+     flat/null on the baseline). Label: "MoM change · Ages 0–5".
+     Tooltips/aria include signed count and percent.
   4. Ethnicity marginal breakdown — horizontal bars in `--accent`, counts
      right-aligned.
   5. Citizenship marginal breakdown — same treatment.

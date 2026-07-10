@@ -531,6 +531,7 @@ button {
   max-width: 6px;
   min-width: 2px;
   opacity: 0.35;
+  position: relative;
 }
 
 .trend-col[data-active="true"] {
@@ -565,11 +566,18 @@ button {
 }
 
 .trend-tick--decline {
-  background: var(--accent);
+  /* color set inline via declineColorByLocalMax / ramp stops 1→5 */
 }
 
 .trend-tick--flat {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
   background: var(--ink-2);
+  min-height: 0;
 }
 
 .bar-list {

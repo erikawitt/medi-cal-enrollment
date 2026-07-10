@@ -1,5 +1,5 @@
 import type { MapGeoFile } from "@medi-cal-disenrollment/shared";
-import { DEFAULT_HUE, rampHex } from "../color/ramp";
+import { DEFAULT_HUE, declineColorByLocalMax } from "../color/ramp";
 import {
   formatCount,
   formatMonth,
@@ -8,15 +8,6 @@ import {
 } from "../data/format";
 import { CITIZENSHIP_LABELS, ETHNICITY_LABELS } from "../data/metricLabels";
 import { useAppDispatch, useAppState } from "../state/store";
-
-const DECLINE_STOPS = rampHex(DEFAULT_HUE).slice(1);
-
-function declineBarColor(absDelta: number, maxDecline: number): string {
-  if (maxDecline <= 0) return DECLINE_STOPS[0] as string;
-  const t = absDelta / maxDecline;
-  const idx = Math.min(DECLINE_STOPS.length - 1, Math.floor(t * DECLINE_STOPS.length));
-  return DECLINE_STOPS[idx] as string;
-}
 
 function trendTickTitle(
   monthLabel: string,
@@ -73,7 +64,6 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
   const trendMax = Math.max(1, ...trendMagnitudes);
   const maxDecline = Math.max(0, ...trendMonths.map(({ delta }) => (delta !== null && delta < 0 ? -delta : 0)));
   const trendSummary = trendMonths
-    .filter(({ delta }) => delta !== null)
     .map(({ month, delta, pct }) => trendTickTitle(formatMonth(month), delta, pct))
     .join("; ");
 
@@ -141,10 +131,10 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
           {trendMonths.map(({ month: m, delta, pct }) => {
             const monthLabel = formatMonth(m);
             const title = trendTickTitle(monthLabel, delta, pct);
-            const barHeight =
-              delta !== null && delta !== 0
-                ? `${Math.max(6, (Math.abs(delta) / trendMax) * 100)}%`
-                : "2px";
+            const isFlat = delta === null || delta === 0;
+            const barHeight = !isFlat
+              ? `${Math.max(6, (Math.abs(delta) / trendMax) * 100)}%`
+              : undefined;
 
             return (
               <div
@@ -153,41 +143,33 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
                 data-active={month === m}
                 data-null={delta === null}
               >
-                <div className="trend-half trend-half--up">
-                  {delta !== null && delta > 0 && (
-                    <div
-                      className="trend-tick trend-tick--growth"
-                      style={{ height: barHeight }}
-                      title={title}
-                    />
-                  )}
-                  {(delta === null || delta === 0) && (
-                    <div
-                      className="trend-tick trend-tick--flat"
-                      style={{ height: "1px" }}
-                      title={title}
-                    />
-                  )}
-                </div>
-                <div className="trend-half trend-half--down">
-                  {(delta === null || delta === 0) && (
-                    <div
-                      className="trend-tick trend-tick--flat"
-                      style={{ height: "1px" }}
-                      title={title}
-                    />
-                  )}
-                  {delta !== null && delta < 0 && (
-                    <div
-                      className="trend-tick trend-tick--decline"
-                      style={{
-                        height: barHeight,
-                        background: declineBarColor(-delta, maxDecline),
-                      }}
-                      title={title}
-                    />
-                  )}
-                </div>
+                {isFlat ? (
+                  <div className="trend-tick trend-tick--flat" title={title} />
+                ) : (
+                  <>
+                    <div className="trend-half trend-half--up">
+                      {delta > 0 && (
+                        <div
+                          className="trend-tick trend-tick--growth"
+                          style={{ height: barHeight }}
+                          title={title}
+                        />
+                      )}
+                    </div>
+                    <div className="trend-half trend-half--down">
+                      {delta < 0 && (
+                        <div
+                          className="trend-tick trend-tick--decline"
+                          style={{
+                            height: barHeight,
+                            background: declineColorByLocalMax(-delta, maxDecline, DEFAULT_HUE),
+                          }}
+                          title={title}
+                        />
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             );
           })}
