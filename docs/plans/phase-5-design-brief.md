@@ -156,7 +156,8 @@ in one component so it can be deleted cleanly later.
   2. Big number: ages 0–5 enrolled for the active month; beneath it total
      enrolled, and MoM delta/pct when non-null.
   3. Trend strip: diverging month-over-month delta ticks for
-     `age_0_5_mom_delta` across all months, centered on a zero baseline
+     `age_0_5_mom_delta` across the latest 12 report months (or fewer if
+     less data), centered on a zero baseline
      (growth up in muted ink, decline down colored with ramp stops 1→5 by
      local-max magnitude — not the map's layer-wide quantile breaks;
      flat/null on the baseline). Label: "MoM change · Ages 0–5".

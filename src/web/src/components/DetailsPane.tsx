@@ -63,7 +63,9 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
   const months = derived?.months ?? [];
   const isCommunity = layerId === "community";
 
-  const trendMonths = months.map((m) => ({
+  /** Strip shows at most the latest 12 report months. */
+  const stripMonths = months.length > 12 ? months.slice(-12) : months;
+  const trendMonths = stripMonths.map((m) => ({
     month: m,
     count: byMonth?.[m]?.age_0_5 ?? null,
     personsTotal: byMonth?.[m]?.persons_total ?? null,
@@ -140,7 +142,7 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
             <MoM /> change · Ages 0–5
           </span>
           <span className="micro-label">
-            {months.length === 1 ? "1 month" : `${months.length} months`}
+            {stripMonths.length === 1 ? "1 month" : `${stripMonths.length} months`}
           </span>
         </div>
         <div
