@@ -158,8 +158,8 @@ in one component so it can be deleted cleanly later.
      (growth up in muted ink, decline down colored with ramp stops 1→5 by
      local-max magnitude — not the map's layer-wide quantile breaks;
      flat/null on the baseline). Label: "MoM change · Ages 0–5".
-     Hover/aria on each column: enrollment count with MoM % vs the prior
-     month (e.g. `FEB 2026 · 1,203 (−15.9%)`; first month: `no prior month`).
+     Hovering a column shows the same cursor-anchored map tooltip (name,
+     ages 0–5, all ages, that column's report month).
   4. Ethnicity marginal breakdown — horizontal bars in `--accent`, counts
      right-aligned.
   5. Citizenship marginal breakdown — same treatment.

@@ -1,4 +1,5 @@
 import type { MapGeoFile } from "@medi-cal-disenrollment/shared";
+import { useState } from "react";
 import { DEFAULT_HUE, declineColorByLocalMax } from "../color/ramp";
 import {
   formatCount,
@@ -8,16 +9,22 @@ import {
 } from "../data/format";
 import { CITIZENSHIP_LABELS, ETHNICITY_LABELS } from "../data/metricLabels";
 import { useAppDispatch, useAppState } from "../state/store";
+import { Tooltip } from "./Tooltip";
 
-/** Hover/aria label: enrollment count with MoM % vs the prior month (prior bar). */
-function trendTickTitle(
+/** Accessible summary mirroring the map tooltip rows for one month. */
+function trendMonthAria(
+  featureName: string,
   monthLabel: string,
   count: number | null,
-  pct: number | null,
+  personsTotal: number | null,
 ): string {
-  const countPart = count !== null ? formatCount(count) : "not published";
-  if (pct === null) return `${monthLabel} · ${countPart} · no prior month`;
-  return `${monthLabel} · ${countPart} (${formatSignedPct(pct)})`;
+  const ages =
+    count !== null ? `Ages 0–5 ${formatCount(count)}` : "Ages 0–5 not published";
+  const all =
+    personsTotal !== null
+      ? `All ages ${formatCount(personsTotal)}`
+      : "All ages not published";
+  return `${featureName}; ${monthLabel}; ${ages}; ${all}`;
 }
 
 const MARGINAL_NOTE =
@@ -38,6 +45,8 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
   const { layerId, hovered, pinned } = useAppState();
   const dispatch = useAppDispatch();
   const feature = pinned ?? hovered;
+  /** Strip column under the cursor — drives the shared map Tooltip for that month. */
+  const [stripHoverMonth, setStripHoverMonth] = useState<string | null>(null);
 
   if (!feature) {
     return (
@@ -56,8 +65,8 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
   const trendMonths = months.map((m) => ({
     month: m,
     count: byMonth?.[m]?.age_0_5 ?? null,
+    personsTotal: byMonth?.[m]?.persons_total ?? null,
     delta: byMonth?.[m]?.age_0_5_mom_delta ?? null,
-    pct: byMonth?.[m]?.age_0_5_mom_pct ?? null,
   }));
   const trendMagnitudes = trendMonths
     .map(({ delta }) => (delta === null ? null : Math.abs(delta)))
@@ -65,8 +74,11 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
   const trendMax = Math.max(1, ...trendMagnitudes);
   const maxDecline = Math.max(0, ...trendMonths.map(({ delta }) => (delta !== null && delta < 0 ? -delta : 0)));
   const trendSummary = trendMonths
-    .map(({ month, count, pct }) => trendTickTitle(formatMonth(month), count, pct))
+    .map(({ month: m, count, personsTotal }) =>
+      trendMonthAria(feature.name, formatMonth(m), count, personsTotal),
+    )
     .join("; ");
+  const stripHoverCell = stripHoverMonth ? byMonth?.[stripHoverMonth] : undefined;
 
   return (
     <div className="panel details-pane">
@@ -128,9 +140,9 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
           className="trend-strip"
           role="img"
           aria-label={trendSummary || "No month-over-month change data yet"}
+          onMouseLeave={() => setStripHoverMonth(null)}
         >
-          {trendMonths.map(({ month: m, count, delta, pct }) => {
-            const title = trendTickTitle(formatMonth(m), count, pct);
+          {trendMonths.map(({ month: m, delta }) => {
             const isFlat = delta === null || delta === 0;
             const barHeight = !isFlat
               ? `${Math.max(6, (Math.abs(delta) / trendMax) * 100)}%`
@@ -142,7 +154,7 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
                 className="trend-col"
                 data-active={month === m}
                 data-null={delta === null}
-                title={title}
+                onMouseEnter={() => setStripHoverMonth(m)}
               >
                 {isFlat ? (
                   <div className="trend-tick trend-tick--flat" />
@@ -173,6 +185,9 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
             );
           })}
         </div>
+        {stripHoverMonth && (
+          <Tooltip hovered={feature} cell={stripHoverCell} month={stripHoverMonth} />
+        )}
       </div>
 
       <MarginalBars title="Ethnicity marginal breakdown" entries={ETHNICITY_LABELS} values={cell?.ethnicity} />
