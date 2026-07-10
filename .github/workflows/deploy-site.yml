@@ -1,6 +1,13 @@
-# Deploys the Phase 5 map app to GitHub Pages on every push to main.
+# Deploys the map app to GitHub Pages on every push to main.
 # Merging a data PR therefore automatically republishes the site with fresh
 # data — that coupling is intentional (see docs/plans/phase-5-web-app.md).
+#
+# Production deploys to the gh-pages branch root. PR previews (preview-site.yml)
+# deploy into previews/pr-<number>/ on the same branch; clean-exclude keeps
+# those folders when main redeploys.
+#
+# Repo setting (one-time): Settings → Pages → Build and deployment → Source:
+# Deploy from a branch → gh-pages / (root).
 name: Deploy site
 
 on:
@@ -9,9 +16,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 # One deploy at a time; a newer push supersedes an in-flight one.
 concurrency:
@@ -19,8 +24,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
     steps:
       - uses: actions/checkout@v4
 
@@ -35,18 +43,12 @@ jobs:
         run: bun run build
         working-directory: src/web
 
-      - uses: actions/configure-pages@v5
-
-      - uses: actions/upload-pages-artifact@v3
+      - name: Deploy to gh-pages
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          path: src/web/dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          branch: gh-pages
+          folder: src/web/dist
+          clean: true
+          clean-exclude: |
+            previews/
+          commit-message: Deploy site from main (${{ github.sha }})

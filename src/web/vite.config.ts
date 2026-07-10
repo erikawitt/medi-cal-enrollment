@@ -6,6 +6,22 @@ import { defineConfig, type Plugin } from "vite";
 /** The repo's committed data directory (two levels up from src/web). */
 const repoDataDir = path.resolve(import.meta.dirname, "../../data");
 
+/** GitHub Pages project-site root segment (matches the repository name). */
+const repoName = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "medi-cal-enrollment";
+
+/**
+ * Vite `base` for production and PR-preview builds on GitHub Pages.
+ * Set `GITHUB_PAGES_PREVIEW_PREFIX=previews/pr-123` in CI to deploy under a
+ * PR-specific subdirectory on the gh-pages branch.
+ */
+function githubPagesBase(): string {
+  const previewPrefix = process.env.GITHUB_PAGES_PREVIEW_PREFIX?.replace(/^\/+|\/+$/g, "") ?? "";
+  if (previewPrefix) {
+    return `/${repoName}/${previewPrefix}/`;
+  }
+  return `/${repoName}/`;
+}
+
 /**
  * Dev-only middleware serving the repo's real data/ directory at /data, so
  * `bun run dev` reads the same committed files the production bundle copies.
@@ -65,7 +81,7 @@ function copyRepoData(): Plugin {
 }
 
 export default defineConfig(({ command }) => ({
-  // GitHub Pages serves the project site under /<repo-name>/.
-  base: command === "build" ? "/medi-cal-enrollment/" : "/",
+  // GitHub Pages serves the project site under /<repo-name>/ (or a PR preview subpath).
+  base: command === "build" ? githubPagesBase() : "/",
   plugins: [react(), serveRepoData(), copyRepoData()],
 }));
