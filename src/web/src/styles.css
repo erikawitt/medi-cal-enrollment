@@ -528,19 +528,14 @@ button {
   pointer-events: none;
 }
 
-/* Slim columns: one month reads as one tick, not a full-width slab. */
+/* Equal-flex columns: up to 12 months share the strip width. */
 .trend-col {
-  flex: 1;
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
-  max-width: 6px;
-  min-width: 2px;
+  min-width: 0;
   opacity: 0.35;
   position: relative;
-  /* Widen the hover hit target without changing the visible tick width. */
-  padding: 0 3px;
-  margin: 0 -3px;
-  box-sizing: content-box;
   cursor: default;
 }
 
