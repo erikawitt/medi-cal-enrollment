@@ -14,6 +14,13 @@
   --hairline-strong: oklch(0.24 0.04 var(--hue) / 0.38);
   --hover-bg: oklch(0.24 0.02 var(--hue) / 0.05);
   --backdrop: oklch(0.24 0.02 var(--hue) / 0.35);
+  --bp-mobile-max: 767px;
+  --chrome-top: 44px;
+  --chrome-bottom: 96px;
+  --control-min-h: 44px;
+  --z-chrome: 10;
+  --z-sheet: 20;
+  --z-modal: 30;
 }
 
 * {
@@ -23,8 +30,9 @@
 
 html,
 body,
-#root {
-  height: 100%;
+#root,
+.app-shell {
+  height: 100dvh;
   margin: 0;
 }
 
@@ -57,7 +65,6 @@ button {
 
 .app-shell {
   position: relative;
-  height: 100%;
   overflow: hidden;
 }
 
@@ -136,8 +143,16 @@ button {
   padding: 0 4px;
 }
 
-.about-trigger:hover {
-  background: var(--hover-bg);
+@media (hover: hover) and (pointer: fine) {
+  .about-trigger:hover {
+    background: var(--hover-bg);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .about-trigger:active {
+    background: var(--hover-bg);
+  }
 }
 
 .segmented {
@@ -161,8 +176,16 @@ button {
   border-left: 1px solid var(--hairline);
 }
 
-.segmented button:hover:not(:disabled) {
-  background: var(--hover-bg);
+@media (hover: hover) and (pointer: fine) {
+  .segmented button:hover:not(:disabled) {
+    background: var(--hover-bg);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .segmented button:active:not(:disabled) {
+    background: var(--hover-bg);
+  }
 }
 
 .segmented button[aria-pressed="true"] {
@@ -191,8 +214,16 @@ button {
   cursor: pointer;
 }
 
-.layer-option:hover {
-  background: var(--hover-bg);
+@media (hover: hover) and (pointer: fine) {
+  .layer-option:hover {
+    background: var(--hover-bg);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .layer-option:active {
+    background: var(--hover-bg);
+  }
 }
 
 .layer-option[data-active="true"] {
@@ -220,8 +251,16 @@ button {
   text-align: left;
 }
 
-.section-disclosure:hover {
-  background: var(--hover-bg);
+@media (hover: hover) and (pointer: fine) {
+  .section-disclosure:hover {
+    background: var(--hover-bg);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .section-disclosure:active {
+    background: var(--hover-bg);
+  }
 }
 
 .section-disclosure-icon {
@@ -281,20 +320,22 @@ button {
   color: var(--ink-2);
 }
 
-.layer-footnote a:hover {
-  color: var(--ink);
+@media (hover: hover) and (pointer: fine) {
+  .layer-footnote a:hover {
+    color: var(--ink);
+  }
 }
 
 /* ---- about modal ---- */
 
 .modal-backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: var(--backdrop);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 20;
+  z-index: var(--z-modal);
   animation: fade-in 200ms ease-out;
 }
 
@@ -338,9 +379,18 @@ button {
   padding: 0 4px;
 }
 
-.modal-close:hover {
-  color: var(--ink);
-  background: var(--hover-bg);
+@media (hover: hover) and (pointer: fine) {
+  .modal-close:hover {
+    color: var(--ink);
+    background: var(--hover-bg);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .modal-close:active {
+    color: var(--ink);
+    background: var(--hover-bg);
+  }
 }
 
 .skeleton-line {
@@ -361,6 +411,12 @@ button {
   padding: 8px;
   min-width: 148px;
   animation: fade-in 120ms ease-out;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .tooltip {
+    display: none;
+  }
 }
 
 .tooltip-name {
@@ -458,9 +514,18 @@ button {
   padding: 0 4px;
 }
 
-.pane-close:hover {
-  color: var(--ink);
-  background: var(--hover-bg);
+@media (hover: hover) and (pointer: fine) {
+  .pane-close:hover {
+    color: var(--ink);
+    background: var(--hover-bg);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .pane-close:active {
+    color: var(--ink);
+    background: var(--hover-bg);
+  }
 }
 
 .big-number {
@@ -686,5 +751,263 @@ button {
     to {
       opacity: 1;
     }
+  }
+}
+
+@keyframes sheet-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes sheet-slide-up {
+    from {
+      transform: none;
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  body {
+    font-size: 12px;
+  }
+
+  .micro-label {
+    font-size: 11px;
+  }
+
+  .layout-mobile .left-stack,
+  .layout-mobile .controls-cluster {
+    display: none;
+  }
+
+  .mobile-chrome {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-chrome);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: var(--chrome-top);
+    padding: env(safe-area-inset-top) 12px 0;
+    background: var(--surface);
+    backdrop-filter: blur(4px);
+    border-bottom: 1px solid var(--hairline-strong);
+  }
+
+  .chrome-btn {
+    flex: none;
+    min-height: var(--control-min-h);
+    padding: 8px 8px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-2);
+    border: 1px solid var(--hairline-strong);
+  }
+
+  .chrome-btn:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  .chrome-btn--has-pin:not(:disabled):not([aria-pressed="true"]) {
+    border-color: color-mix(in oklch, var(--accent) 40%, var(--hairline-strong));
+    color: var(--ink);
+  }
+
+  .chrome-btn[aria-pressed="true"] {
+    border-color: var(--accent);
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .chrome-btn:hover {
+      background: var(--hover-bg);
+    }
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .chrome-btn:active {
+      background: var(--hover-bg);
+    }
+  }
+
+  .chrome-wordmark {
+    flex: 1;
+    text-align: center;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-sheet);
+    background: var(--backdrop);
+    animation: fade-in 200ms ease-out;
+  }
+
+  .sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: calc(var(--z-sheet) + 1);
+    display: flex;
+    flex-direction: column;
+    max-height: min(
+      85dvh,
+      calc(
+        100dvh - var(--chrome-top) - var(--chrome-bottom) - env(safe-area-inset-top) -
+          env(safe-area-inset-bottom)
+      )
+    );
+    background: var(--surface);
+    backdrop-filter: blur(4px);
+    border-top: 1px solid var(--hairline-strong);
+    animation: sheet-slide-up 220ms ease-out;
+  }
+
+  .sheet-handle {
+    flex: none;
+    width: 36px;
+    height: 4px;
+    margin: 8px auto 0;
+    background: var(--hairline-strong);
+  }
+
+  .sheet-header {
+    flex: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .sheet-title {
+    margin: 0;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .sheet-close {
+    min-height: var(--control-min-h);
+    min-width: var(--control-min-h);
+    font-size: 13px;
+    color: var(--ink-2);
+    padding: 0 8px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .sheet-close:hover {
+      color: var(--ink);
+      background: var(--hover-bg);
+    }
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .sheet-close:active {
+      color: var(--ink);
+      background: var(--hover-bg);
+    }
+  }
+
+  .sheet-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .sheet-body .panel {
+    position: static;
+    border: none;
+    background: transparent;
+    backdrop-filter: none;
+    max-width: none;
+    width: 100%;
+  }
+
+  .sheet-body .controls-group {
+    padding: 12px;
+  }
+
+  .sheet-body .controls-group + .controls-group {
+    border-top: 1px solid var(--hairline);
+  }
+
+  .sheet-body .details-pane {
+    padding: 12px;
+  }
+
+  .bottom-strip {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: none;
+    flex-direction: column;
+    z-index: calc(var(--z-chrome) - 1);
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .time-control {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--hairline);
+    padding-left: 0;
+    padding-top: 12px;
+  }
+
+  .time-control input[type="range"] {
+    width: 100%;
+    flex: 1;
+  }
+
+  .segmented button,
+  .layer-option,
+  .about-trigger,
+  .pane-close,
+  .section-disclosure,
+  .top-decrease-row,
+  .chrome-btn,
+  .sheet-close {
+    min-height: var(--control-min-h);
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .bar-row {
+    grid-template-columns: 80px 1fr 40px;
+  }
+
+  .empty-state-note {
+    top: auto;
+    bottom: calc(var(--chrome-bottom) + 24px);
+    transform: translateX(-50%);
   }
 }

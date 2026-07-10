@@ -21,6 +21,11 @@ export const METRIC_LABELS: Record<MetricId, string> = {
   age_0_5_mom_pct: "Month-Over-Month change",
 };
 
+export const METRIC_LABELS_SHORT: Record<MetricId, string> = {
+  age_0_5: "Enrollment",
+  age_0_5_mom_pct: "MoM %",
+};
+
 /** A feature the cursor is over (hovered) or that a click locked (pinned). */
 export interface FeatureRef {
   geoId: string;

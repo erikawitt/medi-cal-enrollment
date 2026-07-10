@@ -2,6 +2,7 @@ import { useState } from "react";
 import { formatSignedCount } from "../data/format";
 import { useTopDecreases, type DecreasePopulation } from "../data/useTopDecreases";
 import { useLayerData } from "../data/useLayerData";
+import { useFinePointer } from "../hooks/useLayoutMode";
 import { resolveMonthIndex, useAppDispatch, useAppState } from "../state/store";
 
 /**
@@ -9,10 +10,15 @@ import { resolveMonthIndex, useAppDispatch, useAppState } from "../state/store";
  * decreases for the active boundary layer and report month. Hover drives map
  * outline + details preview; click pins the selection.
  */
-export function TopDecreaseList() {
+interface TopDecreaseListProps {
+  onPinFromList?: () => void;
+}
+
+export function TopDecreaseList({ onPinFromList }: TopDecreaseListProps) {
   const { layerId, monthIndex, pinned } = useAppState();
   const dispatch = useAppDispatch();
   const layerData = useLayerData(layerId);
+  const hasFinePointer = useFinePointer();
   const [open, setOpen] = useState(true);
   const [population, setPopulation] = useState<DecreasePopulation>("age_0_5");
 
@@ -67,11 +73,18 @@ export function TopDecreaseList() {
                     className="layer-option top-decrease-row"
                     data-active={pinned?.geoId === entry.geoId}
                     aria-label={`${entry.name}, ${formatSignedCount(entry.delta)}`}
-                    onMouseEnter={() =>
-                      dispatch({ type: "setHovered", feature: entry.featureRef })
-                    }
-                    onMouseLeave={() => dispatch({ type: "setHovered", feature: null })}
-                    onClick={() => dispatch({ type: "togglePinned", feature: entry.featureRef })}
+                    {...(hasFinePointer
+                      ? {
+                          onMouseEnter: () =>
+                            dispatch({ type: "setHovered", feature: entry.featureRef }),
+                          onMouseLeave: () => dispatch({ type: "setHovered", feature: null }),
+                        }
+                      : {})}
+                    onClick={() => {
+                      const willPin = pinned?.geoId !== entry.geoId;
+                      dispatch({ type: "togglePinned", feature: entry.featureRef });
+                      if (!hasFinePointer && willPin) onPinFromList?.();
+                    }}
                   >
                     <span className="top-decrease-name">{entry.name}</span>
                     <span className="top-decrease-value">{formatSignedCount(entry.delta)}</span>

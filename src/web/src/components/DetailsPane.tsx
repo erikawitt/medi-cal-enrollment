@@ -31,7 +31,7 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
     return (
       <div className="panel details-pane">
         <div className="micro-label">Details</div>
-        <div className="details-empty">Hover a region — click to pin.</div>
+        <div className="details-empty">Tap a region to pin details.</div>
       </div>
     );
   }
@@ -63,7 +63,7 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
             </button>
           </span>
         ) : (
-          <span className="micro-label">Hover</span>
+          <span className="micro-label">Preview</span>
         )}
       </div>
 

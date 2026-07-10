@@ -1,7 +1,10 @@
 import type { ReportMonth } from "@medi-cal-disenrollment/shared";
+import { forwardRef } from "react";
 import { formatMonth } from "../data/format";
+import { useLayoutMode } from "../hooks/useLayoutMode";
 import {
   METRIC_LABELS,
+  METRIC_LABELS_SHORT,
   resolveMonthIndex,
   useAppDispatch,
   useAppState,
@@ -19,24 +22,30 @@ interface BottomStripProps {
  * With a single month the slider renders disabled and the month label alone
  * carries the state.
  */
-export function BottomStrip({ months }: BottomStripProps) {
+export const BottomStrip = forwardRef<HTMLDivElement, BottomStripProps>(function BottomStrip(
+  { months },
+  ref,
+) {
   const { metric, monthIndex } = useAppState();
   const dispatch = useAppDispatch();
+  const { isMobile } = useLayoutMode();
   const idx = resolveMonthIndex(monthIndex, months);
   const month = months[idx];
   const singleMonth = months.length <= 1;
+  const labels = isMobile ? METRIC_LABELS_SHORT : METRIC_LABELS;
 
   return (
-    <div className="panel bottom-strip">
+    <div className="panel bottom-strip" ref={ref}>
       <div className="segmented" role="group" aria-label="Metric">
         {METRICS.map((m) => (
           <button
             key={m}
             type="button"
             aria-pressed={metric === m}
+            aria-label={METRIC_LABELS[m]}
             onClick={() => dispatch({ type: "setMetric", metric: m })}
           >
-            {METRIC_LABELS[m]}
+            {labels[m]}
           </button>
         ))}
       </div>
@@ -56,4 +65,4 @@ export function BottomStrip({ months }: BottomStripProps) {
       </div>
     </div>
   );
-}
+});
