@@ -9,15 +9,15 @@ import {
 import { CITIZENSHIP_LABELS, ETHNICITY_LABELS } from "../data/metricLabels";
 import { useAppDispatch, useAppState } from "../state/store";
 
+/** Hover/aria label: enrollment count with MoM % vs the prior month (prior bar). */
 function trendTickTitle(
   monthLabel: string,
-  delta: number | null,
+  count: number | null,
   pct: number | null,
 ): string {
-  if (delta === null) return `${monthLabel} · no prior month`;
-  const parts = [monthLabel, formatSignedCount(delta)];
-  if (pct !== null) parts.push(formatSignedPct(pct));
-  return parts.join(" · ");
+  const countPart = count !== null ? formatCount(count) : "not published";
+  if (pct === null) return `${monthLabel} · ${countPart} · no prior month`;
+  return `${monthLabel} · ${countPart} (${formatSignedPct(pct)})`;
 }
 
 const MARGINAL_NOTE =
@@ -55,6 +55,7 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
 
   const trendMonths = months.map((m) => ({
     month: m,
+    count: byMonth?.[m]?.age_0_5 ?? null,
     delta: byMonth?.[m]?.age_0_5_mom_delta ?? null,
     pct: byMonth?.[m]?.age_0_5_mom_pct ?? null,
   }));
@@ -64,7 +65,7 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
   const trendMax = Math.max(1, ...trendMagnitudes);
   const maxDecline = Math.max(0, ...trendMonths.map(({ delta }) => (delta !== null && delta < 0 ? -delta : 0)));
   const trendSummary = trendMonths
-    .map(({ month, delta, pct }) => trendTickTitle(formatMonth(month), delta, pct))
+    .map(({ month, count, pct }) => trendTickTitle(formatMonth(month), count, pct))
     .join("; ");
 
   return (
@@ -128,9 +129,8 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
           role="img"
           aria-label={trendSummary || "No month-over-month change data yet"}
         >
-          {trendMonths.map(({ month: m, delta, pct }) => {
-            const monthLabel = formatMonth(m);
-            const title = trendTickTitle(monthLabel, delta, pct);
+          {trendMonths.map(({ month: m, count, delta, pct }) => {
+            const title = trendTickTitle(formatMonth(m), count, pct);
             const isFlat = delta === null || delta === 0;
             const barHeight = !isFlat
               ? `${Math.max(6, (Math.abs(delta) / trendMax) * 100)}%`
@@ -142,9 +142,10 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
                 className="trend-col"
                 data-active={month === m}
                 data-null={delta === null}
+                title={title}
               >
                 {isFlat ? (
-                  <div className="trend-tick trend-tick--flat" title={title} />
+                  <div className="trend-tick trend-tick--flat" />
                 ) : (
                   <>
                     <div className="trend-half trend-half--up">
@@ -152,7 +153,6 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
                         <div
                           className="trend-tick trend-tick--growth"
                           style={{ height: barHeight }}
-                          title={title}
                         />
                       )}
                     </div>
@@ -164,7 +164,6 @@ export function DetailsPane({ derived, month }: DetailsPaneProps) {
                             height: barHeight,
                             background: declineColorByLocalMax(-delta, maxDecline, DEFAULT_HUE),
                           }}
-                          title={title}
                         />
                       )}
                     </div>

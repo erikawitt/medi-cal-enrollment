@@ -532,6 +532,11 @@ button {
   min-width: 2px;
   opacity: 0.35;
   position: relative;
+  /* Widen the hover hit target without changing the visible tick width. */
+  padding: 0 3px;
+  margin: 0 -3px;
+  box-sizing: content-box;
+  cursor: default;
 }
 
 .trend-col[data-active="true"] {
