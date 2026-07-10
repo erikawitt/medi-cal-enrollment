@@ -13,11 +13,14 @@ import {
 } from "../color/ramp";
 import { layerById } from "../data/layers";
 import type { LayerData } from "../data/loadLayerData";
+import type { ChromeInsets } from "../hooks/useChromeInsets";
+import { DESKTOP_CHROME_INSETS } from "../hooks/useChromeInsets";
 import {
   useAppDispatch,
   useAppState,
   type FeatureRef,
 } from "../state/store";
+import { FINE_POINTER_QUERY, MOBILE_QUERY } from "../hooks/useLayoutMode";
 
 // MapLibre normally spins up its worker by serializing internal functions
 // via .toString() into a blob. Vite's production bundler (rolldown) can
@@ -32,6 +35,18 @@ const LA_COUNTY_BOUNDS: [[number, number], [number, number]] = [
   [-118.95, 33.6],
   [-117.6, 34.9],
 ];
+
+function effectivePadding(
+  chromeInsets: ChromeInsets,
+  sheetBottomObstruction: number,
+): maplibregl.PaddingOptions {
+  return {
+    top: chromeInsets.top,
+    left: chromeInsets.left,
+    right: chromeInsets.right,
+    bottom: chromeInsets.bottom + sheetBottomObstruction,
+  };
+}
 
 const SOURCE_ID = "active-boundaries";
 const FILL_LAYER_ID = "choropleth-fill";
@@ -79,9 +94,19 @@ interface MapViewProps {
   layerData: LayerData | null;
   scale: ColorScale;
   isChangeView: boolean;
+  chromeInsets?: ChromeInsets;
+  sheetBottomObstruction?: number;
+  onPinnedRegionTap?: () => void;
 }
 
-export function MapView({ layerData, scale, isChangeView }: MapViewProps) {
+export function MapView({
+  layerData,
+  scale,
+  isChangeView,
+  chromeInsets = DESKTOP_CHROME_INSETS,
+  sheetBottomObstruction = 0,
+  onPinnedRegionTap,
+}: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const [mapReady, setMapReady] = useState(false);
@@ -93,6 +118,13 @@ export function MapView({ layerData, scale, isChangeView }: MapViewProps) {
   const dispatchRef = useRef(dispatch);
   dispatchRef.current = dispatch;
   stateRef.current.idProp = layerById(layerId).boundaryIdProperty;
+  stateRef.current.pinnedId = pinned?.geoId ?? null;
+  const chromeInsetsRef = useRef(chromeInsets);
+  chromeInsetsRef.current = chromeInsets;
+  const sheetBottomObstructionRef = useRef(sheetBottomObstruction);
+  sheetBottomObstructionRef.current = sheetBottomObstruction;
+  const onPinnedRegionTapRef = useRef(onPinnedRegionTap);
+  onPinnedRegionTapRef.current = onPinnedRegionTap;
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -100,14 +132,18 @@ export function MapView({ layerData, scale, isChangeView }: MapViewProps) {
       container: containerRef.current,
       style: `${import.meta.env.BASE_URL}basemap/style.json`,
       bounds: LA_COUNTY_BOUNDS,
-      fitBoundsOptions: { padding: { left: 360, top: 24, right: 24, bottom: 24 } },
+      fitBoundsOptions: {
+        padding: effectivePadding(chromeInsetsRef.current, sheetBottomObstructionRef.current),
+      },
       attributionControl: { compact: true },
     });
     mapRef.current = map;
     map.on("load", () => setMapReady(true));
 
     let rafId = 0;
+    const finePointerMql = window.matchMedia(FINE_POINTER_QUERY);
     map.on("mousemove", (e) => {
+      if (!finePointerMql.matches) return;
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
         if (!map.getLayer(FILL_LAYER_ID)) return;
@@ -123,6 +159,7 @@ export function MapView({ layerData, scale, isChangeView }: MapViewProps) {
     // never linger over UI chrome.
     const container = containerRef.current;
     const onMouseLeave = () => {
+      if (!finePointerMql.matches) return;
       cancelAnimationFrame(rafId);
       dispatchRef.current({ type: "setHovered", feature: null });
     };
@@ -131,18 +168,65 @@ export function MapView({ layerData, scale, isChangeView }: MapViewProps) {
       if (!map.getLayer(FILL_LAYER_ID)) return;
       const features = map.queryRenderedFeatures(e.point, { layers: [FILL_LAYER_ID] });
       const ref = features[0] ? featureRef(features[0], stateRef.current.idProp) : null;
-      if (ref) dispatchRef.current({ type: "togglePinned", feature: ref });
-      else dispatchRef.current({ type: "clearPinned" });
+      if (ref) {
+        const isMobile = window.matchMedia(MOBILE_QUERY).matches;
+        const pinnedId = stateRef.current.pinnedId;
+        if (
+          isMobile &&
+          pinnedId &&
+          ref.geoId === pinnedId &&
+          sheetBottomObstructionRef.current === 0
+        ) {
+          onPinnedRegionTapRef.current?.();
+          return;
+        }
+        dispatchRef.current({ type: "togglePinned", feature: ref });
+      } else {
+        dispatchRef.current({ type: "clearPinned" });
+      }
     });
+
+    const shell = container.parentElement;
+    let paddingTimer = 0;
+    const applyPadding = () => {
+      window.clearTimeout(paddingTimer);
+      paddingTimer = window.setTimeout(() => {
+        map.resize();
+        map.setPadding(
+          effectivePadding(chromeInsetsRef.current, sheetBottomObstructionRef.current),
+        );
+      }, 100);
+    };
+
+    const mql = window.matchMedia(MOBILE_QUERY);
+    mql.addEventListener("change", applyPadding);
+
+    const resizeObserver =
+      shell &&
+      new ResizeObserver(() => {
+        applyPadding();
+      });
+    if (shell && resizeObserver) resizeObserver.observe(shell);
 
     return () => {
       cancelAnimationFrame(rafId);
+      window.clearTimeout(paddingTimer);
+      mql.removeEventListener("change", applyPadding);
+      resizeObserver?.disconnect();
       container.removeEventListener("mouseleave", onMouseLeave);
       map.remove();
       mapRef.current = null;
       setMapReady(false);
     };
   }, []);
+
+  // Resize + setPadding when chrome insets or sheet obstruction change.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    map.resize();
+    map.setPadding(effectivePadding(chromeInsets, sheetBottomObstruction));
+  }, [mapReady, chromeInsets, sheetBottomObstruction]);
 
   // (Re)build the boundary source + fill/line layers when the layer's data
   // arrives. promoteId lifts the join key into the feature id so
